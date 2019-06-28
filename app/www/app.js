@@ -85,14 +85,15 @@ function onDeviceReady() {
     if (cordova.platformId == 'android') {
         StatusBar.backgroundColorByHexString("#fff");
     }
-    function getLanguage() {
-        navigator.globalization.getPreferredLanguage(
-            function (language) {
-                return language.value;
-            },
-            function () {
-                //Error
-            }
-        );
-    }
+    navigator.globalization.getPreferredLanguage(function (language) {
+        //German
+        if (language.value.includes("de")) {
+            $("#text__featured").html("Angesagt");
+            $("#text__trending").html("Neu und beliebt");
+            $("#text__list").html("Deine Liste");
+            $("#logout").html("Abmelden");
+            $("#view__settings h1").html("Einstellungen");
+            $("#qq").attr("placeholder", "Suchbegriff");
+        }
+    });
 }
