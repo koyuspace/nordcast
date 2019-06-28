@@ -69,6 +69,7 @@ h1, h2, h3 {
     margin: 5px;
     width: 80px;
     height: 80px;
+    margin-bottom: 15px;
 }
 
 .card__small {
@@ -78,6 +79,7 @@ h1, h2, h3 {
     margin: 5px;
     width: 64px;
     height: 64px;
+    margin-bottom: 15px;
 }
 
 .fa__nav {
@@ -111,6 +113,8 @@ h1, h2, h3 {
     font-size: 24pt;
     font-family: 'open_sanslight';
     font-weight: 300;
+    padding: 12px 20px;
+    margin: 8px 0;
 }
 
 #wrapper__search input:focus {
@@ -142,6 +146,8 @@ h1, h2, h3 {
     font-size: 24pt;
     font-family: 'open_sanslight';
     font-weight: 300;
+    padding: 12px 20px;
+    margin: 8px 0;
 }
 
 #view__settings {

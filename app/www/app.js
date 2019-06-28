@@ -85,4 +85,14 @@ function onDeviceReady() {
     if (cordova.platformId == 'android') {
         StatusBar.backgroundColorByHexString("#fff");
     }
+    function getLanguage() {
+        navigator.globalization.getPreferredLanguage(
+            function (language) {
+                return language.value;
+            },
+            function () {
+                //Error
+            }
+        );
+    }
 }
