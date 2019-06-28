@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Nordcast</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="primarycolor.js"></script>
+        <script src="getfeed.js"></script>
+        <script src="https://kit.fontawesome.com/8b5d897402.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="config.js"></script>
+        <script src="cordova.js"></script>
+        <script src="welcome.js"></script>
+    </head>
+    <body>
+        <img src="logo.svg" height="128" alt="Logo" id="logo__intro" />
+        <div id="view__welcome">
+            <h1>Willkommen bei Nordcast</h1>
+            <p>Bitte melde dich mit deinem koyu.space-Account an. Solltest du noch keinen Account haben, kannst du dir <a href="https://koyu.space/auth/sign_up" target="_blank">hier</a> einen machen.</p>
+            <p><input type="text" id="username" placeholder="Benutzername"></p>
+            <p><input type="password" id="password" placeholder="Passwort"></p>
+            <p><button class="btn btn-primary" id="kslogin" style="width: 80%;">Anmelden</button></p>
+            <div id="welcome__error"></div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,5 @@
+bottle
+tornado
+feedparser
+Mastodon.py
+redis

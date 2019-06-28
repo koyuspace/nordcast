@@ -1,0 +1,155 @@
+@import url("fonts.css");
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #fff !important;
+    color: #333;
+    font-family: 'open_sansregular' !important;
+    padding: 0;
+    margin: 0;
+}
+
+#view__main {
+    padding-left: 20px;
+}
+
+#logo__intro {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#nav {
+    background: #fff;
+    height: 90px;
+    position: fixed;
+    width: 100%;
+}
+
+#nav img {
+    margin: 0 auto;
+    display: block;
+    margin-top: -6px;
+}
+
+h1, h2, h3 {
+    font-family: 'open_sanslight';
+    font-weight: 300;
+}
+
+.card__big {
+    border-radius: 6px;
+    background: #fff;
+    margin: 15px;
+    margin-bottom: 30px;
+}
+
+.card__big img {
+    height: 100%;
+}
+
+#section__featured {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+#section__featured div {
+    display: inline-block;
+}
+
+.card__smaller {
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
+    margin: 5px;
+    width: 80px;
+    height: 80px;
+}
+
+.card__small {
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
+    margin: 5px;
+    width: 64px;
+    height: 64px;
+}
+
+.fa__nav {
+    font-size: 24px;
+    margin-top: -60px;
+    margin-right: 25px;
+    float: right;
+}
+
+.fa__nav2 {
+    font-size: 24px;
+    margin-top: -60px;
+    margin-right: 70px;
+    float: right;
+}
+
+#wrapper__search {
+    background-color: #fff;
+    padding: 10px;
+    text-align: center;
+    margin: -20px;
+}
+
+#wrapper__search input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #333;
+    height: 48px;
+    width: 80%;
+    font-size: 24pt;
+    font-family: 'open_sanslight';
+    font-weight: 300;
+}
+
+#wrapper__search input:focus {
+    outline: 0;
+}
+
+#view__welcome {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 60px;
+}
+
+#view__welcome p,
+#view__welcome h1 {
+    margin-bottom: 30px;
+
+}
+
+#view__welcome input,
+#view__welcome input:focus {
+    outline: 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #333;
+    height: 48px;
+    width: 80%;
+    font-size: 24pt;
+    font-family: 'open_sanslight';
+    font-weight: 300;
+}
+
+#view__settings {
+    padding-top: 120px;
+    padding-left: 20px;
+}
+
+p {
+    margin-bottom: 0;
+    margin-top: 0;
+}

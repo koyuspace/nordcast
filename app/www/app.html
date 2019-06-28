@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Nordcast</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="color-thief.js"></script>
+        <script src="primarycolor.js"></script>
+        <script src="getfeed.js"></script>
+        <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+        <script src="config.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script src="cordova.js"></script>
+        <script src="app.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <img src="logo.svg" height="128" alt="Logo" id="logo__intro" />
+        <div id="nav">
+            <img src="logo.svg" height="96" alt="Logo" id="logo__nav" />
+            <ion-icon name="settings" class="fa__nav"></ion-icon>
+            <ion-icon name="search" class="fa__nav2"></ion-icon>
+            <div id="wrapper__search">
+                <input type="text" id="qq" />
+            </div>
+        </div>
+        <div id="view__main">
+            <h1>Angesagt</h1>
+            <div id="section__featured">
+            </div>
+            <br /><h2>Nordcast Originals</h3>
+            <div id="section__originals">
+                <p><img src="fake_data/4.jpg" class="card__smaller" /><img src="fake_data/5.jpg" class="card__smaller" /><img src="fake_data/6.jpg" class="card__smaller" /><img src="fake_data/7.jpg" class="card__smaller" /><img src="fake_data/8.jpg" class="card__smaller" /><img src="fake_data/4.jpg" class="card__smaller" /><img src="fake_data/5.jpg" class="card__smaller" /><img src="fake_data/6.jpg" class="card__smaller" /><img src="fake_data/7.jpg" class="card__smaller" /><img src="fake_data/8.jpg" class="card__smaller" /></p>
+            </div>
+            <br /><h3>Neu und heiß</h3>
+            <div id="section__trending">
+                <p><img src="fake_data/4.jpg" class="card__small" /><img src="fake_data/5.jpg" class="card__small" /><img src="fake_data/6.jpg" class="card__small" /><img src="fake_data/7.jpg" class="card__small" /><img src="fake_data/8.jpg" class="card__small" /><img src="fake_data/4.jpg" class="card__small" /><img src="fake_data/5.jpg" class="card__small" /><img src="fake_data/6.jpg" class="card__small" /><img src="fake_data/7.jpg" class="card__small" /><img src="fake_data/8.jpg" class="card__small" /></p>
+            </div>
+            <br /><h3>Deine Liste</h3>
+            <div id="section__list">
+               
+            </div>
+        </div>
+        <div id="view__settings">
+            <h1>Einstellungen</h1><br />
+            <button type="button" id="logout" class="btn btn-danger">Abmelden</button>
+        </div>
+    </body>
+</html>
