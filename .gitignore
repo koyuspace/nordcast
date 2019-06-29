@@ -1,1 +1,2 @@
 clientcred.secret
+authtokens/*.secret

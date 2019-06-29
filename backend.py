@@ -37,7 +37,8 @@ def login():
     )
     mastodon.log_in(
         username,
-        password
+        password,
+        to_file = 'authtokens/'+username+'.secret'
     )
     if not os.path.exists("usercred.secret"):
         suid = str(uuid.uuid1())
@@ -51,9 +52,51 @@ def login2(username, uuid):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    mastodon.account_verify_credentials().source.note
     if suid == uuid:
         return json.dumps({"login": "ok", "uuid": uuid})
     else:
+        return "{\"login\": \"error\"}"
+
+@get("/api/v1/setlist/<username>/<uuid>/<podlist>")
+def setlist(username, uuid, podlist):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    if suid == "uuid":
+        r.set("nordcast/podlist/" + username, podlist)
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+    else:
+        return "{\"login\": \"error\"}"
+
+@get("/api/v1/getlist/<username>/<uuid>")
+def getlist(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    podlist = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    if suid == "uuid":
+        r.set("nordcast/podlist/" + username, podlist)
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
+    else:
+        return "{\"login\": \"error\"}"
+
+@get("/api/v1/getmainview/<username>/<uuid>")
+def getmainview(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    if suid == uuid:
+        response.content_type = "text/html"
+        f = open("mainview.html", "r")
+        s = f.read()
+        f.close()
+        return s
+    else:
+        response.content_type = "application/json"
         return "{\"login\": \"error\"}"
 
 run(server="tornado",port=9000,host="0.0.0.0")

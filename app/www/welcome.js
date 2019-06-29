@@ -1,5 +1,6 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 $(document).ready(function() {
+    $("#welcome__error").hide();
     $("#view__welcome").hide();
     $("#nav").hide();
     window.setTimeout(function() {
@@ -11,6 +12,7 @@ $(document).ready(function() {
         location.href = "app.html";
     }
     $("#kslogin").click(function() {
+        $("#welcome__error").hide();
         $("#kslogin").attr("disabled", "");
         var oldHTML = $("#kslogin").html();
         $("#kslogin").html("<i class=\"fas fa-sync-alt fa-spin\"></i> "+$("#kslogin").html());
@@ -25,12 +27,12 @@ $(document).ready(function() {
                 } else {
                     $("#kslogin").removeAttr("disabled");
                     $("#kslogin").html(oldHTML);
-                    $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
+                    $("#welcome__error").show();
                 }
             }).error(function() {
                 $("#kslogin").removeAttr("disabled");
                 $("#kslogin").html(oldHTML);
-                $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
+                $("#welcome__error").show();
             });
         }, 1000)
     });
@@ -41,4 +43,10 @@ function onDeviceReady() {
     if (cordova.platformId == 'android') {
         StatusBar.backgroundColorByHexString("#fff");
     }
+    navigator.globalization.getPreferredLanguage(function (language) {
+        //German
+        if (language.value.includes("de")) {
+            $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
+        }
+    });
 }
