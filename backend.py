@@ -1,4 +1,4 @@
-from bottle import *
+from bottle import get, post, request, response, route, run
 from mastodon import Mastodon
 import feedparser
 import json
@@ -29,8 +29,8 @@ def getbanner(val):
 def login():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    username = request.forms.get("username")
-    password = request.forms.get("password")
+    username = request.forms.get("username") # pylint: disable=no-member
+    password = request.forms.get("password") # pylint: disable=no-member
     mastodon = Mastodon(
         client_id = 'clientcred.secret',
         api_base_url = 'https://koyu.space'
