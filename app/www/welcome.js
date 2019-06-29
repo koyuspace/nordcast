@@ -15,26 +15,28 @@ $(document).ready(function() {
         $("#welcome__error").hide();
         $("#kslogin").attr("disabled", "");
         var oldHTML = $("#kslogin").html();
-        $("#kslogin").html("<i class=\"fas fa-sync-alt fa-spin\"></i> "+$("#kslogin").html());
-        window.setTimeout(function() {
-            $.post(backend+"/api/v1/login", {username: $("#username").val(), password: $("#password").val()}, function(data) {
-                if (data["login"] === "ok") {
-                    localStorage.setItem("uuid", data["uuid"]);
-                    localStorage.setItem("username", $("#username").val());
-                    window.setTimeout(function() {
-                        location.href = "app.html";
-                    }, 200)
-                } else {
+        $("#kslogin").html("<img src=\"loading.svg\" height=\"16\" style=\"vertical-align:middle;margin-top:-3px;\" /> "+$("#kslogin").html());
+        if (debug === false) {
+            window.setTimeout(function() {
+                $.post(backend+"/api/v1/login", {username: $("#username").val(), password: $("#password").val()}, function(data) {
+                    if (data["login"] === "ok") {
+                        localStorage.setItem("uuid", data["uuid"]);
+                        localStorage.setItem("username", $("#username").val());
+                        window.setTimeout(function() {
+                            location.href = "app.html";
+                        }, 200)
+                    } else {
+                        $("#kslogin").removeAttr("disabled");
+                        $("#kslogin").html(oldHTML);
+                        $("#welcome__error").show();
+                    }
+                }).error(function() {
                     $("#kslogin").removeAttr("disabled");
                     $("#kslogin").html(oldHTML);
                     $("#welcome__error").show();
-                }
-            }).error(function() {
-                $("#kslogin").removeAttr("disabled");
-                $("#kslogin").html(oldHTML);
-                $("#welcome__error").show();
-            });
-        }, 1000)
+                });
+            }, 1000)
+        }
     });
 });
 
