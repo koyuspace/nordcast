@@ -67,7 +67,12 @@ def setlist(username, uuid, podlist):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    if suid == "uuid":
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    mastodon.account_verify_credentials().source.note
+    if suid == uuid:
         r.set("nordcast/podlist/" + username, podlist)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
     else:
@@ -77,9 +82,14 @@ def setlist(username, uuid, podlist):
 def getlist(username, uuid):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
     podlist = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    if suid == "uuid":
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    mastodon.account_verify_credentials().source.note
+    if suid == uuid:
         r.set("nordcast/podlist/" + username, podlist)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
     else:
@@ -89,6 +99,11 @@ def getlist(username, uuid):
 def getmainview(username, uuid):
     response.headers['Access-Control-Allow-Origin'] = '*'
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    mastodon.account_verify_credentials().source.note
     if suid == uuid:
         response.content_type = "text/html"
         f = open("mainview.html", "r")
@@ -98,5 +113,19 @@ def getmainview(username, uuid):
     else:
         response.content_type = "application/json"
         return "{\"login\": \"error\"}"
+
+@get("/api/v1/getname/<username>/<uuid>")
+def getname(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    userdict = mastodon.account_verify_credentials()
+    if suid == uuid:
+        ksname = userdict.username
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname})
 
 run(server="tornado",port=9000,host="0.0.0.0")

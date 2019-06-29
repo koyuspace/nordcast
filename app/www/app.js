@@ -55,6 +55,12 @@ $(document).ready(function() {
         $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/2\" class=\"card__big\" /></div>");
         $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/3\" class=\"card__big\" /></div>");
 
+        $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+            $(".placeholder__username").html(data["ksname"]);
+        }).error(function() {
+            $("#text__username").hide();
+        });
+
         $(".card__big").primaryColor({
             callback: function(color) {
                 $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
@@ -112,6 +118,7 @@ $(document).ready(function() {
                     $("#text__featured").html("Angesagt");
                     $("#text__trending").html("Neu und beliebt");
                     $("#text__list").html("Deine Liste");
+                    $("#text__hello").html("Hallo");
                     $("#logout").html("Abmelden");
                     $("#view__settings h1").html("Einstellungen");
                     $("#qq").attr("placeholder", "Suchbegriff");
