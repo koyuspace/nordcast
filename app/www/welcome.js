@@ -18,6 +18,7 @@ $(document).ready(function() {
             $.post(backend+"/api/v1/login", {username: $("#username").val(), password: $("#password").val()}, function(data) {
                 if (data["login"] === "ok") {
                     localStorage.setItem("uuid", data["uuid"]);
+                    localStorage.setItem("username", $("#username").val());
                     window.setTimeout(function() {
                         location.href = "app.html";
                     }, 200)

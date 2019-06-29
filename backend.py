@@ -46,4 +46,14 @@ def login():
     else:
         return "{\"login\": \"error\"}"
 
+@get("/api/v1/login2/<username>/<uuid>")
+def login2(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    if suid == uuid:
+        return json.dumps({"login": "ok", "uuid": uuid})
+    else:
+        return "{\"login\": \"error\"}"
+
 run(server="tornado",port=9000,host="0.0.0.0")
