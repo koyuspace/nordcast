@@ -62,6 +62,7 @@ $(document).ready(function() {
                 });
                 $("#text__cast").html(callback.feed.title);
                 $("#text__subtitle").html(callback.feed.subtitle);
+                $("#text__author").html(callback.feed.author);
                 $("#text__description").html(callback.feed.content.replaceAll("\n", "<br />"));
                 callback.entries.forEach(function(item) {
                     $("#podtable tbody").append("<tr><td><ion-icon name=\"play-circle\"></ion-icon></td><td>"+item.title+"</td></tr>");
@@ -121,7 +122,6 @@ $(document).ready(function() {
             $("#logo__intro").hide();
         }
         $("#view__main").css("padding-top", "90px");
-        //localStorage.setItem("podlist", "https://aboutweb.podigee.io/feed/mp3,https://www.nrwision.de/mediathek/sendungen/abschied-von-der-steinkohle/rss/100/")
         $("#view__main").hide();
         $("#view__settings").hide();
         $("#nav").hide();
@@ -163,6 +163,11 @@ $(document).ready(function() {
             $.get(backend+"/api/v1/getfeatured", function(data) {
                 data.forEach(function(item) {
                     $("#section__featured").html($("#section__featured").html()+"<div><a href=\"app.html?cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
+                    $(".card__big").primaryColor({
+                        callback: function(color) {
+                            $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
+                        }
+                    });
                 });
             });
 
@@ -170,12 +175,6 @@ $(document).ready(function() {
                 $(".placeholder__username").html(data["ksname"]);
             }).error(function() {
                 $("#text__username").hide();
-            });
-
-            $(".card__big").primaryColor({
-                callback: function(color) {
-                    $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
-                }
             });
         }, 800);
     }
@@ -245,6 +244,7 @@ function onDeviceReady() {
                 $("#text__featured").html("Angesagt");
                 $("#text__list").html("Deine Liste");
                 $("#text__hello").html("Hallo");
+                $("#text__by").html("von");
                 $("#logout").html("Abmelden");
                 $("#view__settings h1").html("Einstellungen");
                 $("#qq").attr("placeholder", "Suchbegriff");
