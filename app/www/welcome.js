@@ -22,7 +22,7 @@ $(document).ready(function() {
                     localStorage.setItem("uuid", data["uuid"]);
                     localStorage.setItem("username", $("#username").val());
                     window.setTimeout(function() {
-                        location.href = "app.html";
+                        location.href = "app.html?nosplash=ok";
                     }, 200)
                 } else {
                     $("#kslogin").removeAttr("disabled");
@@ -35,6 +35,18 @@ $(document).ready(function() {
                 $("#welcome__error").show();
             });
         }, 1000)
+    });
+    $("#username").keypress(function (e) {
+        if (e.which === 13) {
+          $("#kslogin").click();
+          return false;
+        }
+    });
+    $("#password").keypress(function (e) {
+        if (e.which === 13) {
+          $("#kslogin").click();
+          return false;
+        }
     });
 });
 

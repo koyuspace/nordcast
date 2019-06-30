@@ -1,126 +1,254 @@
 $(document).ready(function() {
-    $("#view__main").css("padding-top", "90px");
-    var searchtoggle = false;
-    $("#wrapper__search").hide();
-    localStorage.setItem("podlist", "https://aboutweb.podigee.io/feed/mp3,https://www.nrwision.de/mediathek/sendungen/abschied-von-der-steinkohle/rss/100/")
-    $("#view__main").hide();
-    $("#view__settings").hide();
-    $("#nav").hide();
-    window.setTimeout(function() {
-        $("#logo__intro").hide();
-        $("#view__main").show();
-        $("#nav").show();
-    }, 2000);
-    $.get(backend+"/api/v1/getmainview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-        $("#view__main").html(data);
-    });
-    window.setTimeout(function() {
-        window.setInterval(function() {
-            $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-                if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
-                    localStorage.clear();
-                    window.setTimeout(function() {
-                        location.href = "index.html";
-                    }, 200);
-                }
-            }).error(function() {
+    function findGetParameter(parameterName) {
+        var result = null,
+            tmp = [];
+        location.search
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+              tmp = item.split("=");
+              if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+            });
+        return result;
+    }
+    String.prototype.replaceAll = function(search, replacement) {
+        var target = this;
+        return target.replace(new RegExp(search, 'g'), replacement);
+    };
+    window.setInterval(function() {
+        $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+            if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
                 localStorage.clear();
                 window.setTimeout(function() {
                     location.href = "index.html";
                 }, 200);
-            });
-        }, 1000);
-        $("#logout").click(function() {
-            localStorage.clear()
+            }
+        }).error(function() {
+            localStorage.clear();
             window.setTimeout(function() {
                 location.href = "index.html";
             }, 200);
         });
-        if (localStorage.getItem("podlist") === null) {
-            $("#section__list").html("<p style=\"text-align:center;\">Es befinden sich keine Podcasts in deiner Liste.</p>")
-        } else {
-            $("#section__list").html($("#section__list").html()+"<p>");
-            localStorage.getItem("podlist").split(",").forEach(function(feed) {
-                $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                    $("#section__list").html($("#section__list").html()+"<img src=\""+callback.feed.image.href+"\" class=\"card__small\" />")
-                });
-            });
-            $("#section__list").html($("#section__list").html()+"</p>");
-        }
-        $("#section__featured").html();
-        $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/1\" class=\"card__big\" /></div>");
-        $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/2\" class=\"card__big\" /></div>");
-        $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/3\" class=\"card__big\" /></div>");
-
-        $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-            $(".placeholder__username").html(data["ksname"]);
-        }).error(function() {
-            $("#text__username").hide();
-        });
-
-        $(".card__big").primaryColor({
-            callback: function(color) {
-                $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
-            }
-        });
-        
-        $(".fa__nav2").click(function() {
-            if (searchtoggle === false) {
-                $("#wrapper__search").show();
-                searchtoggle = true;
-                $("#view__main").css("padding-top", "150px");
-            } else {
-                $("#wrapper__search").hide();
-                searchtoggle = false;
-                $("#view__main").css("padding-top", "90px");
-            }
-        });
-        $(".fa__nav").click(function() {
-            $("#view__main").hide();
-            $(".fa__nav").hide();
-            $(".fa__nav2").hide();
-            $("#wrapper__search").hide();
-            $("#view__main").css("padding-top", "90px");
-            searchtoggle = false;
-            $("#view__settings").show();
+    }, 1000);
+    if (findGetParameter("cast")) {
+        $("#logo__intro").hide();
+        $("#view__settings").hide();
+        $("#qq").hide();
+        $(".fa__nav").hide();
+        $(".fa__nav2").hide();
+        $("#nav").show();
+        var feed = findGetParameter("cast");
+        $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/pod", function(data) {
+            $("#view__main").html(data);
         });
         $("#logo__nav").click(function() {
-            $("#view__main").show();
-            $(".fa__nav").show();
-            $(".fa__nav2").show();
-            $("#view__settings").hide();
+            location.href = "app.html?nosplash=ok";
         });
-        $("#qq").keyup(function() {
-            $.getJSON("https://searchapi.koyu.space/" + $("#qq").val(), function(data) {
-                $("#qq").autocomplete({
-                    source: data[1],
-                    select: function() {
-                        setTimeout(function() {
-                            $("#submit").click();
-                        }, 50);
-                    }
-                });
-            });
-        });
-
-        document.addEventListener("deviceready", onDeviceReady, false);
-        //Cordova-specific code
-        function onDeviceReady() {
-            if (cordova.platformId == 'android') {
-                StatusBar.backgroundColorByHexString("#fff");
-            }
-            navigator.globalization.getPreferredLanguage(function (language) {
-                //German
-                if (language.value.includes("de")) {
-                    $("#text__featured").html("Angesagt");
-                    $("#text__trending").html("Neu und beliebt");
-                    $("#text__list").html("Deine Liste");
-                    $("#text__hello").html("Hallo");
-                    $("#logout").html("Abmelden");
-                    $("#view__settings h1").html("Einstellungen");
-                    $("#qq").attr("placeholder", "Suchbegriff");
+        $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+            data["podlist"].split(",").forEach(function(item) {
+                if (item === feed) {
+                    $("#button__follow").hide();
+                    $("#button__unfollow").show();
+                } else {
+                    $("#button__unfollow").hide();
+                    $("#button__follow").show();
                 }
             });
+        });
+        window.setTimeout(function() {
+            $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                $("#img__cast").attr("src", callback.feed.image.href);
+                $("#img__cast").primaryColor({
+                    callback: function(color) {
+                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
+                    }
+                });
+                console.log(callback);
+                $("#text__cast").html(callback.feed.title);
+                $("#text__subtitle").html(callback.feed.subtitle);
+                $("#text__description").html(callback.feed.content.replaceAll("\n", "<br />"));
+                $("#button__follow").click(function() {
+                    console.log("click!");
+                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                        var podlist = data["podlist"];
+                        data["podlist"].split(",").forEach(function(element) {
+                            if (element !== feed) {
+                                $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), {podlist: podlist+","+feed},function(data) {
+                                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                                        data["podlist"].split(",").forEach(function(item) {
+                                            if (item === feed) {
+                                                $("#button__follow").hide();
+                                                $("#button__unfollow").show();
+                                            } else {
+                                                $("#button__unfollow").hide();
+                                                $("#button__follow").show();
+                                            }
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                    });
+                });
+                $("#button__unfollow").click(function() {
+                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                        var podlist = data["podlist"];
+                        podlist.split(",").forEach(function(element) {
+                            if (element === feed) {
+                                var pl = podlist.replaceAll(","+feed, "").replaceAll(feed, "");
+                                $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), {podlist: pl}, function(data) {
+                                    if (data["action"] === "success") {
+                                        $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                                            data["podlist"].split(",").forEach(function(item) {
+                                                if (item === feed) {
+                                                    $("#button__follow").hide();
+                                                    $("#button__unfollow").show();
+                                                } else {
+                                                    $("#button__unfollow").hide();
+                                                    $("#button__follow").show();
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    });
+                });
+            });
+        }, 500);
+        $("#view__main").css("padding-top", "60px");
+    } else {
+        if (findGetParameter("nosplash") === "ok") {
+            $("#logo__intro").hide();
         }
+        $("#view__main").css("padding-top", "90px");
+        var searchtoggle = false;
+        $("#wrapper__search").hide();
+        //localStorage.setItem("podlist", "https://aboutweb.podigee.io/feed/mp3,https://www.nrwision.de/mediathek/sendungen/abschied-von-der-steinkohle/rss/100/")
+        $("#view__main").hide();
+        $("#view__settings").hide();
+        $("#nav").hide();
+        $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/main", function(data) {
+            $("#view__main").html(data);
+        });
+        window.setTimeout(function() {
+            $("#logout").click(function() {
+                localStorage.clear()
+                window.setTimeout(function() {
+                    location.href = "index.html";
+                }, 200);
+            });
+            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                if (data["podlist"] === "") {
+                    $("#section__list").html("<br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br />")
+                } else {
+                    $("#section__list").html($("#section__list").html()+"<p>");
+                    data["podlist"].split(",").forEach(function(feed) {
+                        $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                            $("#section__list").html($("#section__list").html()+"<a href=\"app.html?cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                        });
+                    });
+                    $("#section__list").html($("#section__list").html()+"</p>");
+                }
+            });
+            $("#section__featured").html();
+            $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/1\" class=\"card__big\" /></div>");
+            $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/2\" class=\"card__big\" /></div>");
+            $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/3\" class=\"card__big\" /></div>");
+
+            $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                $(".placeholder__username").html(data["ksname"]);
+            }).error(function() {
+                $("#text__username").hide();
+            });
+
+            $(".card__big").primaryColor({
+                callback: function(color) {
+                    $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
+                }
+            });
+            
+            $(".fa__nav2").click(function() {
+                if (searchtoggle === false) {
+                    $("#wrapper__search").show();
+                    searchtoggle = true;
+                    $("#view__main").css("padding-top", "150px");
+                } else {
+                    $("#wrapper__search").hide();
+                    searchtoggle = false;
+                    $("#view__main").css("padding-top", "90px");
+                }
+            });
+            $(".fa__nav").click(function() {
+                $("#view__main").hide();
+                $(".fa__nav").hide();
+                $(".fa__nav2").hide();
+                $("#wrapper__search").hide();
+                $("#view__main").css("padding-top", "90px");
+                searchtoggle = false;
+                $("#view__settings").show();
+            });
+            $("#logo__nav").click(function() {
+                $("#view__main").show();
+                $(".fa__nav").show();
+                $(".fa__nav2").show();
+                $("#view__settings").hide();
+            });
+            $("#qq").keyup(function() {
+                window.setTimeout(function() {
+                    console.log("tap");
+                    $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
+                        var results = [];
+                        data["results"].forEach(function(el) {
+                            results.push(el["collectionName"]);
+                        });
+                        $("#qq").autocomplete({
+                            source: results,
+                            select: function() {
+                                setTimeout(function() {
+                                    data["results"].forEach(function(el) {
+                                        if (el["collectionName"] == $("#qq").val()) {
+                                            location.href = "app.html?cast="+el["feedUrl"];
+                                        }
+                                    });
+                                }, 50);
+                            }
+                        });
+                    });
+                }, 200);
+            });
+            $("#logo__intro").hide();
+            $("#view__main").show();
+            $("#nav").show();
     }, 800);
+    }
 });
+
+document.addEventListener("deviceready", onDeviceReady, false);
+//Cordova-specific code
+function onDeviceReady() {
+    if (cordova.platformId == 'android') {
+        StatusBar.backgroundColorByHexString("#fff");
+    }
+    window.setTimeout(function() {
+        navigator.globalization.getPreferredLanguage(function (language) {
+            localStorage.setItem("lang", language.value.split("-")[0]);
+            //German
+            if (language.value.includes("de")) {
+                $("#text__featured").html("Angesagt");
+                $("#text__trending").html("Neu und beliebt");
+                $("#text__list").html("Deine Liste");
+                $("#text__hello").html("Hallo");
+                $("#logout").html("Abmelden");
+                $("#view__settings h1").html("Einstellungen");
+                $("#qq").attr("placeholder", "Suchbegriff");
+                $("#button__follow").html("Folgen");
+                $("#button__unfollow").html("Entfolgen");
+                window.setTimeout(function() {
+                    $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
+                }, 500);
+            }
+        });
+    }, 500);
+}

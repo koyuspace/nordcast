@@ -5,6 +5,7 @@ import json
 import os.path
 import redis
 import uuid
+import requests
 
 admin = "koyu"
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -62,11 +63,12 @@ def login2(username, uuid):
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/setlist/<username>/<uuid>/<podlist>")
-def setlist(username, uuid, podlist):
+@post("/api/v1/setlist/<username>/<uuid>")
+def setlist(username, uuid):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    podlist = request.forms.get("podlist") # pylint: disable=no-member
     mastodon = Mastodon(
         access_token = 'authtokens/'+username+'.secret',
         api_base_url = 'https://koyu.space'
@@ -82,7 +84,7 @@ def setlist(username, uuid, podlist):
 def getlist(username, uuid):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    podlist = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    podlist = str(r.get("nordcast/podlist/" + username)).replace("b'", "").replace("'", "")
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
     mastodon = Mastodon(
         access_token = 'authtokens/'+username+'.secret',
@@ -90,13 +92,12 @@ def getlist(username, uuid):
     )
     mastodon.account_verify_credentials().source.note
     if suid == uuid:
-        r.set("nordcast/podlist/" + username, podlist)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getmainview/<username>/<uuid>")
-def getmainview(username, uuid):
+@get("/api/v1/getview/<username>/<uuid>/<view>")
+def getview(username, uuid, view):
     response.headers['Access-Control-Allow-Origin'] = '*'
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
     mastodon = Mastodon(
@@ -106,7 +107,7 @@ def getmainview(username, uuid):
     mastodon.account_verify_credentials().source.note
     if suid == uuid:
         response.content_type = "text/html"
-        f = open("mainview.html", "r")
+        f = open("views/"+view+"view.html", "r")
         s = f.read()
         f.close()
         return s
@@ -127,5 +128,14 @@ def getname(username, uuid):
     if suid == uuid:
         ksname = userdict.username
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname})
+
+@get("/api/v1/search/<lang>/<query>")
+def search(lang,query):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    query = query.replace(" ", "%20")
+    url = "https://itunes.apple.com/"+lang+"/search?term="+query+"&media=podcast"
+    data = requests.get(url)
+    return data
 
 run(server="tornado",port=9000,host="0.0.0.0")

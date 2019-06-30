@@ -36,7 +36,7 @@ body {
     margin-top: -6px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
     font-family: 'open_sanslight';
     font-weight: 300;
 }
@@ -162,4 +162,16 @@ p {
 
 ion-icon .fa-spin {
     font-size: 18pt;
+}
+
+#podcard {
+    margin: 0;
+    padding: 10px;
+    padding-top: 30px;
+    margin-left: -20px;
+}
+
+#text__description {
+    padding: 20px;
+    margin-left: -20px;
 }
