@@ -67,6 +67,9 @@ $(document).ready(function() {
                 $("#text__cast").html(callback.feed.title);
                 $("#text__subtitle").html(callback.feed.subtitle);
                 $("#text__description").html(callback.feed.content.replaceAll("\n", "<br />"));
+                callback.entries.forEach(function(item) {
+                    $("#podtable tbody").append("<tr><td><ion-icon name=\"play-circle\"></ion-icon></td><td>"+item.title+"</td></tr>");
+                });
                 $("#button__follow").click(function() {
                     console.log("click!");
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
