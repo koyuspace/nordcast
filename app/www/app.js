@@ -30,12 +30,11 @@ $(document).ready(function() {
             }, 200);
         });
     }, 1000);
+    var searchtoggle = false;
+    $("#wrapper__search").hide();
     if (findGetParameter("cast")) {
         $("#logo__intro").hide();
         $("#view__settings").hide();
-        $("#qq").hide();
-        $(".fa__nav").hide();
-        $(".fa__nav2").hide();
         $("#nav").show();
         var feed = findGetParameter("cast");
         $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/pod", function(data) {
@@ -45,15 +44,13 @@ $(document).ready(function() {
             location.href = "app.html?nosplash=ok";
         });
         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-            data["podlist"].split(",").forEach(function(item) {
-                if (item === feed) {
-                    $("#button__follow").hide();
-                    $("#button__unfollow").show();
-                } else {
-                    $("#button__unfollow").hide();
-                    $("#button__follow").show();
-                }
-            });
+            if (data["podlist"].includes(feed)) {
+                $("#button__follow").hide();
+                $("#button__unfollow").show();
+            } else {
+                $("#button__unfollow").hide();
+                $("#button__follow").show();
+            }
         });
         window.setTimeout(function() {
             $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
@@ -63,7 +60,6 @@ $(document).ready(function() {
                         $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
                     }
                 });
-                console.log(callback);
                 $("#text__cast").html(callback.feed.title);
                 $("#text__subtitle").html(callback.feed.subtitle);
                 $("#text__description").html(callback.feed.content.replaceAll("\n", "<br />"));
@@ -71,7 +67,6 @@ $(document).ready(function() {
                     $("#podtable tbody").append("<tr><td><ion-icon name=\"play-circle\"></ion-icon></td><td>"+item.title+"</td></tr>");
                 });
                 $("#button__follow").click(function() {
-                    console.log("click!");
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                         var podlist = data["podlist"];
                         data["podlist"].split(",").forEach(function(element) {
@@ -79,7 +74,7 @@ $(document).ready(function() {
                                 $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), {podlist: podlist+","+feed},function(data) {
                                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                                         data["podlist"].split(",").forEach(function(item) {
-                                            if (item === feed) {
+                                            if (data["podlist"].includes(feed)) {
                                                 $("#button__follow").hide();
                                                 $("#button__unfollow").show();
                                             } else {
@@ -103,7 +98,7 @@ $(document).ready(function() {
                                     if (data["action"] === "success") {
                                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                                             data["podlist"].split(",").forEach(function(item) {
-                                                if (item === feed) {
+                                                if (data["podlist"].includes(feed)) {
                                                     $("#button__follow").hide();
                                                     $("#button__unfollow").show();
                                                 } else {
@@ -126,8 +121,6 @@ $(document).ready(function() {
             $("#logo__intro").hide();
         }
         $("#view__main").css("padding-top", "90px");
-        var searchtoggle = false;
-        $("#wrapper__search").hide();
         //localStorage.setItem("podlist", "https://aboutweb.podigee.io/feed/mp3,https://www.nrwision.de/mediathek/sendungen/abschied-von-der-steinkohle/rss/100/")
         $("#view__main").hide();
         $("#view__settings").hide();
@@ -144,7 +137,7 @@ $(document).ready(function() {
             });
             $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                 if (data["podlist"] === "") {
-                    $("#section__list").html("<br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br />")
+                    $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                 } else {
                     $("#section__list").html($("#section__list").html()+"<p>");
                     data["podlist"].split(",").forEach(function(feed) {
@@ -155,10 +148,23 @@ $(document).ready(function() {
                     $("#section__list").html($("#section__list").html()+"</p>");
                 }
             });
-            $("#section__featured").html();
-            $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/1\" class=\"card__big\" /></div>");
-            $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/2\" class=\"card__big\" /></div>");
-            $("#section__featured").html($("#section__featured").html()+"<div><img src=\""+backend+"/api/v1/getbanner/3\" class=\"card__big\" /></div>");
+            $.get(backend+"/api/v1/getoriginals", function(data) {
+                if (data["podlist"] !== "") {
+                    $("#section__originals").html($("#section__originals").html()+"<p>");
+                    data["podlist"].split(",").forEach(function(feed) {
+                        $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                            $("#section__originals").html($("#section__originals").html()+"<a href=\"app.html?cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__smaller\" /></a>");
+                        });
+                    });
+                    $("#section__originals").html($("#section__originals").html()+"</p>");
+                }
+            });
+
+            $.get(backend+"/api/v1/getfeatured", function(data) {
+                data.forEach(function(item) {
+                    $("#section__featured").html($("#section__featured").html()+"<div><a href=\"app.html?cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
+                });
+            });
 
             $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                 $(".placeholder__username").html(data["ksname"]);
@@ -171,61 +177,58 @@ $(document).ready(function() {
                     $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
                 }
             });
-            
-            $(".fa__nav2").click(function() {
-                if (searchtoggle === false) {
-                    $("#wrapper__search").show();
-                    searchtoggle = true;
-                    $("#view__main").css("padding-top", "150px");
-                } else {
-                    $("#wrapper__search").hide();
-                    searchtoggle = false;
-                    $("#view__main").css("padding-top", "90px");
-                }
+        }, 800);
+    }
+
+    $(".fa__nav2").click(function() {
+        if (searchtoggle === false) {
+            $("#wrapper__search").show();
+            searchtoggle = true;
+            $("#view__main").css("padding-top", "150px");
+        } else {
+            $("#wrapper__search").hide();
+            searchtoggle = false;
+            $("#view__main").css("padding-top", "90px");
+        }
+    });
+    $(".fa__nav").click(function() {
+        $("#view__main").hide();
+        $(".fa__nav").hide();
+        $(".fa__nav2").hide();
+        $("#wrapper__search").hide();
+        $("#view__main").css("padding-top", "90px");
+        searchtoggle = false;
+        $("#view__settings").show();
+    });
+    $("#logo__nav").click(function() {
+        $("#view__main").show();
+        $(".fa__nav").show();
+        $(".fa__nav2").show();
+        $("#view__settings").hide();
+    });
+    $("#qq").keyup(function() {
+        $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
+            var results = [];
+            data["results"].forEach(function(el) {
+                results.push(el["collectionName"]);
             });
-            $(".fa__nav").click(function() {
-                $("#view__main").hide();
-                $(".fa__nav").hide();
-                $(".fa__nav2").hide();
-                $("#wrapper__search").hide();
-                $("#view__main").css("padding-top", "90px");
-                searchtoggle = false;
-                $("#view__settings").show();
-            });
-            $("#logo__nav").click(function() {
-                $("#view__main").show();
-                $(".fa__nav").show();
-                $(".fa__nav2").show();
-                $("#view__settings").hide();
-            });
-            $("#qq").keyup(function() {
-                window.setTimeout(function() {
-                    console.log("tap");
-                    $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
-                        var results = [];
+            $("#qq").autocomplete({
+                source: results,
+                select: function() {
+                    setTimeout(function() {
                         data["results"].forEach(function(el) {
-                            results.push(el["collectionName"]);
-                        });
-                        $("#qq").autocomplete({
-                            source: results,
-                            select: function() {
-                                setTimeout(function() {
-                                    data["results"].forEach(function(el) {
-                                        if (el["collectionName"] == $("#qq").val()) {
-                                            location.href = "app.html?cast="+el["feedUrl"];
-                                        }
-                                    });
-                                }, 50);
+                            if (el["collectionName"] == $("#qq").val()) {
+                                location.href = "app.html?cast="+el["feedUrl"];
                             }
                         });
-                    });
-                }, 200);
+                    }, 50);
+                }
             });
-            $("#logo__intro").hide();
-            $("#view__main").show();
-            $("#nav").show();
-    }, 800);
-    }
+        });
+    });
+    $("#logo__intro").hide();
+    $("#view__main").show();
+    $("#nav").show();
 });
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -240,7 +243,6 @@ function onDeviceReady() {
             //German
             if (language.value.includes("de")) {
                 $("#text__featured").html("Angesagt");
-                $("#text__trending").html("Neu und beliebt");
                 $("#text__list").html("Deine Liste");
                 $("#text__hello").html("Hallo");
                 $("#logout").html("Abmelden");

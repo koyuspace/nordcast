@@ -138,4 +138,25 @@ def search(lang,query):
     data = requests.get(url)
     return data
 
+@get("/api/v1/getoriginals")
+def getoriginals():
+    f = open("data/originals", "r")
+    x = f.read()
+    f.close()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    return json.dumps({"podlist": x})
+
+@get("/api/v1/getfeatured")
+def gefeatured():
+    f = open("data/featured", "r")
+    x = f.readlines()
+    f.close()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    l = []
+    for i in x:
+        l.append([i.split("#")[0], i.split("#")[1]])
+    return json.dumps(l)
+
 run(server="tornado",port=9000,host="0.0.0.0")
