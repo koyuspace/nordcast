@@ -15,24 +15,21 @@ $(document).ready(function() {
         $("#view__main").html(data);
     });
     window.setTimeout(function() {
-        if (debug === false) {
-            window.setInterval(function() {
-                console.log("Connection to koyu.space");
-                $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-                    if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
-                        localStorage.clear();
-                        window.setTimeout(function() {
-                            location.href = "index.html";
-                        }, 200);
-                    }
-                }).error(function() {
+        window.setInterval(function() {
+            $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
                     localStorage.clear();
                     window.setTimeout(function() {
                         location.href = "index.html";
                     }, 200);
-                });
-            }, 1000);
-        }
+                }
+            }).error(function() {
+                localStorage.clear();
+                window.setTimeout(function() {
+                    location.href = "index.html";
+                }, 200);
+            });
+        }, 1000);
         $("#logout").click(function() {
             localStorage.clear()
             window.setTimeout(function() {
