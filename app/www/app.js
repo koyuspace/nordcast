@@ -247,7 +247,7 @@ function onDeviceReady() {
                 $("#button__unfollow").html("Entfolgen");
                 window.setTimeout(function() {
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
-                }, 500);
+                }, 1000);
             }
         });
     }, 500);
