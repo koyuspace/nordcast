@@ -28,13 +28,20 @@ body {
     height: 90px;
     position: fixed;
     width: 100%;
+    padding-bottom: 10px;
     z-index: 1;
 }
 
 #nav img {
     margin: 0 auto;
+    margin-left: 37%;
     display: block;
-    margin-top: -6px;
+}
+
+#profile__picture {
+    float: left;
+    margin-left: 5% !important;
+    margin-top: 22px !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -82,6 +89,15 @@ h1, h2, h3, h4, h5, h6 {
     margin: 5px;
     width: 64px;
     height: 64px;
+    margin-bottom: 15px;
+}
+
+.card__small1 {
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background: #fff;
+    margin: 5px;
+    height: 48px !important;
     margin-bottom: 15px;
 }
 

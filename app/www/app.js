@@ -29,9 +29,10 @@ $(document).ready(function() {
                 location.href = "index.html";
             }, 200);
         });
-    }, 1000);
+    }, 10000);
     var searchtoggle = false;
     $("#wrapper__search").hide();
+    $("#profile__picture").hide();
     if (findGetParameter("cast")) {
         $("#logo__intro").hide();
         $("#view__settings").hide();
@@ -199,6 +200,13 @@ $(document).ready(function() {
             });
         }, 800);
     }
+
+    $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+        $("#profile__picture").attr("src", data["kspic"]);
+        $("#profile__picture").show();
+    }).error(function() {
+        $("#profile__picture").hide();
+    });
 
     $(".fa__nav2").click(function() {
         if (searchtoggle === false) {
