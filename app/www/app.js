@@ -60,12 +60,12 @@ $(document).ready(function() {
                         $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
                     }
                 });
-                $("#text__cast").html(callback.feed.title);
+                $("#text__cast").html(twemoji.parse(callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0]));
                 $("#text__subtitle").html(callback.feed.subtitle);
-                $("#text__author").html(callback.feed.author);
-                $("#text__description").html(callback.feed.content.replaceAll("\n", "<br />"));
+                $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
+                $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                 callback.entries.forEach(function(item) {
-                    $("#podtable tbody").append("<tr><td><ion-icon name=\"play-circle\"></ion-icon></td><td>"+item.title+"</td></tr>");
+                    $("#podtable tbody").append("<tr><td><ion-icon name=\"play-circle\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
                 });
                 $("#button__follow").click(function() {
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
@@ -117,6 +117,20 @@ $(document).ready(function() {
             });
         }, 500);
         $("#view__main").css("padding-top", "60px");
+    } else if(findGetParameter("search")) {
+        $("#view__main").css("padding-top", "60px");
+        $("#view__main").hide();
+        $("#view__settings").hide();
+        $("#nav").hide();
+        $("#text__query").html(findGetParameter("search"));
+        $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/search", function(data) {
+            $("#view__main").html(data);
+            $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+findGetParameter("search"), function(data) {
+                data["results"].forEach(function(item) {
+                    $("#searchtable tbody").append("<tr><td><a href=\"app.html?cast="+item.feedUrl+"\"><img src=\""+item.artworkUrl100+"\" class=\"card__small\"></a></td><td><a href=\"app.html?cast="+item.feedUrl+"\" style=\"color:#333;\">"+twemoji.parse(item.collectionName)+"</a></td></tr>");
+                });
+            });
+        });
     } else {
         if (findGetParameter("nosplash") === "ok") {
             $("#logo__intro").hide();
@@ -173,6 +187,13 @@ $(document).ready(function() {
 
             $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                 $(".placeholder__username").html(data["ksname"]);
+                $.get(backend+"/api/v1/getemoji/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                    var ksemoji = data["ksemoji"];
+                    ksemoji.forEach(function(emoji) {
+                        $(".placeholder__username").html($(".placeholder__username").html().replaceAll(":" + emoji["shortcode"] + ":", "<img src=\"" + emoji["url"] + "\" height=\"16\">"));
+                    });
+                });
+                $(".placeholder__username").html(twemoji.parse($(".placeholder__username").html()));
             }).error(function() {
                 $("#text__username").hide();
             });
@@ -183,7 +204,7 @@ $(document).ready(function() {
         if (searchtoggle === false) {
             $("#wrapper__search").show();
             searchtoggle = true;
-            $("#view__main").css("padding-top", "150px");
+            $("#view__main").css("padding-top", "165px");
         } else {
             $("#wrapper__search").hide();
             searchtoggle = false;
@@ -205,25 +226,34 @@ $(document).ready(function() {
         $(".fa__nav2").show();
         $("#view__settings").hide();
     });
-    $("#qq").keyup(function() {
-        $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
-            var results = [];
-            data["results"].forEach(function(el) {
-                results.push(el["collectionName"]);
+    $("#qq").keydown(function() {
+        function qq() {
+            $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
+                var results = [];
+                data["results"].forEach(function(el) {
+                    results.push(el["collectionName"]);
+                });
+                $("#qq").autocomplete({
+                    source: results,
+                    select: function() {
+                        setTimeout(function() {
+                            data["results"].forEach(function(el) {
+                                if (el["collectionName"] == $("#qq").val()) {
+                                    location.href = "app.html?cast="+el["feedUrl"];
+                                }
+                            });
+                        }, 50);
+                    }
+                });
             });
-            $("#qq").autocomplete({
-                source: results,
-                select: function() {
-                    setTimeout(function() {
-                        data["results"].forEach(function(el) {
-                            if (el["collectionName"] == $("#qq").val()) {
-                                location.href = "app.html?cast="+el["feedUrl"];
-                            }
-                        });
-                    }, 50);
-                }
-            });
-        });
+        }
+        $("#qq").keydown(qq());
+    });
+    $("#qq").keypress(function (e) {
+        if (e.which === 13) {
+          location.href = "app.html?search="+$("#qq").val();
+          return false;
+        }
     });
     $("#logo__intro").hide();
     $("#view__main").show();
@@ -255,5 +285,5 @@ function onDeviceReady() {
                 }, 1000);
             }
         });
-    }, 500);
+    }, 1200);
 }

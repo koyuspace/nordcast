@@ -126,8 +126,36 @@ def getname(username, uuid):
     )
     userdict = mastodon.account_verify_credentials()
     if suid == uuid:
-        ksname = userdict.username
+        ksname = userdict.display_name
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname})
+
+@get("/api/v1/getpic/<username>/<uuid>")
+def getpic(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    userdict = mastodon.account_verify_credentials()
+    if suid == uuid:
+        kspic = userdict.avatar
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
+
+@get("/api/v1/getemoji/<username>/<uuid>")
+def getemoji(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    userdict = mastodon.account_verify_credentials()
+    if suid == uuid:
+        ksemoji = mastodon.custom_emojis()
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksemoji": ksemoji})
 
 @get("/api/v1/search/<lang>/<query>")
 def search(lang,query):
@@ -137,6 +165,12 @@ def search(lang,query):
     url = "https://itunes.apple.com/"+lang+"/search?term="+query+"&media=podcast"
     data = requests.get(url)
     return data
+
+@get("/api/v1/search/<lang>/")
+def searche(lang):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    return ""
 
 @get("/api/v1/getoriginals")
 def getoriginals():
