@@ -154,7 +154,7 @@ $(document).ready(function() {
                     }, 200);
                 });
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-                    if (data["podlist"] === "") {
+                    if (data["podlist"] === "None") {
                         $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                     } else {
                         $("#section__list").html($("#section__list").html()+"<p>");
