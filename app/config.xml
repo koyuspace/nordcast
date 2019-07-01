@@ -94,5 +94,5 @@
     <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="StatusBarBackgroundColor" value="#ffffff" />
-    <plugin name="cordova-plugin-music-controls" spec="~2.2.0" />
+    <!-- <plugin name="cordova-plugin-music-controls" spec="~2.2.0" /> -->
 </widget>
