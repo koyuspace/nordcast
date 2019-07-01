@@ -3,15 +3,15 @@ function playcast(file, secret, title, author, podcover) {
     localStorage.setItem("secret", secret);
     var player = document.getElementById("player");
     if (!playing) {
-        $(".playbutton").attr("name", "play");
-        $("#cast-"+secret).attr("name", "pause");
+        $(".playbutton").attr("class", "playbutton ion-md-play");
+        $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
         if ($("#player").attr("src") !== file) {
             $("#player").attr("src", file);
         }
         playing = true;
     } else {
-        $(".playbutton").attr("name", "play");
-        $("#cast-"+secret).attr("name", "play");
+        $(".playbutton").attr("class", "playbutton ion-md-play");
+        $("#cast-"+secret).attr("class", "playbutton ion-md-play");
         if ($("#player").attr("src") !== file) {
             $("#player").attr("src", "");
             player.pause();
@@ -23,8 +23,8 @@ function playcast(file, secret, title, author, podcover) {
         }
     }
     if (playing) {
-        $(".playbutton").attr("name", "play");
-        $("#cast-"+secret).attr("name", "pause");
+        $(".playbutton").attr("class", "playbutton ion-md-play");
+        $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
         $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret, function(data) {
             if (debug) {
                 console.log(data);
@@ -52,7 +52,7 @@ function playcast(file, secret, title, author, podcover) {
             skipBackwardInterval : 10
         }, onSuccess, onError);*/
     } else {
-        $(".playbutton").attr("name", "play");
+        $(".playbutton").attr("class", "playbutton ion-md-play");
         //MusicControls.destroy();
     }
 }
