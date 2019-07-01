@@ -237,9 +237,14 @@ h1 .emoji {
 }
 
 #rev,
-#ffw {
+#ffw,
+#restart {
     font-size: 24px;
     margin-right: 20px;
     height: 24px;
     width: 24px;
+}
+
+#timer {
+    margin-right: 60px;
 }

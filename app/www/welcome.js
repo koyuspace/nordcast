@@ -9,7 +9,21 @@ $(document).ready(function() {
         $("#nav").show();
     }, 2000);
     if (localStorage.getItem("uuid") !== null) {
-        location.href = "app.html";
+        $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+            if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
+                localStorage.clear();
+                window.setTimeout(function() {
+                    location.href = "index.html";
+                }, 200);
+            } else {
+                location.href = "app.html";
+            }
+        }).error(function() {
+            localStorage.clear();
+            window.setTimeout(function() {
+                location.href = "index.html";
+            }, 200);
+        });
     }
     $("#kslogin").click(function() {
         $("#welcome__error").hide();

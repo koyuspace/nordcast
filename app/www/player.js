@@ -45,12 +45,40 @@ function playcast(file, secret) {
     }
 }
 
+//Thanks to https://stackoverflow.com/a/6313008
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10);
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    return hours+':'+minutes+':'+seconds;
+}
+
+window.setInterval(function() {
+    var player = document.getElementById("player");
+    $("#timer").html(String(player.currentTime).toHHMMSS());
+}, 1);
+
+window.setInterval(function() {
+    var player = document.getElementById("player");
+    $("#timeleft").html("-"+String(player.duration - player.currentTime).toHHMMSS());
+}, 1);
+
 function ffw() {
     var player = document.getElementById("player");
     player.currentTime = player.currentTime + 10;
 }
 
-function rev() {
+function restart() {
+    var player = document.getElementById("player");
+    player.currentTime = 0;
+}
+
+function rev() {c
     var player = document.getElementById("player");
     player.currentTime = player.currentTime - 10;
 }

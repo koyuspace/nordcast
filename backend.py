@@ -108,14 +108,6 @@ def setpos(username, uuid, secret, pos):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
-        )
-        mastodon.account_verify_credentials().source.note
-    except:
-        pass
     if suid == uuid:
         r.set("nordcast/pos/" + username + "/" + secret, pos)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
