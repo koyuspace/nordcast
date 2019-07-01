@@ -20,19 +20,20 @@ $(document).ready(function() {
             if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
                 localStorage.clear();
                 window.setTimeout(function() {
-                    location.href = "index.html";
+                    window.location.replace("index.html");
                 }, 200);
             }
         }).error(function() {
             localStorage.clear();
             window.setTimeout(function() {
-                location.href = "index.html";
+                window.location.replace("index.html");
             }, 200);
         });
     }, 10000);
     var searchtoggle = false;
     $("#wrapper__search").hide();
     $("#profile__picture").hide();
+    $("#player").hide();
     if (findGetParameter("cast")) {
         $("#logo__intro").hide();
         $("#view__settings").hide();
@@ -54,6 +55,9 @@ $(document).ready(function() {
             });
             window.setTimeout(function() {
                 $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                    if (debug) {
+                        console.log(callback);
+                    }
                     $("#img__cast").attr("src", callback.feed.image.href);
                     $("#img__cast").primaryColor({
                         callback: function(color) {
@@ -65,7 +69,7 @@ $(document).ready(function() {
                     $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
                     $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                     callback.entries.forEach(function(item) {
-                        $("#podtable tbody").append("<tr><td><ion-icon name=\"play-circle\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
+                        $("#podtable tbody").append("<tr><td><ion-icon onclick=\"playcast('"+item.links[1].href+"', '"+item.id.substring(0,8)+"')\" id=\"cast-"+item.id.substring(0,8)+"\" class=\"playbutton\"name=\"play\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
                     });
                     $("#button__follow").click(function() {
                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
@@ -146,7 +150,7 @@ $(document).ready(function() {
                 $("#logout").click(function() {
                     localStorage.clear()
                     window.setTimeout(function() {
-                        location.href = "index.html";
+                        window.location.replace("index.html");
                     }, 200);
                 });
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
@@ -263,6 +267,17 @@ $(document).ready(function() {
           return false;
         }
     });
+    var jumper = document.getElementsByName("a");
+    jumper.onclick = function(event) {
+        var e = event || window.event ;
+        if(e.preventDefault) {
+            e.preventDefault();
+        } else {
+            e.returnValue = true ;
+        }
+        location.replace(this.href);
+        jumper = null;
+    }
     $("#logo__intro").hide();
     $("#view__main").show();
     $("#nav").show();

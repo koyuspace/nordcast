@@ -17,6 +17,33 @@
         <script src="app.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script>
+            var playing = false;
+            function playcast(file, secret) {
+                var player = document.getElementById("player");
+                if (!playing) {
+                    $(".playbutton").attr("name", "play");
+                    $("#cast-"+secret).attr("name", "pause");
+                    if ($("#player").attr("src") !== file) {
+                        $("#player").attr("src", file);
+                    }
+                    player.play(); 
+                    playing = true;
+                } else {
+                    $(".playbutton").attr("name", "play");
+                    $("#cast-"+secret).attr("name", "play");
+                    if ($("#player").attr("src") !== file) {
+                        $("#player").attr("src", "");
+                        player.pause();
+                        playing = false;
+                        playcast(file);
+                    } else {
+                        player.pause();
+                        playing = false;
+                    }
+                }
+            }
+        </script>
     </head>
     <body>
         <img src="logo.png" height="128" alt="Logo" id="logo__intro" />
@@ -29,6 +56,7 @@
                 <input type="text" id="qq" placeholder="Search term" />
             </div>
         </div><br />
+        <audio id="player" src=""></audio>
         <div id="view__main">
             
         </div>
