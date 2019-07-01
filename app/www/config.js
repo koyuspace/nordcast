@@ -1,2 +1,2 @@
 var backend = "https://api.nordcast.app";
-var debug = true;
+var debug = false;
