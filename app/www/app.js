@@ -300,15 +300,15 @@ function onDeviceReady() {
                 $("#text__list").html("Deine Liste");
                 $("#text__hello").html("Hallo");
                 $("#text__by").html("von");
-                $("#text__results").html("Suchergebnisse für");
                 $("#logout").html("Abmelden");
                 $("#view__settings h1").html("Einstellungen");
                 $("#qq").attr("placeholder", "Suchbegriff");
                 $("#button__follow").html("Folgen");
                 $("#button__unfollow").html("Entfolgen");
                 window.setTimeout(function() {
+                    $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
-                }, 1000);
+                }, 600);
             }
         });
     }, 1200);
