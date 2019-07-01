@@ -1,2 +1,3 @@
 clientcred.secret
 authtokens/*.secret
+app/app.zip
