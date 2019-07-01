@@ -1,5 +1,5 @@
 var playing = false;
-function playcast(file, secret) {
+function playcast(file, secret, title, author, podcover) {
     localStorage.setItem("secret", secret);
     var player = document.getElementById("player");
     if (!playing) {
@@ -40,8 +40,20 @@ function playcast(file, secret) {
         window.setInterval(function() {
             $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime, function(data) { });
         }, 1000);
+        /*MusicControls.create({
+            track       : title,
+            artist      : author,
+            cover       : podcover,
+            hasPrev   : false,
+            hasNext   : false,
+            duration : player.duration,
+            elapsed : player.currentTime,
+            skipForwardInterval : 10,
+            skipBackwardInterval : 10
+        }, onSuccess, onError);*/
     } else {
         $(".playbutton").attr("name", "play");
+        //MusicControls.destroy();
     }
 }
 
@@ -66,6 +78,12 @@ window.setInterval(function() {
 window.setInterval(function() {
     var player = document.getElementById("player");
     $("#timeleft").html("-"+String(player.duration - player.currentTime).toHHMMSS());
+    /*if (playing) {
+        MusicControls.updateElapsed({
+            elapsed: player.currentTime,
+            isPlaying: true
+        });
+    }*/
 }, 1);
 
 function ffw() {

@@ -69,7 +69,7 @@ $(document).ready(function() {
                     callback.entries.forEach(function(item) {
                         var secret = "";
                         secret = item.id.replaceAll("/", "-").replace(".", "-");
-                        $("#podtable tbody").append("<tr><td><ion-icon onclick=\"playcast('"+item.links[1].href+"', '"+secret+"')\" id=\"cast-"+secret+"\" class=\"playbutton\"name=\"play\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
+                        $("#podtable tbody").append("<tr><td><ion-icon onclick=\"playcast('"+item.links[1].href+"', '"+secret+"', '"+item.title+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"')\" id=\"cast-"+secret+"\" class=\"playbutton\"name=\"play\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
                     });
                     $("#button__follow").click(function() {
                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {

@@ -8,6 +8,11 @@ $(document).ready(function() {
         $("#view__welcome").show();
         $("#nav").show();
     }, 2000);
+    $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+        if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
+            location.href = "app.html";
+        }
+    });
     $("#kslogin").click(function() {
         $("#welcome__error").hide();
         $("#kslogin").attr("disabled", "");
