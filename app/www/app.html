@@ -42,6 +42,12 @@
                         playing = false;
                     }
                 }
+                if (playing) {
+                    $(".playbutton").attr("name", "play");
+                    $("#cast-"+secret).attr("name", "pause");
+                } else {
+                    $(".playbutton").attr("name", "play");
+                }
             }
         </script>
     </head>

@@ -69,7 +69,9 @@ $(document).ready(function() {
                     $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
                     $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                     callback.entries.forEach(function(item) {
-                        $("#podtable tbody").append("<tr><td><ion-icon onclick=\"playcast('"+item.links[1].href+"', '"+item.id.substring(0,8)+"')\" id=\"cast-"+item.id.substring(0,8)+"\" class=\"playbutton\"name=\"play\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
+                        var secret = "";
+                        secret = item.id.replaceAll("/", "-").replace(".", "-");
+                        $("#podtable tbody").append("<tr><td><ion-icon onclick=\"playcast('"+item.links[1].href+"', '"+secret+"')\" id=\"cast-"+secret+"\" class=\"playbutton\"name=\"play\"></ion-icon></td><td>"+twemoji.parse(item.title)+"</td></tr>");
                     });
                     $("#button__follow").click(function() {
                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
