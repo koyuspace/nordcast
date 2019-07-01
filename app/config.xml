@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.phonegap.helloworld" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>helloworld</name>
+<widget id="com.Sommerlichter.nordcast" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>nordcast</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        A new podcast app
     </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+    <author email="support@koyu.space" href="https://nordcast.app">
+        Nordcast
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
@@ -18,24 +18,13 @@
     <plugin name="cordova-plugin-inappbrowser" source="npm" spec="~1.7.1" />
     <plugin name="cordova-plugin-network-information" source="npm" spec="~1.3.3" />
     <platform name="android">
-        <icon density="ldpi" src="www/res/icon/android/drawable-ldpi-icon.png" />
-        <icon density="mdpi" src="www/res/icon/android/drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="www/res/icon/android/drawable-hdpi-icon.png" />
-        <icon density="xhdpi" src="www/res/icon/android/drawable-xhdpi-icon.png" />
-        <icon density="xxhdpi" src="www/res/icon/android/drawable-xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="www/res/icon/android/drawable-xxxhdpi-icon.png" />
-        <splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi-screen.png" />
-        <splash density="land-mdpi" src="www/res/screen/android/drawable-land-mdpi-screen.png" />
-        <splash density="land-hdpi" src="www/res/screen/android/drawable-land-hdpi-screen.png" />
-        <splash density="land-xhdpi" src="www/res/screen/android/drawable-land-xhdpi-screen.png" />
-        <splash density="land-xxhdpi" src="www/res/screen/android/drawable-land-xxhdpi-screen.png" />
-        <splash density="land-xxxhdpi" src="www/res/screen/android/drawable-land-xxxhdpi-screen.png" />
-        <splash density="port-ldpi" src="www/res/screen/android/drawable-port-ldpi-screen.png" />
-        <splash density="port-mdpi" src="www/res/screen/android/drawable-port-mdpi-screen.png" />
-        <splash density="port-hdpi" src="www/res/screen/android/drawable-port-hdpi-screen.png" />
-        <splash density="port-xhdpi" src="www/res/screen/android/drawable-port-xhdpi-screen.png" />
-        <splash density="port-xxhdpi" src="www/res/screen/android/drawable-port-xxhdpi-screen.png" />
-        <splash density="port-xxxhdpi" src="www/res/screen/android/drawable-port-xxxhdpi-screen.png" />
+        <preference name="orientation" value="portrait" />
+        <icon density="ldpi" src="www/icon.png" />
+        <icon density="mdpi" src="www/icon.png" />
+        <icon density="hdpi" src="www/icon.png" />
+        <icon density="xhdpi" src="www/icon.png" />
+        <icon density="xxhdpi" src="www/icon.png" />
+        <icon density="xxxhdpi" src="www/icon.png" />
     </platform>
     <platform name="ios">
         <icon height="57" platform="ios" src="www/res/icon/ios/icon.png" width="57" />
