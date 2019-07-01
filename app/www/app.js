@@ -20,13 +20,13 @@ $(document).ready(function() {
             if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
                 localStorage.clear();
                 window.setTimeout(function() {
-                    window.location.replace("index.html");
+                    location.href = "index.html";
                 }, 200);
             }
         }).error(function() {
             localStorage.clear();
             window.setTimeout(function() {
-                window.location.replace("index.html");
+                location.href = "index.html";
             }, 200);
         });
     }, 10000);
@@ -152,7 +152,7 @@ $(document).ready(function() {
                 $("#logout").click(function() {
                     localStorage.clear()
                     window.setTimeout(function() {
-                        window.location.replace("index.html");
+                        location.href = "index.html";
                     }, 200);
                 });
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {

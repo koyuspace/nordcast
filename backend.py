@@ -72,14 +72,6 @@ def setlist(username, uuid):
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
     podlist = request.forms.get("podlist") # pylint: disable=no-member
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
-        )
-        mastodon.account_verify_credentials().source.note
-    except:
-        pass
     if suid == uuid:
         r.set("nordcast/podlist/" + username, podlist)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
@@ -92,14 +84,6 @@ def getlist(username, uuid):
     response.content_type = "application/json"
     podlist = str(r.get("nordcast/podlist/" + username)).replace("b'", "").replace("'", "")
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
-        )
-        mastodon.account_verify_credentials().source.note
-    except:
-        pass
     if suid == uuid:
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
     else:
@@ -109,14 +93,6 @@ def getlist(username, uuid):
 def getview(username, uuid, view):
     response.headers['Access-Control-Allow-Origin'] = '*'
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
-        )
-        mastodon.account_verify_credentials().source.note
-    except:
-        pass
     if suid == uuid:
         response.content_type = "text/html"
         f = open("views/"+view+"view.html", "r")
@@ -127,42 +103,8 @@ def getview(username, uuid, view):
         response.content_type = "application/json"
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getname/<username>/<uuid>")
-def getname(username, uuid):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
-        )
-        userdict = mastodon.account_verify_credentials()
-    except:
-        pass
-    if suid == uuid:
-        ksname = userdict.display_name
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname})
-
-@get("/api/v1/getpic/<username>/<uuid>")
-def getpic(username, uuid):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
-        )
-        userdict = mastodon.account_verify_credentials()
-    except:
-        pass
-    if suid == uuid:
-        kspic = userdict.avatar
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
-
-@get("/api/v1/getemoji/<username>/<uuid>")
-def getemoji(username, uuid):
+@get("/api/v1/setpos/<username>/<uuid>/<secret>/<pos>")
+def setpos(username, uuid, secret, pos):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
@@ -174,6 +116,57 @@ def getemoji(username, uuid):
         mastodon.account_verify_credentials().source.note
     except:
         pass
+    if suid == uuid:
+        r.set("nordcast/pos/" + username + "/" + secret, pos)
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+
+@get("/api/v1/getpos/<username>/<uuid>/<secret>")
+def getpos(username, uuid, secret):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    if suid == uuid:
+        pos = str(r.get("nordcast/pos/" + username + "/" + secret)).replace("b'", "").replace("'", "")
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "pos": pos, "secret": secret})
+
+@get("/api/v1/getname/<username>/<uuid>")
+def getname(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    userdict = mastodon.account_verify_credentials()
+    if suid == uuid:
+        ksname = userdict.display_name
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname})
+
+@get("/api/v1/getpic/<username>/<uuid>")
+def getpic(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    userdict = mastodon.account_verify_credentials()
+    if suid == uuid:
+        kspic = userdict.avatar
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
+
+@get("/api/v1/getemoji/<username>/<uuid>")
+def getemoji(username, uuid):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    mastodon = Mastodon(
+        access_token = 'authtokens/'+username+'.secret',
+        api_base_url = 'https://koyu.space'
+    )
+    mastodon.account_verify_credentials().source.note
     if suid == uuid:
         ksemoji = mastodon.custom_emojis()
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksemoji": ksemoji})
