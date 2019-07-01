@@ -291,9 +291,9 @@ function onDeviceReady() {
     }
     window.setTimeout(function() {
         navigator.globalization.getPreferredLanguage(function (language) {
-            localStorage.setItem("lang", language.value.split("-")[0]);
             //German
             if (language.value.includes("de")) {
+                localStorage.setItem("lang", "de");
                 $("#text__featured").html("Angesagt");
                 $("#text__list").html("Deine Liste");
                 $("#text__hello").html("Hallo");
@@ -307,6 +307,8 @@ function onDeviceReady() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
                 }, 600);
+            } else {
+                localStorage.setItem("lang", "ca");
             }
         });
     }, 1200);
