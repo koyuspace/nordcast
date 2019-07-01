@@ -9,7 +9,8 @@
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
-    <preference name="android-minSdkVersion" value="14" />
+    <preference name="android-targetSdkVersion" value="14" />
+    <preference name="android-minSdkVersion" value="26" />
     <platform name="android">
         <preference name="orientation" value="portrait" />
         <icon density="ldpi" src="www/icon.png" />
