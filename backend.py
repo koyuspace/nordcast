@@ -1,4 +1,4 @@
-from bottle import get, post, request, response, route, run
+from bottle import get, post, request, response, route, run, redirect
 from mastodon import Mastodon
 import feedparser
 import json
@@ -9,6 +9,10 @@ import requests
 
 admin = "koyu"
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+@get("/")
+def index():
+    return redirect("https://nordcast.app", code=302)
 
 @get("/api/v1/getpodcast")
 def getpodcast():
