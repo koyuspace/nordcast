@@ -15,6 +15,19 @@ $(document).ready(function() {
         var target = this;
         return target.replace(new RegExp(search, 'g'), replacement);
     };
+    $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+        if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
+            localStorage.clear();
+            window.setTimeout(function() {
+                location.href = "index.html";
+            }, 200);
+        }
+    }).error(function() {
+        localStorage.clear();
+        window.setTimeout(function() {
+            location.href = "index.html";
+        }, 200);
+    });
     var searchtoggle = false;
     $("#wrapper__search").hide();
     $("#profile__picture").hide();
