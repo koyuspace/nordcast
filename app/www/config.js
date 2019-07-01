@@ -1,2 +1,2 @@
-var backend = "http://192.168.178.22:9000";
+var backend = "https://api.nordcast.app";
 var debug = true;
