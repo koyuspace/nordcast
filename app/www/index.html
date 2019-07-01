@@ -11,7 +11,7 @@
         <script src="jquery-ui.js"></script>
         <script src="primarycolor.js"></script>
         <script src="getfeed.js"></script>
-        <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+        <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
         <link rel="stylesheet" href="bootstrap.min.css">
         <script src="bootstrap.min.js"></script>
         <script src="config.js"></script>
@@ -25,6 +25,7 @@
             <p id="text__welcome">Please log in with your koyu.space account. If you don't have an account, you can sign up <a href="#" onclick="window.open('https://koyu.space/auth/sign_up', '_system'); return false;">here</a>.</p>
             <p><input type="email" id="username" placeholder="E-mail"></p>
             <p><input type="password" id="password" placeholder="Password"></p>
+            <p><a href="#" onclick="window.open('https://koyu.space/terms', '_system'); return false;"><i class="ion-md-lock"></i> <span id="text__safe">Your data is safe.</span></a></p>
             <p><button class="btn btn-primary" id="kslogin" style="width: 80%;">Login</button></p>
             <div id="welcome__error"><p><b style="color:red;">Your username and/or password is wrong.</b></p></div>
         </div>
