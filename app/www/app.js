@@ -68,7 +68,7 @@ $(document).ready(function() {
                     $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                     callback.entries.forEach(function(item) {
                         var secret = "";
-                        secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-");
+                        secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-");
                         var podurl = "";
                         item.links.forEach(function(el) {
                             if (el.type.includes("audio")) {
