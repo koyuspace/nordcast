@@ -33,6 +33,30 @@ $(document).ready(function() {
     loadview();
     function loadview() {
         window.setTimeout(function() {
+            window.setTimeout(function() {
+                navigator.globalization.getPreferredLanguage(function (language) {
+                    //German
+                    if (language.value.includes("de")) {
+                        localStorage.setItem("lang", "de");
+                        $("#text__featured").html("Angesagt");
+                        $("#text__list").html("Deine Liste");
+                        $("#text__hello").html("Hallo");
+                        $("#text__by").html("von");
+                        $("#logout").html("Abmelden");
+                        $("#view__settings h1").html("Einstellungen");
+                        $("#qq").attr("placeholder", "Suchbegriff");
+                        $("#button__follow").html("Folgen");
+                        $("#button__unfollow").html("Entfolgen");
+                        window.setTimeout(function() {
+                            $("#text__results").html("Suchergebnisse für");
+                            $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
+                            $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
+                        }, 600);
+                    } else {
+                        localStorage.setItem("lang", "ca");
+                    }
+                });
+            }, 1200);
             if (findGetParameter("cast")) {
                 $("#logo__intro").hide();
                 $("#view__settings").hide();
@@ -292,35 +316,3 @@ $(document).ready(function() {
     $("#view__main").show();
     $("#nav").show();
 });
-
-document.addEventListener("deviceready", onDeviceReady, false);
-//Cordova-specific code
-function onDeviceReady() {
-    if (cordova.platformId == 'android') {
-        StatusBar.backgroundColorByHexString("#fff");
-    }
-    window.setTimeout(function() {
-        navigator.globalization.getPreferredLanguage(function (language) {
-            //German
-            if (language.value.includes("de")) {
-                localStorage.setItem("lang", "de");
-                $("#text__featured").html("Angesagt");
-                $("#text__list").html("Deine Liste");
-                $("#text__hello").html("Hallo");
-                $("#text__by").html("von");
-                $("#logout").html("Abmelden");
-                $("#view__settings h1").html("Einstellungen");
-                $("#qq").attr("placeholder", "Suchbegriff");
-                $("#button__follow").html("Folgen");
-                $("#button__unfollow").html("Entfolgen");
-                window.setTimeout(function() {
-                    $("#text__results").html("Suchergebnisse für");
-                    $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
-                    $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
-                }, 600);
-            } else {
-                localStorage.setItem("lang", "ca");
-            }
-        });
-    }, 3700);
-}
