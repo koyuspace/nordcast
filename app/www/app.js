@@ -155,9 +155,6 @@ $(document).ready(function() {
                 });
             } else if(findGetParameter("search")) {
                 $("#view__main").css("padding-top", "60px");
-                $("#view__main").hide();
-                $("#view__settings").hide();
-                $("#nav").hide();
                 $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/search", function(data) {
                     $("#view__main").html(data);
                     $("#text__query").html(findGetParameter("search"));
