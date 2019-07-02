@@ -68,8 +68,14 @@ $(document).ready(function() {
                     $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                     callback.entries.forEach(function(item) {
                         var secret = "";
-                        secret = item.id.replaceAll("/", "-").replace(".", "-");
-                        $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+item.links[1].href+"', '"+secret+"', '"+item.title+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td></tr>");
+                        secret = item.id.replaceAll("/", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-");
+                        var podurl = "";
+                        item.links.forEach(function(el) {
+                            if (el.type.includes("audio")) {
+                              podurl = el.href;
+                            }
+                        });
+                        $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+item.title+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td></tr>");
                     });
                     $("#button__follow").click(function() {
                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
@@ -118,6 +124,8 @@ $(document).ready(function() {
                             });
                         });
                     });
+                }).error(function() {
+                        $("#view__main").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
                 });
             }, 500);
             $("#view__main").css("padding-top", "60px");
@@ -306,6 +314,7 @@ function onDeviceReady() {
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
+                    $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
                 }, 600);
             } else {
                 localStorage.setItem("lang", "ca");

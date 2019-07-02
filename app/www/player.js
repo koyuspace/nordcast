@@ -96,7 +96,7 @@ function restart() {
     player.currentTime = 0;
 }
 
-function rev() {c
+function rev() {
     var player = document.getElementById("player");
     player.currentTime = player.currentTime - 10;
 }
