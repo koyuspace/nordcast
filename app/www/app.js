@@ -156,7 +156,7 @@ $(document).ready(function() {
                                 $("#section__list").html($("#section__list").html()+"<p>");
                                 data["podlist"].split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                        $("#section__list").html($("#section__list").html()+"<a onclick=\"location.reload()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                        $("#section__list").html($("#section__list").html()+"<a onclick=\"rl()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
                                     });
                                 });
                                 $("#section__list").html($("#section__list").html()+"</p>");
@@ -167,7 +167,7 @@ $(document).ready(function() {
                                 $("#section__originals").html($("#section__originals").html()+"<p>");
                                 data["podlist"].split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                        $("#section__originals").html($("#section__originals").html()+"<a onclick=\"location.reload()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__smaller\" /></a>");
+                                        $("#section__originals").html($("#section__originals").html()+"<a onclick=\"rl()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__smaller\" /></a>");
                                     });
                                 });
                                 $("#section__originals").html($("#section__originals").html()+"</p>");
@@ -176,7 +176,7 @@ $(document).ready(function() {
     
                         $.get(backend+"/api/v1/getfeatured", function(data) {
                             data.forEach(function(item) {
-                                $("#section__featured").html($("#section__featured").html()+"<div><a onclick=\"location.reload()\" href=\"app.html#cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
+                                $("#section__featured").html($("#section__featured").html()+"<div><a onclick=\"rl()\" href=\"app.html#cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
                                 $(".card__big").primaryColor({
                                     callback: function(color) {
                                         $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
