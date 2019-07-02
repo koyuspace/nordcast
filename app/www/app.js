@@ -68,14 +68,14 @@ $(document).ready(function() {
                     $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                     callback.entries.forEach(function(item) {
                         var secret = "";
-                        secret = item.id.replaceAll("/", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-");
+                        secret = item.id.replaceAll("/", "-").replaceAll(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-");
                         var podurl = "";
                         item.links.forEach(function(el) {
                             if (el.type.includes("audio")) {
                               podurl = el.href;
                             }
                         });
-                        $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+item.title+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td></tr>");
+                        $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+item.title.replaceAll("'", "")+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td></tr>");
                     });
                     $("#button__follow").click(function() {
                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
