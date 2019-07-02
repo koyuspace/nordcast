@@ -91,7 +91,7 @@ $(document).ready(function() {
                             $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
                             callback.entries.forEach(function(item) {
                                 var secret = "";
-                                secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-");
+                                secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "");
                                 var podurl = "";
                                 item.links.forEach(function(el) {
                                     if (el.type.includes("audio")) {
@@ -160,7 +160,7 @@ $(document).ready(function() {
                     $("#text__query").html(findGetParameter("search"));
                     $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+findGetParameter("search"), function(data) {
                         data["results"].forEach(function(item) {
-                            $("#searchtable tbody").append("<tr><td><a href=\"app.html#cast="+item.feedUrl+"\"><img src=\""+item.artworkUrl100+"\" class=\"card__small\"></a></td><td><a href=\"app.html#cast="+item.feedUrl+"\" style=\"color:#333;\">"+twemoji.parse(item.collectionName)+"</a></td></tr>");
+                            $("#searchtable tbody").append("<tr><td><a onclick=\"rl()\" href=\"app.html#cast="+item.feedUrl+"\"><img src=\""+item.artworkUrl100+"\" class=\"card__small\"></a></td><td><a onclick=\"rl()\" href=\"app.html#cast="+item.feedUrl+"\" style=\"color:#333;\">"+twemoji.parse(item.collectionName)+"</a></td></tr>");
                         });
                     });
                 });
