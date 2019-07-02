@@ -24,7 +24,7 @@
         <img src="logo.png" height="128" alt="Logo" id="logo__intro" />
         <div id="nav">
             <a href="#" onclick="window.open('https://koyu.space/settings/profile', '_system'); return false;"><img height="96" alt="Profile picture" class="card__small1" id="profile__picture" /></a>
-            <a href="app.html?nosplash=ok"><img src="logo.png" height="96" alt="Logo" id="logo__nav" /></a>
+            <img src="logo.png" height="96" alt="Logo" id="logo__nav" />
             <i class="ion-md-settings fa__nav"></i>
             <i class="fa__nav2 ion-md-search fa__nav2"></i>
             <div id="wrapper__search">
@@ -34,6 +34,10 @@
         <audio id="player" src=""></audio>
         <div id="view__main">
             
+        </div>
+        <div id="player__controls">
+            <br><a id="link__cast"><img id="img__cast2" class="card__smaller" style="float: left;"></a><div style="text-align: center;"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>
+            <br><div style="text-align: center;"><i onclick="restart()" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i></div>
         </div>
         <div id="view__settings">
             <h1>Settings</h1><br />

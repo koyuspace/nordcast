@@ -1,10 +1,14 @@
 var playing = false;
-function playcast(file, secret, title, author, podcover) {
+function playcast(file, secret, title, author, podcover, feed) {
     localStorage.setItem("secret", secret);
+    $("#bplay").attr("onclick", "playcast('"+file+"', '"+secret+"', '"+title+"', '"+author+"', '"+podcover+"', '"+feed+"')");
+    $("#link__cast").attr("href", "#cast="+feed);
+    $("#player__controls").show();
     var player = document.getElementById("player");
     if (!playing) {
         $(".playbutton").attr("class", "playbutton ion-md-play");
         $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
+        $("#bplay").attr("class", "playbutton ion-md-pause");
         if ($("#player").attr("src") !== file) {
             $("#player").attr("src", file);
         }
@@ -12,6 +16,7 @@ function playcast(file, secret, title, author, podcover) {
     } else {
         $(".playbutton").attr("class", "playbutton ion-md-play");
         $("#cast-"+secret).attr("class", "playbutton ion-md-play");
+        $("#bplay").attr("class", "playbutton ion-md-play");
         if ($("#player").attr("src") !== file) {
             $("#player").attr("src", "");
             player.pause();
@@ -25,6 +30,7 @@ function playcast(file, secret, title, author, podcover) {
     if (playing) {
         $(".playbutton").attr("class", "playbutton ion-md-play");
         $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
+        $("#bplay").attr("class", "playbutton ion-md-pause");
         $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret, function(data) {
             if (debug) {
                 console.log(data);
