@@ -251,6 +251,8 @@ h1 .emoji {
 #rev,
 #ffw,
 #restart,
+#snbutton,
+#snclose,
 .playbutton {
     font-size: 24px;
     margin-right: 20px;
@@ -265,4 +267,10 @@ h1 .emoji {
 #img__cast2 {
     margin-bottom: 25px;
     margin-left: 25px;
+}
+
+#snclose {
+    float: right;
+    margin-top: 65px;
+    margin-bottom: 10px;
 }
