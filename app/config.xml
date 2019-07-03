@@ -95,5 +95,5 @@
     <plugin name="cordova-plugin-statusbar" spec="~2.4.2" />
     <plugin name="cordova-plugin-globalization" spec="~1.0.9" />
     <plugin name="cordova-plugin-navigationbar-color" spec="0.0.9" />
-    <plugin name="cordova-plugin-music-controls" spec="2.2.0" />
+    <plugin name="cordova-plugin-music-controls" spec="https://github.com/amitkhare/cordova-music-controls-plugin" />
 </widget>
