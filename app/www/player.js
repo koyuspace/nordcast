@@ -1,6 +1,7 @@
 var playing = false;
 function playcast(file, secret, title, author, podcover, feed) {
     localStorage.setItem("secret", secret);
+    $("#view__main").attr("style", "margin-bottom: 135px !important; padding-top: 60px;");
     $("#bplay").attr("onclick", "playcast('"+file+"', '"+secret+"', '"+title+"', '"+author+"', '"+podcover+"', '"+feed+"')");
     $("#link__cast").attr("href", "#cast="+feed);
     $("#player__controls").show();

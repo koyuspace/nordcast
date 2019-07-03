@@ -1,7 +1,7 @@
 @import url("fonts.css");
 
 * {
-    box-sizing: border-box;
+    box-sizing: unset !important;
 }
 
 body {
@@ -14,7 +14,6 @@ body {
 
 #view__main {
     padding-left: 20px;
-    margin-bottom: 135px !important;
 }
 
 #logo__intro {
@@ -273,4 +272,12 @@ h1 .emoji {
     float: right;
     margin-top: 65px;
     margin-bottom: 10px;
+}
+
+#shownotes img {
+    margin-left: -30px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-top: -30px;
+    padding: 30px;
 }

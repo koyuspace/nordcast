@@ -1,10 +1,14 @@
-function shownotes(rss, shownotes) {
+var oldhtml = "";
+
+function shownotes(shownotes) {
     oldhtml = $("#view__main").html();
-    $("#view__main").html("");
-    $("#view__main").append(shownotes);
+    $("#view__main").html("<div id=\"shownotes\">"+Base64.decode(shownotes)+"</div>");
     $("#view__main").css("padding", "20px");
     $("#view__main").css("padding-top", "100px");
-    $("a").attr("onclick", "window.open('"+$("a").attr("href")+"', '_system')");
-    $("a").attr("href", "");
     $("#snclose").show();
+    scrollTo(0,0);
+}
+
+function restoreview() {
+    $("#view__main").html(oldhtml);
 }
