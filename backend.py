@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 from bottle import get, post, request, response, route, run, redirect
 from mastodon import Mastodon
 import feedparser
@@ -19,7 +22,7 @@ def getpodcast():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    return json.dumps(feedparser.parse(q))
+    return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
 
 @get("/api/v1/getbanner/<val>")
 def getbanner(val):

@@ -56,7 +56,7 @@ $(document).ready(function() {
                     localStorage.setItem("lang", "ca");
                 }
             });
-        }, 3700);
+        }, 700);
         if (findGetParameter("cast")) {
             $("#logo__intro").hide();
             $("#view__settings").hide();
@@ -88,7 +88,7 @@ $(document).ready(function() {
                         $("#text__cast").html(twemoji.parse(callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0]));
                         $("#text__subtitle").html(callback.feed.subtitle);
                         $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
-                        $("#text__description").html(callback.feed.summary.replaceAll("\n", "<br />"));
+                        $("#text__description").html(callback.feed.summary_detail.value.replaceAll("\n", "<br />"));
                         callback.entries.forEach(function(item) {
                             var secret = "";
                             secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "");
@@ -98,7 +98,13 @@ $(document).ready(function() {
                                 podurl = el.href;
                                 }
                             });
-                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+item.title.replaceAll("'", "")+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"', '"+feed+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(item.summary.replaceAll("\n", "<br>"))+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td></tr>");
+                            var shownotes = "";
+                            item.content.forEach(function(el) {
+                                if (el.type === "text/html") {
+                                    shownotes = el.value;
+                                }
+                            });
+                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+item.title.replaceAll("'", "")+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"', '"+feed+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td></tr>");
                         });
                         $("#button__follow").click(function() {
                             $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
@@ -234,11 +240,13 @@ $(document).ready(function() {
         if (searchtoggle === false) {
             $("#wrapper__search").show();
             searchtoggle = true;
-            $("#view__main").css("padding-top", "165px");
+            $("#view__main").css("margin-top", "90px");
+            $("#shownotes").css("margin-top", "90px");
         } else {
             $("#wrapper__search").hide();
             searchtoggle = false;
-            $("#view__main").css("padding-top", "90px");
+            $("#view__main").css("margin-top", "0px");
+            $("#shownotes").css("margin-top", "0px");
         }
     });
     $(".fa__nav").click(function() {
@@ -289,6 +297,13 @@ $(document).ready(function() {
     $("#link__cast").click(function() {
         window.setTimeout(function() {
             loadview();
+            window.setTimeout(function() {
+                if (playing) {
+                    $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
+                } else {
+                    $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
+                }
+            }, 1700);
         }, 500);
     });
 

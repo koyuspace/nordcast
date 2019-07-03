@@ -13,7 +13,11 @@ body {
 }
 
 #view__main {
-    padding-left: 20px;
+    padding: 90px 20px 0px !important;
+}
+
+#shownotes {
+    padding-top: 40px;
 }
 
 #logo__intro {
@@ -143,8 +147,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 24pt;
     font-family: 'open_sanslight';
     font-weight: 300;
-    padding: 12px 20px;
-    margin: 8px 0;
+    padding: .5rem 1rem;
 }
 
 #wrapper__search input:focus {
@@ -203,10 +206,12 @@ ion-icon {
     padding: 10px;
     padding-top: 30px;
     margin-left: -20px;
+    width: calc(100% + 20px);
 }
 
 #podtable {
     margin-left: -20px;
+    margin-right: -20px;
 }
 
 #text__description {
@@ -229,7 +234,7 @@ th, td {
 }
 
 #podtable tr:nth-child(even) {
-    background-color: #f2f2f2
+    background-color: #f2f2f2;
 }
 
 #text__cast {
@@ -254,9 +259,12 @@ h1 .emoji {
 #snclose,
 .playbutton {
     font-size: 24px;
-    margin-right: 20px;
     height: 24px;
     width: 24px;
+}
+
+#player__controls i {
+    margin-right: 20px !important;
 }
 
 #timer {
@@ -270,8 +278,9 @@ h1 .emoji {
 
 #snclose {
     float: right;
-    margin-top: 65px;
-    margin-bottom: 10px;
+    margin-top: 80px;
+    margin-right: 10px;
+    margin-bottom: 20px;
 }
 
 #shownotes img {
