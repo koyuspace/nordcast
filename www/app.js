@@ -3,7 +3,7 @@ $(document).ready(function() {
     function findGetParameter(parameterName) {
         var result = null;
         if (window.location.href.includes(parameterName)) {
-            result = window.location.href.split("=")[1];
+            result = decodeURIComponent(window.location.href.split("=")[1]);
         } else {
             result = false;
         }
@@ -272,6 +272,9 @@ $(document).ready(function() {
                             data["results"].forEach(function(el) {
                                 if (el["collectionName"] == $("#qq").val()) {
                                     location.href = "app.html#cast="+el["feedUrl"];
+                                    window.setTimeout(function() {
+                                        location.reload();
+                                    }, 50)
                                 }
                             });
                         }, 50);
