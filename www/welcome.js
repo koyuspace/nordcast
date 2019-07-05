@@ -67,19 +67,19 @@ $(document).ready(function() {
 function onDeviceReady() {
     if (cordova.platformId == 'android') {
         StatusBar.backgroundColorByHexString("#fff");
+        navigator.globalization.getPreferredLanguage(function (language) {
+            //German
+            if (language.value.includes("de")) {
+                $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
+                $("#text__safe").html("Deine Daten sind sicher.");
+                $("h1").html("Willkommen bei Nordcast");
+                $("#text__welcome").html("Bitte melde dich mit deinem koyu.space-Account an. Solltest du noch keinen Account haben, kannst du dir <a href=\"#\" onclick=\"window.open('https://koyu.space/auth/sign_up', '_system'); return false;\">hier</a> einen machen.");
+                $("#username").attr("placeholder", "E-Mailadresse");
+                $("#password").attr("placeholder", "Passwort");
+                $("#kslogin").html("Anmelden");
+                $("#nologin").html("Weiter ohne Account");
+                warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein eine handvoll an Podcasts zu hören, da bestimmte Schnittstellen einen Account benötigen. Möchtest du wirklich fortfahren?";
+            }
+        });
     }
-    navigator.globalization.getPreferredLanguage(function (language) {
-        //German
-        if (language.value.includes("de")) {
-            $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
-            $("#text__safe").html("Deine Daten sind sicher.");
-            $("h1").html("Willkommen bei Nordcast");
-            $("#text__welcome").html("Bitte melde dich mit deinem koyu.space-Account an. Solltest du noch keinen Account haben, kannst du dir <a href=\"#\" onclick=\"window.open('https://koyu.space/auth/sign_up', '_system'); return false;\">hier</a> einen machen.");
-            $("#username").attr("placeholder", "E-Mailadresse");
-            $("#password").attr("placeholder", "Passwort");
-            $("#kslogin").html("Anmelden");
-            $("#nologin").html("Weiter ohne Account");
-            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein eine handvoll an Podcasts zu hören, da bestimmte Schnittstellen einen Account benötigen. Möchtest du wirklich fortfahren?";
-        }
-    });
 }
