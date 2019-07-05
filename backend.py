@@ -99,7 +99,6 @@ def getlist(username, uuid):
 @get("/api/v1/getview/<username>/<uuid>/<view>")
 def getview(username, uuid, view):
     response.headers['Access-Control-Allow-Origin'] = '*'
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
     response.content_type = "text/html"
     f = open("views/"+view+"view.html", "r")
     s = f.read()
