@@ -80,13 +80,13 @@ function onDeviceReady() {
                         }
                         $("#img__cast").attr("src", callback.feed.image.href);
                         $("#img__cast2").attr("src", callback.feed.image.href);
-                        /*window.setTimeout(function() {
+                        window.setTimeout(function() {
                             $("#img__cast").primaryColor({
                                 callback: function(color) {
                                     $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
                                 }
                             });
-                        },200);*/
+                        },200);
                         $("#text__cast").html(twemoji.parse(callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0]));
                         $("#text__subtitle").html(callback.feed.subtitle);
                         $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
@@ -206,13 +206,13 @@ function onDeviceReady() {
                     $.get(backend+"/api/v1/getfeatured", function(data) {
                         data.forEach(function(item) {
                             $("#section__featured").html($("#section__featured").html()+"<div><a onclick=\"rl()\" href=\"app.html#cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
-                            /*window.setTimeout(function() {
+                            window.setTimeout(function() {
                                 $(".card__big").primaryColor({
                                     callback: function(color) {
                                         $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
                                     }
                                 });
-                            },200)*/
+                            },200)
                         });
                     });
 
