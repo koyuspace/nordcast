@@ -1,4 +1,4 @@
-function onDeviceReady() {
+function onAppReady() {
     $("#player__controls").hide();
     function findGetParameter(parameterName) {
         var result = null;
@@ -354,7 +354,7 @@ function onDeviceReady() {
     $("#nav").show();
 }
 
-document.addEventListener("deviceready", onDeviceReady, false);
+document.addEventListener("deviceready", onAppReady, false);
 
 $(document).on('click', 'a[href^="http"]', function (e) {
     var url = $(this).attr('href');
