@@ -1,4 +1,4 @@
-var backend = "http://localhost:9000";
+var backend = "https://api.nordcast.app";
 var debug = false;
 
 function onDeviceReady() {
