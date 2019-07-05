@@ -14,6 +14,9 @@ $(document).ready(function() {
             location.href = "app.html";
         }
     });
+    if (localStorage.getItem("uuid") === "dummy") {
+        location.href = "app.html";
+    }
     $("#kslogin").click(function() {
         $("#welcome__error").hide();
         $("#kslogin").attr("disabled", "");
