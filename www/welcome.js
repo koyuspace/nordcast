@@ -1,4 +1,5 @@
 document.addEventListener("deviceready", onDeviceReady, false);
+var warning_nologin = "Warning: If you don't login you'll be only able to listen to a select number of podcasts only since special APIs require authentication. Are you sure you want to continue?";
 $(document).ready(function() {
     $("#welcome__error").hide();
     $("#view__welcome").hide();
@@ -50,6 +51,16 @@ $(document).ready(function() {
           return false;
         }
     });
+    $("#nologin").click(function (e) {
+        if (window.confirm(warning_nologin)) {
+            localStorage.setItem("uuid", "dummy");
+            localStorage.setItem("username", "dummy");
+            window.setTimeout(function() {
+                location.href = "app.html#nosplash=ok";
+            }, 50);
+        }
+        e.preventDefault();
+    });
 });
 
 //Cordova-specific code
@@ -67,6 +78,8 @@ function onDeviceReady() {
             $("#username").attr("placeholder", "E-Mailadresse");
             $("#password").attr("placeholder", "Passwort");
             $("#kslogin").html("Anmelden");
+            $("#nologin").html("Weiter ohne Account");
+            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein eine handvoll an Podcasts zu hören, da bestimmte Schnittstellen einen Account benötigen. Möchtest du wirklich fortfahren?";
         }
     });
 }

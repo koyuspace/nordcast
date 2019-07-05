@@ -33,20 +33,30 @@ function playcast(file, secret, title, author, podcover, feed) {
         $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
         $("#bplay").attr("class", "playbutton ion-md-pause");
         $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret, function(data) {
-            if (debug) {
-                console.log(data);
-            }
-            if (data["pos"] === "None") {
+            if (data["login"] === "error") {
                 player.currentTime = 0;
-                player.play();
+                player.play(); 
             } else {
-                player.currentTime = parseInt(data["pos"]);
-                player.play();
+                if (debug) {
+                    console.log(data);
+                }
+                if (data["pos"] === "None") {
+                    player.currentTime = 0;
+                    player.play();
+                } else {
+                    player.currentTime = parseInt(data["pos"]);
+                    player.play();
+                }
             }
+        }).error(function() {
+            player.currentTime = 0;
+            player.play();
         });
-        window.setInterval(function() {
-            $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime, function(data) { });
-        }, 1000);
+        if (localStorage.getItem("uuid") !== "dummy") {
+            window.setInterval(function() {
+                $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime, function(data) { });
+            }, 1000);
+        }
     } else {
         $(".playbutton").attr("class", "playbutton ion-md-play");
     }

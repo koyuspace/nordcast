@@ -1,10 +1,9 @@
-var backend = "https://api.nordcast.app";
+var backend = "http://localhost:9000";
 var debug = false;
 
 function onDeviceReady() {
     screen.orientation.lock('portrait');
     StatusBar.backgroundColorByHexString("#fff");
-    NavigationBar.backgroundColorByName("white", true);
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);

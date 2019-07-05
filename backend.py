@@ -100,15 +100,11 @@ def getlist(username, uuid):
 def getview(username, uuid, view):
     response.headers['Access-Control-Allow-Origin'] = '*'
     suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
-    if suid == uuid:
-        response.content_type = "text/html"
-        f = open("views/"+view+"view.html", "r")
-        s = f.read()
-        f.close()
-        return s
-    else:
-        response.content_type = "application/json"
-        return "{\"login\": \"error\"}"
+    response.content_type = "text/html"
+    f = open("views/"+view+"view.html", "r")
+    s = f.read()
+    f.close()
+    return s
 
 @get("/api/v1/setpos/<username>/<uuid>/<secret>/<pos>")
 def setpos(username, uuid, secret, pos):

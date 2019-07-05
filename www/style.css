@@ -281,3 +281,12 @@ h1 .emoji {
     margin-right: 10px;
     margin-bottom: 20px;
 }
+
+#nologin {
+    color: #a9a9 !important;
+    padding-top: 20px;
+}
+
+#view__welcome button {
+    margin-bottom: 10px;
+}

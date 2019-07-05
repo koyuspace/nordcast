@@ -14,23 +14,30 @@ $(document).ready(function() {
         return target.replace(new RegExp(search, 'g'), replacement);
     };
     $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-        if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
+        if (localStorage.getItem("uuid") !== "dummy") {
+            if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
+                localStorage.clear();
+                window.setTimeout(function() {
+                    location.href = "index.html";
+                }, 200);
+            }
+        }
+    }).error(function() {
+        if (localStorage.getItem("uuid") !== "dummy") {
             localStorage.clear();
             window.setTimeout(function() {
                 location.href = "index.html";
             }, 200);
         }
-    }).error(function() {
-        localStorage.clear();
-        window.setTimeout(function() {
-            location.href = "index.html";
-        }, 200);
     });
     var searchtoggle = false;
     $("#wrapper__search").hide();
     $("#profile__picture").hide();
     $("#player").hide();
     loadview();
+    if (localStorage.getItem("uuid") === "dummy") {
+        $(".fa__nav2").hide();
+    }
     function loadview() {
         $("#snclose").hide();
         window.setTimeout(function() {
@@ -65,12 +72,17 @@ $(document).ready(function() {
             $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/pod", function(data) {
                 $("#view__main").html(data);
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-                    if (data["podlist"].includes(feed)) {
+                    if (data["login"] === "error") {
                         $("#button__follow").hide();
-                        $("#button__unfollow").show();
-                    } else {
                         $("#button__unfollow").hide();
-                        $("#button__follow").show();
+                    } else {
+                        if (data["podlist"].includes(feed)) {
+                            $("#button__follow").hide();
+                            $("#button__unfollow").show();
+                        } else {
+                            $("#button__unfollow").hide();
+                            $("#button__follow").show();
+                        }
                     }
                 });
                 window.setTimeout(function() {
@@ -179,18 +191,23 @@ $(document).ready(function() {
                 $("#view__main").html(data);
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-                        if (data["podlist"] === "None") {
-                            $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
+                        if (data["login"] === "error") {
+                            $("#section__list").hide();
+                            $("#text__list").hide();
                         } else {
-                            $("#section__list").html($("#section__list").html()+"<p>");
-                            data["podlist"].split(",").forEach(function(feed) {
-                                $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                    try {
-                                        $("#section__list").html($("#section__list").html()+"<a onclick=\"rl()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
-                                    } catch (e) {}
+                            if (data["podlist"] === "None") {
+                                $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
+                            } else {
+                                $("#section__list").html($("#section__list").html()+"<p>");
+                                data["podlist"].split(",").forEach(function(feed) {
+                                    $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                                        try {
+                                            $("#section__list").html($("#section__list").html()+"<a onclick=\"rl()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                        } catch (e) {}
+                                    });
                                 });
-                            });
-                            $("#section__list").html($("#section__list").html()+"</p>");
+                                $("#section__list").html($("#section__list").html()+"</p>");
+                            }
                         }
                     });
                     $.get(backend+"/api/v1/getoriginals", function(data) {
