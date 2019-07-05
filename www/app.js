@@ -35,9 +35,6 @@ $(document).ready(function() {
     $("#profile__picture").hide();
     $("#player").hide();
     loadview();
-    if (localStorage.getItem("uuid") === "dummy") {
-        $(".fa__nav2").hide();
-    }
     function loadview() {
         $("#snclose").hide();
         window.setTimeout(function() {
@@ -307,9 +304,7 @@ $(document).ready(function() {
             $("#view__settings").hide();
             $("#view__main").show();
             $(".fa__nav").show();
-            if (localStorage.getItem("uuid") !== "dummy") {
-                $(".fa__nav2").show();
-            }
+            $(".fa__nav2").show();
         } else {
             location.href = "app.html#nosplash=ok";
             loadview();

@@ -1,5 +1,5 @@
 document.addEventListener("deviceready", onDeviceReady, false);
-var warning_nologin = "Warning: If you don't login you'll be only able to listen to a select number of podcasts only since special APIs require authentication. Are you sure you want to continue?";
+var warning_nologin = "Warning: If you don't login you'll be only able to listen to podcasts. This might be suitable for you, but you won't be able to follow podcasts or save your current listening position. Are you sure you want to continue?";
 $(document).ready(function() {
     $("#welcome__error").hide();
     $("#view__welcome").hide();
@@ -79,7 +79,7 @@ function onDeviceReady() {
             $("#password").attr("placeholder", "Passwort");
             $("#kslogin").html("Anmelden");
             $("#nologin").html("Weiter ohne Account");
-            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein eine handvoll an Podcasts zu hören, da bestimmte Schnittstellen einen Account benötigen. Möchtest du wirklich fortfahren?";
+            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein Podcasts zu hören. Das mag zwar passend für dich sein, aber du kannst dann weder Podcasts folgen noch dort weiterhören, wo du aufgehört hast. Möchtest du wirklich fortfahren?";
         }
     });
 }
