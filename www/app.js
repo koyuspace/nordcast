@@ -1,4 +1,4 @@
-$(document).ready(function() {
+function onDeviceReady() {
     $("#player__controls").hide();
     function findGetParameter(parameterName) {
         var result = null;
@@ -56,7 +56,7 @@ $(document).ready(function() {
                     localStorage.setItem("lang", "ca");
                 }
             });
-        }, 900);
+        }, 1200);
         if (findGetParameter("cast")) {
             $("#logo__intro").hide();
             $("#view__settings").hide();
@@ -80,11 +80,13 @@ $(document).ready(function() {
                         }
                         $("#img__cast").attr("src", callback.feed.image.href);
                         $("#img__cast2").attr("src", callback.feed.image.href);
-                        $("#img__cast").primaryColor({
-                            callback: function(color) {
-                                $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
-                            }
-                        });
+                        window.setTimeout(function() {
+                            $("#img__cast").primaryColor({
+                                callback: function(color) {
+                                    $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
+                                }
+                            });
+                        },200);
                         $("#text__cast").html(twemoji.parse(callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0]));
                         $("#text__subtitle").html(callback.feed.subtitle);
                         $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
@@ -204,11 +206,13 @@ $(document).ready(function() {
                     $.get(backend+"/api/v1/getfeatured", function(data) {
                         data.forEach(function(item) {
                             $("#section__featured").html($("#section__featured").html()+"<div><a onclick=\"rl()\" href=\"app.html#cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
-                            $(".card__big").primaryColor({
-                                callback: function(color) {
-                                    $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
-                                }
-                            });
+                            window.setTimeout(function() {
+                                $(".card__big").primaryColor({
+                                    callback: function(color) {
+                                        $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
+                                    }
+                                });
+                            },200)
                         });
                     });
 
@@ -348,7 +352,9 @@ $(document).ready(function() {
     $("#logo__intro").hide();
     $("#view__main").show();
     $("#nav").show();
-});
+}
+
+document.addEventListener("deviceready", onDeviceReady, false);
 
 $(document).on('click', 'a[href^="http"]', function (e) {
     var url = $(this).attr('href');

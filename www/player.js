@@ -65,15 +65,17 @@ String.prototype.toHHMMSS = function () {
     return hours+':'+minutes+':'+seconds;
 }
 
-window.setInterval(function() {
-    var player = document.getElementById("player");
-    $("#timer").html(String(player.currentTime).toHHMMSS());
-}, 1);
-
-window.setInterval(function() {
-    var player = document.getElementById("player");
-    $("#timeleft").html("-"+String(player.duration - player.currentTime).toHHMMSS());
-}, 100);
+function onDeviceReady() {
+    window.setInterval(function() {
+        var player = document.getElementById("player");
+        $("#timer").html(String(player.currentTime).toHHMMSS());
+    }, 1);
+    
+    window.setInterval(function() {
+        var player = document.getElementById("player");
+        $("#timeleft").html("-"+String(player.duration - player.currentTime).toHHMMSS());
+    }, 100);
+}
 
 function ffw() {
     var player = document.getElementById("player");
@@ -89,3 +91,5 @@ function rev() {
     var player = document.getElementById("player");
     player.currentTime = player.currentTime - 10;
 }
+
+document.addEventListener("deviceready", onDeviceReady, false);
