@@ -37,12 +37,14 @@
       return {};
     },
     getImageData: function() {
-      var canvas = document.createElement('canvas');
-      canvas.width = this.element.width;
-      canvas.height = this.element.height;
-      var context = canvas.getContext('2d');
-      context.drawImage(this.element, 0, 0);
-      return context.getImageData(0, 0, this.element.width, this.element.height);
+      try {
+        var canvas = document.createElement('canvas');
+        canvas.width = this.element.width;
+        canvas.height = this.element.height;
+        var context = canvas.getContext('2d');
+        context.drawImage(this.element, 0, 0);
+        return context.getImageData(0, 0, this.element.width, this.element.height);
+      } catch (e) {}
     },
     isApproximateColor: function(color1, color2) {
       if ( !color1 || !color2 ) {
@@ -57,42 +59,44 @@
       return l < 60;
     },
     onLoad: function() {
-      console.log(this.element.src);
-      var image_data   = this.getImageData(),
-          data         = image_data.data,
-          pixel_length = data.length / 4,
-          // 取得した色の出現回数を格納しておく
-          colors = {};
+      try {
+        console.log(this.element.src);
+        var image_data   = this.getImageData(),
+            data         = image_data.data,
+            pixel_length = data.length / 4,
+            // 取得した色の出現回数を格納しておく
+            colors = {};
 
-      // 1px ごとに画像データを走査する ( 1px ごとに rgba の 4 要素ある )
-      for ( var px = 0; px < pixel_length; px = px + this.settings.skip * 4 ) {
+        // 1px ごとに画像データを走査する ( 1px ごとに rgba の 4 要素ある )
+        for ( var px = 0; px < pixel_length; px = px + this.settings.skip * 4 ) {
 
-        // 透明度を持つものは無視
-        if ( data[px+3] < 255 ) {
-          continue;
+          // 透明度を持つものは無視
+          if ( data[px+3] < 255 ) {
+            continue;
+          }
+
+          var rgb = [ data[px], data[px+1], data[px+2] ].join(',');
+          // primary color との近似色判定
+          if ( this.primary.rgb && this.isApproximateColor(this.primary.rgb, rgb) ) {
+            rgb = this.primary.rgb;
+          }
+
+          // すでに同じ色が出現しているかカウント
+          // 保持しているプライマリカラーより出現回数が多くなったら入れ替え
+          colors[rgb] = colors[rgb] || 0;
+          var count = ++colors[rgb];
+          if ( count > this.primary.count ) {
+            this.primary.rgb = rgb;
+            this.primary.count = count;
+          }
         }
 
-        var rgb = [ data[px], data[px+1], data[px+2] ].join(',');
-        // primary color との近似色判定
-        if ( this.primary.rgb && this.isApproximateColor(this.primary.rgb, rgb) ) {
-          rgb = this.primary.rgb;
+        $.data(this.element, dataName, this.primary.rgb);
+
+        if ( typeof this.settings.callback === 'function' ) {
+          this.settings.callback.call(this.element, this.primary.rgb);
         }
-
-        // すでに同じ色が出現しているかカウント
-        // 保持しているプライマリカラーより出現回数が多くなったら入れ替え
-        colors[rgb] = colors[rgb] || 0;
-        var count = ++colors[rgb];
-        if ( count > this.primary.count ) {
-          this.primary.rgb = rgb;
-          this.primary.count = count;
-        }
-      }
-
-      $.data(this.element, dataName, this.primary.rgb);
-
-      if ( typeof this.settings.callback === 'function' ) {
-        this.settings.callback.call(this.element, this.primary.rgb);
-      }
+      } catch (e) {}
     }
   });
 

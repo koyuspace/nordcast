@@ -1,4 +1,4 @@
-function onAppReady() {
+$(document).ready(function() {
     $("#player__controls").hide();
     function findGetParameter(parameterName) {
         var result = null;
@@ -185,7 +185,9 @@ function onAppReady() {
                             $("#section__list").html($("#section__list").html()+"<p>");
                             data["podlist"].split(",").forEach(function(feed) {
                                 $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                    $("#section__list").html($("#section__list").html()+"<a onclick=\"rl()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                    try {
+                                        $("#section__list").html($("#section__list").html()+"<a onclick=\"rl()\" href=\"app.html#cast="+callback.href+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                    } catch (e) {}
                                 });
                             });
                             $("#section__list").html($("#section__list").html()+"</p>");
@@ -212,7 +214,7 @@ function onAppReady() {
                                         $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
                                     }
                                 });
-                            },200)
+                            },200);
                         });
                     });
 
@@ -352,9 +354,7 @@ function onAppReady() {
     $("#logo__intro").hide();
     $("#view__main").show();
     $("#nav").show();
-}
-
-document.addEventListener("deviceready", onAppReady, false);
+});
 
 $(document).on('click', 'a[href^="http"]', function (e) {
     var url = $(this).attr('href');
