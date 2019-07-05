@@ -41,30 +41,28 @@ $(document).ready(function() {
     function loadview() {
         $("#snclose").hide();
         window.setTimeout(function() {
-            if (cordova.platformId == 'android') {
-                navigator.globalization.getPreferredLanguage(function (language) {
-                    //German
-                    if (language.value.includes("de")) {
-                        localStorage.setItem("lang", "de");
-                        $("#text__featured").html("Angesagt");
-                        $("#text__list").html("Deine Liste");
-                        $("#text__hello").html("Hallo");
-                        $("#text__by").html("von");
-                        $("#logout").html("Abmelden");
-                        $("#view__settings h1").html("Einstellungen");
-                        $("#qq").attr("placeholder", "Suchbegriff");
-                        $("#button__follow").html("Folgen");
-                        $("#button__unfollow").html("Entfolgen");
-                        window.setTimeout(function() {
-                            $("#text__results").html("Suchergebnisse für");
-                            $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
-                            $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
-                        }, 600);
-                    } else {
-                        localStorage.setItem("lang", "ca");
-                    }
-                });
-            }
+            navigator.globalization.getPreferredLanguage(function (language) {
+                //German
+                if (language.value.includes("de")) {
+                    localStorage.setItem("lang", "de");
+                    $("#text__featured").html("Angesagt");
+                    $("#text__list").html("Deine Liste");
+                    $("#text__hello").html("Hallo");
+                    $("#text__by").html("von");
+                    $("#logout").html("Abmelden");
+                    $("#view__settings h1").html("Einstellungen");
+                    $("#qq").attr("placeholder", "Suchbegriff");
+                    $("#button__follow").html("Folgen");
+                    $("#button__unfollow").html("Entfolgen");
+                    window.setTimeout(function() {
+                        $("#text__results").html("Suchergebnisse für");
+                        $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
+                        $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
+                    }, 600);
+                } else {
+                    localStorage.setItem("lang", "ca");
+                }
+            });
         }, 1200);
         if (findGetParameter("cast")) {
             $("#logo__intro").hide();
@@ -94,13 +92,6 @@ $(document).ready(function() {
                         }
                         $("#img__cast").attr("src", callback.feed.image.href);
                         $("#img__cast2").attr("src", callback.feed.image.href);
-                        window.setTimeout(function() {
-                            $("#img__cast").primaryColor({
-                                callback: function(color) {
-                                    $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
-                                }
-                            });
-                        },200);
                         $("#text__cast").html(twemoji.parse(callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0]));
                         $("#text__subtitle").html(callback.feed.subtitle);
                         $("#text__author").html(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]);
@@ -227,13 +218,6 @@ $(document).ready(function() {
                     $.get(backend+"/api/v1/getfeatured", function(data) {
                         data.forEach(function(item) {
                             $("#section__featured").html($("#section__featured").html()+"<div><a onclick=\"rl()\" href=\"app.html#cast="+item[1]+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
-                            window.setTimeout(function() {
-                                $(".card__big").primaryColor({
-                                    callback: function(color) {
-                                        $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
-                                    }
-                                });
-                            },200);
                         });
                     });
 
@@ -323,7 +307,9 @@ $(document).ready(function() {
             $("#view__settings").hide();
             $("#view__main").show();
             $(".fa__nav").show();
-            $(".fa__nav2").show();
+            if (localStorage.getItem("uuid") !== "dummy") {
+                $(".fa__nav2").show();
+            }
         } else {
             location.href = "app.html#nosplash=ok";
             loadview();
