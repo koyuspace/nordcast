@@ -56,7 +56,7 @@ $(document).ready(function() {
                     localStorage.setItem("lang", "ca");
                 }
             });
-        }, 700);
+        }, 900);
         if (findGetParameter("cast")) {
             $("#logo__intro").hide();
             $("#view__settings").hide();
@@ -214,11 +214,12 @@ $(document).ready(function() {
 
                     $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
                         $(".placeholder__username").html(data["ksname"]);
-                        $.get(backend+"/api/v1/getemoji/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
-                            var ksemoji = data["ksemoji"];
-                            ksemoji.forEach(function(emoji) {
-                                $(".placeholder__username").html($(".placeholder__username").html().replaceAll(":" + emoji["shortcode"] + ":", "<img src=\"" + emoji["url"] + "\" height=\"16\">"));
-                            });
+                        var ksemojis = data["ksemojis"];
+                        if (debug) {
+                            console.log(data["ksemojis"]);
+                        }
+                        ksemojis.forEach(function(emoji) {
+                            $(".placeholder__username").html($(".placeholder__username").html().replaceAll(":" + emoji["shortcode"] + ":", "<img src=\"" + emoji["url"] + "\" height=\"16\">"));
                         });
                         $(".placeholder__username").html(twemoji.parse($(".placeholder__username").html()));
                     }).error(function() {
@@ -293,8 +294,15 @@ $(document).ready(function() {
     });
 
     $("#logo__nav").click(function() {
-        location.href = "app.html#nosplash=ok";
-        loadview();
+        if ($("#view__settings").is(":visible")) {
+            $("#view__settings").hide();
+            $("#view__main").show();
+            $(".fa__nav").show();
+            $(".fa__nav2").show();
+        } else {
+            location.href = "app.html#nosplash=ok";
+            loadview();
+        }
     });
 
     $("#link__cast").click(function() {

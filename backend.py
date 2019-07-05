@@ -140,7 +140,8 @@ def getname(username, uuid):
     userdict = mastodon.account_verify_credentials()
     if suid == uuid:
         ksname = userdict.display_name
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname})
+        ksemojis = userdict.emojis
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
 
 @get("/api/v1/getpic/<username>/<uuid>")
 def getpic(username, uuid):
