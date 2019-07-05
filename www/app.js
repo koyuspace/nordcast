@@ -170,7 +170,8 @@ $(document).ready(function() {
                 }, 500);
                 $("#view__main").css("padding-top", "60px");
             });
-        } else if(findGetParameter("search")) {
+        }
+        if(findGetParameter("search")) {
             $("#view__main").css("padding-top", "60px");
             $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/search", function(data) {
                 $("#view__main").html(data);
@@ -181,7 +182,8 @@ $(document).ready(function() {
                     });
                 });
             });
-        } else {
+        } 
+        if (findGetParameter("main")) {
             $("#view__main").css("padding-top", "90px");
             $("#view__settings").hide();
             $.get(backend+"/api/v1/getview/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/main", function(data) {
@@ -320,7 +322,7 @@ $(document).ready(function() {
             $(".fa__nav").show();
             $(".fa__nav2").show();
         } else {
-            location.href = "app.html#nosplash=ok";
+            location.href = "app.html#main";
             loadview();
         }
     });

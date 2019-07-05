@@ -11,11 +11,11 @@ $(document).ready(function() {
     }, 2000);
     $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
         if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
-            location.href = "app.html";
+            location.href = "app.html#main";
         }
     });
     if (localStorage.getItem("uuid") === "dummy") {
-        location.href = "app.html";
+        location.href = "app.html#main";
     }
     $("#kslogin").click(function() {
         $("#welcome__error").hide();
@@ -28,7 +28,7 @@ $(document).ready(function() {
                     localStorage.setItem("uuid", data["uuid"]);
                     localStorage.setItem("username", $("#username").val());
                     window.setTimeout(function() {
-                        location.href = "app.html?nosplash=ok";
+                        location.href = "app.html#main";
                     }, 200)
                 } else {
                     $("#kslogin").removeAttr("disabled");
@@ -59,7 +59,7 @@ $(document).ready(function() {
             localStorage.setItem("uuid", "dummy");
             localStorage.setItem("username", "dummy");
             window.setTimeout(function() {
-                location.href = "app.html#nosplash=ok";
+                location.href = "app.html#main";
             }, 50);
         }
         e.preventDefault();
