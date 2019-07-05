@@ -11,7 +11,9 @@ function shownotes(shownotes) {
 }
 
 function restoreview() {
-    $(".fa__nav2").show();
+    if (localStorage.getItem("uuid") !== "dummy") {
+        $(".fa__nav2").show();
+    }
     $("#view__main").html(oldhtml);
     if (playing) {
         $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
