@@ -12,8 +12,13 @@ body {
     margin: 0;
 }
 
-#view__main {
-    padding: 90px 20px 0px !important;
+#view__search {
+    padding: 90px 20px 0px;
+}
+
+#view__cast,
+#view_settings {
+    padding: 40px 20px 0px;
 }
 
 #shownotes {
@@ -61,6 +66,10 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'open_sanslight';
     font-weight: 300;
+}
+
+#text__subtitle {
+    margin: 0 !important;
 }
 
 .card__big {
@@ -132,6 +141,7 @@ h1, h2, h3, h4, h5, h6 {
 #wrapper__search {
     background-color: #fff;
     padding: 10px;
+    padding-bottom: 5vh;
     text-align: center;
     margin: -20px;
 }
@@ -206,6 +216,7 @@ ion-icon {
     padding-top: 30px;
     margin-left: -20px;
     width: calc(100% + 20px);
+    height: 120px;
 }
 
 #podtable {
@@ -255,6 +266,7 @@ h1 .emoji {
 #restart,
 #snbutton,
 #snclose,
+#plclose,
 .playbutton {
     font-size: 24px;
     height: 24px;
@@ -288,4 +300,19 @@ h1 .emoji {
 
 #view__welcome button {
     margin-bottom: 10px;
+}
+
+#view__main {
+    padding: 40px 20px 0px;
+}
+
+#podtitle {
+    text-align: center;
+}
+
+#element__author {
+    text-align: center;
+    width: 50%;
+    margin: 0 auto;
+    margin-left: calc(96px*1.5);
 }

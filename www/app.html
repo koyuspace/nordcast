@@ -17,15 +17,10 @@
         <script src="cordova.js"></script>
         <script src="app.js"></script>
         <link rel="stylesheet" href="bootstrap.min.css">
+        <script src="popper.min.js"></script>
+        <script src="bootstrap.min.js"></script>
         <script src="player.js"></script>
         <script src="shownotes.js"></script>
-        <script>
-            function rl() {
-                window.setTimeout(function() {
-                    location.reload();
-                }, 1200);
-            }
-        </script>
     </head>
     <body>
         <img src="logo.png" height="128" alt="Logo" id="logo__intro" />
@@ -43,13 +38,21 @@
         <div id="view__main">
             
         </div>
+        <div id="view__cast">
+
+        </div>
+        <div id="view__search">
+
+        </div>
         <div id="player__controls">
+            <br><div id="podtitle"></div>
             <br><a id="link__cast"><img id="img__cast2" class="card__smaller" style="float: left;"></a><div style="text-align: center;"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>
-            <br><div style="text-align: center;"><i onclick="restart()" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i></div>
+            <br><div style="text-align: center;"><i onclick="restart()" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
         </div>
         <div id="view__settings">
             <h1>Settings</h1><br />
             <button type="button" id="logout" class="btn btn-danger">Logout</button>
         </div>
+        <script src="imagesloaded.js"></script>
     </body>
 </html>
