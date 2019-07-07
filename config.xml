@@ -33,7 +33,7 @@
         <icon height="152" platform="ios" src="www/res/icon/ios/152.png" width="152" />
         <icon height="180" platform="ios" src="www/res/icon/ios/180.png" width="180" />
         <icon height="1024" platform="ios" src="www/res/icon/ios/1024.png" width="1024" />
-        <gap:plugin name="cordova-plugin-statusbar" source="npm"/>
+        <gap:plugin name="cordova-plugin-statusbar" source="npm" />
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarBackgroundColor" value="#ffffff" />
         <preference name="StatusBarStyle" value="default" />
