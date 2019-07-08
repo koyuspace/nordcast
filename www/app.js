@@ -85,7 +85,6 @@ $(document).ready(function() {
                     if (data["login"] === "error") {
                         $("#button__follow").hide();
                         $("#button__unfollow").hide();
-                        $("#text__description").css("margin-top", "-100px");
                     } else {
                         if (data["podlist"].includes(feed)) {
                             $("#button__follow").hide();
@@ -117,7 +116,12 @@ $(document).ready(function() {
                         },200);
                         var feedtitle = callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0];
                         $("#text__cast").html(twemoji.parse(feedtitle));
-                        $("#text__subtitle").html(callback.feed.subtitle + "<br><br><br>");
+                        if (callback.feed.subtitle === undefined || callback.feed.subtitle === "") {
+                            $("#text__subtitle").hide();
+                        } else {
+                            $("#text__subtitle").html("<br><br>"+callback.feed.subtitle+"<br><br><br>");
+                            $("#text__subtitle").show();
+                        }
                         var author = callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0];
                         if (author === "Nordisch Media Tobias Ain") {
                             author = "Nordisch Media";
@@ -307,36 +311,40 @@ $(document).ready(function() {
         location.href = "app.html#view=settings";
         loadview();
     });
-    $("#qq").keydown(function() {
-        function qq() {
-            $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
-                var results = [];
-                data["results"].forEach(function(el) {
-                    results.push(el["collectionName"]);
-                });
-                $("#qq").autocomplete({
-                    source: results,
-                    select: function() {
-                        setTimeout(function() {
-                            data["results"].forEach(function(el) {
-                                if (el["collectionName"] == $("#qq").val()) {
-                                    location.href = "app.html#view=cast&cast="+el["feedUrl"];
-                                    window.setTimeout(function() {
-                                        location.reload();
-                                    }, 50)
-                                }
-                            });
-                        }, 50);
-                    }
-                });
+    $("#qq").keyup(function() {
+        $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+$("#qq").val(), function(data) {
+            var results = [];
+            data["results"].forEach(function(el) {
+                results.push(el["collectionName"]);
             });
-        }
-        $("#qq").keydown(qq());
+            $("#qq").autocomplete({
+                source: results,
+                select: function() {
+                    data["results"].forEach(function(el) {
+                        window.setTimeout(function() {
+                            if (el["collectionName"] == $("#qq").val()) {
+                                if (debug) {
+                                    console.log(Base64.encode(el["feedUrl"]));
+                                }
+                                location.href = "app.html#view=cast&cast="+Base64.encode(el["feedUrl"]);
+                                window.setTimeout(function() {
+                                    $("#qq").val("");
+                                    $("#wrapper__search").hide();
+                                    $("#view__"+findGetParameter("view")).hide();
+                                    loadview();
+                                }, 200)
+                            }
+                        }, 50);
+                    });
+                }
+            });
+        });
     });
     $("#qq").keypress(function (e) {
         if (e.which === 13 && !loading) {
             $("#wrapper__search").hide();
             location.href = "app.html#view=search&q="+$("#qq").val();
+            $("#qq").val("");
             loadview();
             return false;
         }

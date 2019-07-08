@@ -213,10 +213,9 @@ ion-icon {
 #podcard {
     margin: 0;
     padding: 10px;
-    padding-top: 30px;
+    padding-top: 60px;
     margin-left: -20px;
     width: calc(100% + 20px);
-    height: 120px;
 }
 
 #podtable {
@@ -312,7 +311,4 @@ h1 .emoji {
 
 #element__author {
     text-align: center;
-    width: 50%;
-    margin: 0 auto;
-    margin-left: calc(96px*1.5);
 }
