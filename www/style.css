@@ -70,6 +70,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #text__subtitle {
     margin: 0 !important;
+    text-align: center;
 }
 
 .card__big {

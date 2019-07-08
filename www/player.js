@@ -97,7 +97,6 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             }, 1)
         } else {
             $(".playbutton").attr("class", "playbutton ion-md-play");
-            $("body").removeAttr("style");
         }
     }
 }
