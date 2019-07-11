@@ -1,5 +1,5 @@
-var backend = "http://localhost:9000";
-var debug = true;
+var backend = "https://api.nordcast.app";
+var debug = false;
 
 function onDeviceReady() {
     if (device.platform === "Android" || device.platform === "iOS") {
