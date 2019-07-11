@@ -31,7 +31,7 @@ $(document).ready(function() {
         }
     }, 10)
     $("#player__controls").hide();
-    $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+    $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
         if (localStorage.getItem("uuid") !== "dummy") {
             if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
                 localStorage.clear();
@@ -81,7 +81,7 @@ $(document).ready(function() {
             }
             $.get("views/podview.html", function(data) {
                 $("#view__cast").html(data);
-                $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                     if (data["login"] === "error") {
                         $("#button__follow").hide();
                         $("#button__unfollow").hide();
@@ -147,12 +147,12 @@ $(document).ready(function() {
                         });
                         $("#button__follow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0];
-                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                                 var podlist = data["podlist"];
                                 data["podlist"].split(",").forEach(function(element) {
                                     if (element !== feed) {
-                                        $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), {podlist: podlist+","+feed},function(data) {
-                                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                                        $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: podlist+","+feed},function(data) {
+                                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                                                 data["podlist"].split(",").forEach(function(item) {
                                                     if (data["podlist"].includes(feed)) {
                                                         $("#button__follow").hide();
@@ -170,14 +170,14 @@ $(document).ready(function() {
                         });
                         $("#button__unfollow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0];
-                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                                 var podlist = data["podlist"];
                                 podlist.split(",").forEach(function(element) {
                                     if (element === feed) {
                                         var pl = podlist.replaceAll(","+feed, "").replaceAll(feed, "");
-                                        $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), {podlist: pl}, function(data) {
+                                        $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: pl}, function(data) {
                                             if (data["action"] === "success") {
-                                                $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                                                $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                                                     data["podlist"].split(",").forEach(function(item) {
                                                         if (data["podlist"].includes(feed)) {
                                                             $("#button__follow").hide();
@@ -217,7 +217,7 @@ $(document).ready(function() {
             $.get("views/mainview.html", function(data) {
                 $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
                 window.setTimeout(function() {
-                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "error") {
                             $("#section__list").hide();
                             $("#text__list").hide();
@@ -271,7 +271,7 @@ $(document).ready(function() {
                         },200);
                     });
 
-                    $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+                    $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         $(".placeholder__username").html(data["ksname"]);
                         var ksemojis = data["ksemojis"];
                         if (debug) {
@@ -289,7 +289,7 @@ $(document).ready(function() {
         }
     }
 
-    $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+    $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
         $("#profile__picture").attr("src", data["kspic"]);
         $("#profile__picture").show();
     }).error(function() {

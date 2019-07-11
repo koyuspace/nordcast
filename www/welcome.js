@@ -10,7 +10,7 @@ $(document).ready(function() {
         $("#nav").show();
     }, 2000);
     try {
-        $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid"), function(data) {
+        $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
             if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
                 location.href = "app.html#view=main";
             }
@@ -20,29 +20,38 @@ $(document).ready(function() {
         }
     } catch (e) {}
     $("#kslogin").click(function() {
-        $("#welcome__error").hide();
-        $("#kslogin").attr("disabled", "");
-        var oldHTML = $("#kslogin").html();
-        $("#kslogin").html("<img src=\"loading.svg\" height=\"16\" style=\"vertical-align:middle;margin-top:-3px;\" /> "+$("#kslogin").html());
-        window.setTimeout(function() {
-            $.post(backend+"/api/v1/login", {username: $("#username").val(), password: $("#password").val()}, function(data) {
-                if (data["login"] === "ok") {
-                    localStorage.setItem("uuid", data["uuid"]);
-                    localStorage.setItem("username", $("#username").val());
-                    window.setTimeout(function() {
-                        location.href = "app.html#view=main";
-                    }, 200)
-                } else {
+        //Blocking gab, don't judge me
+        if ($("#instance").val().includes("gab.com") || $("#instance").val().includes("gab.ai")) {
+            $("#kslogin").removeAttr("disabled");
+            $("#kslogin").html(oldHTML);
+            window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_system');
+            return false;
+        } else {
+            $("#welcome__error").hide();
+            $("#kslogin").attr("disabled", "");
+            var oldHTML = $("#kslogin").html();
+            $("#kslogin").html("<img src=\"loading.svg\" height=\"16\" style=\"vertical-align:middle;margin-top:-3px;\" /> "+$("#kslogin").html());
+            window.setTimeout(function() {
+                $.post(backend+"/api/v1/login", {username: $("#username").val(), password: $("#password").val(), instance: $("#instance").val()}, function(data) {
+                    if (data["login"] === "ok") {
+                        localStorage.setItem("uuid", data["uuid"]);
+                        localStorage.setItem("username", $("#username").val());
+                        localStorage.setItem("instance", $("#instance").val());
+                        window.setTimeout(function() {
+                            location.href = "app.html#view=main";
+                        }, 200)
+                    } else {
+                        $("#kslogin").removeAttr("disabled");
+                        $("#kslogin").html(oldHTML);
+                        $("#welcome__error").show();
+                    }
+                }).error(function() {
                     $("#kslogin").removeAttr("disabled");
                     $("#kslogin").html(oldHTML);
                     $("#welcome__error").show();
-                }
-            }).error(function() {
-                $("#kslogin").removeAttr("disabled");
-                $("#kslogin").html(oldHTML);
-                $("#welcome__error").show();
-            });
-        }, 1000)
+                });
+            }, 1000)
+        }
     });
     $("#username").keypress(function (e) {
         if (e.which === 13) {
@@ -51,6 +60,12 @@ $(document).ready(function() {
         }
     });
     $("#password").keypress(function (e) {
+        if (e.which === 13) {
+          $("#kslogin").click();
+          return false;
+        }
+    });
+    $("#instance").keypress(function (e) {
         if (e.which === 13) {
           $("#kslogin").click();
           return false;
@@ -79,9 +94,10 @@ function onDeviceReady() {
             $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
             $("#text__safe").html("Deine Daten sind sicher.");
             $("h1").html("Willkommen bei Nordcast");
-            $("#text__welcome").html("Bitte melde dich mit deinem koyu.space-Account an. Solltest du noch keinen Account haben, kannst du dir <a href=\"#\" onclick=\"window.open('https://koyu.space/auth/sign_up', '_system'); return false;\">hier</a> einen machen.");
+            $("#text__welcome").html("Bitte melde dich mit deinem Mastodon-Account an. Solltest du noch keinen Account haben, kannst du dir <a href=\"#\" onclick=\"window.open('https://koyu.space/auth/sign_up', '_system'); return false;\">hier</a> einen machen.");
             $("#username").attr("placeholder", "E-Mailadresse");
             $("#password").attr("placeholder", "Passwort");
+            $("#instance").attr("placeholder", "Instanz");
             $("#kslogin").html("Anmelden");
             $("#nologin").html("Weiter ohne Account");
             warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein Podcasts zu hören. Das mag zwar passend für dich sein, aber du kannst dann weder Podcasts folgen noch dort weiterhören, wo du aufgehört hast. Möchtest du wirklich fortfahren?";

@@ -10,7 +10,6 @@ import redis
 import uuid
 import requests
 
-admin = "koyu"
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 @get("/")
@@ -39,31 +38,32 @@ def login():
     response.content_type = "application/json"
     username = request.forms.get("username") # pylint: disable=no-member
     password = request.forms.get("password") # pylint: disable=no-member
+    instance = request.forms.get("instance") # pylint: disable=no-member
     mastodon = Mastodon(
         client_id = 'clientcred.secret',
-        api_base_url = 'https://koyu.space'
+        api_base_url = 'https://'+instance
     )
     mastodon.log_in(
         username,
         password,
-        to_file = 'authtokens/'+username+'.secret'
+        to_file = 'authtokens/'+username+'.'+instance+'.secret',
     )
     if not os.path.exists("usercred.secret"):
         suid = str(uuid.uuid1())
-        r.set("nordcast/uuids/" + username, suid)
+        r.set("nordcast/uuids/" + username + "$$" + instance, suid)
         return json.dumps({"login": "ok", "uuid": suid})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/login2/<username>/<uuid>")
-def login2(username, uuid):
+@get("/api/v1/login2/<username>/<uuid>/<instance>")
+def login2(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     try:
         mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.secret',
-            api_base_url = 'https://koyu.space'
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
         )
         mastodon.account_verify_credentials().source.note
     except:
@@ -73,64 +73,55 @@ def login2(username, uuid):
     else:
         return "{\"login\": \"error\"}"
 
-@post("/api/v1/setlist/<username>/<uuid>")
-def setlist(username, uuid):
+@post("/api/v1/setlist/<username>/<uuid>/<instance>")
+def setlist(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     podlist = request.forms.get("podlist") # pylint: disable=no-member
     if suid == uuid:
-        r.set("nordcast/podlist/" + username, podlist)
+        r.set("nordcast/podlist/" + username + "$$" + instance, podlist)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getlist/<username>/<uuid>")
-def getlist(username, uuid):
+@get("/api/v1/getlist/<username>/<uuid>/<instance>")
+def getlist(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    podlist = str(r.get("nordcast/podlist/" + username)).replace("b'", "").replace("'", "")
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    podlist = str(r.get("nordcast/podlist/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     if suid == uuid:
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getview/<username>/<uuid>/<view>")
-def getview(username, uuid, view):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.content_type = "text/html"
-    f = open("views/"+view+"view.html", "r")
-    s = f.read()
-    f.close()
-    return s
-
-@get("/api/v1/setpos/<username>/<uuid>/<secret>/<pos>")
-def setpos(username, uuid, secret, pos):
+@get("/api/v1/setpos/<username>/<uuid>/<secret>/<pos>/<instance>")
+def setpos(username, uuid, secret, pos, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     if suid == uuid:
-        r.set("nordcast/pos/" + username + "/" + secret, pos)
+        r.set("nordcast/pos/" + username + "$$" + instance + "/" + secret, pos)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
 
-@get("/api/v1/getpos/<username>/<uuid>/<secret>")
-def getpos(username, uuid, secret):
+@get("/api/v1/getpos/<username>/<uuid>/<secret>/<instance>")
+def getpos(username, uuid, secret, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     if suid == uuid:
-        pos = str(r.get("nordcast/pos/" + username + "/" + secret)).replace("b'", "").replace("'", "")
+        pos = str(r.get("nordcast/pos/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "pos": pos, "secret": secret})
 
-@get("/api/v1/getname/<username>/<uuid>")
-def getname(username, uuid):
+@get("/api/v1/getname/<username>/<uuid>/<instance>")
+def getname(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     mastodon = Mastodon(
-        access_token = 'authtokens/'+username+'.secret',
-        api_base_url = 'https://koyu.space'
+        access_token = 'authtokens/'+username+'.'+instance+'.secret',
+        api_base_url = 'https://'+instance
     )
     userdict = mastodon.account_verify_credentials()
     if suid == uuid:
@@ -138,28 +129,28 @@ def getname(username, uuid):
         ksemojis = userdict.emojis
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
 
-@get("/api/v1/getpic/<username>/<uuid>")
-def getpic(username, uuid):
+@get("/api/v1/getpic/<username>/<uuid>/<instance>")
+def getpic(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     mastodon = Mastodon(
-        access_token = 'authtokens/'+username+'.secret',
-        api_base_url = 'https://koyu.space'
+        access_token = 'authtokens/'+username+'.'+instance+'.secret',
+        api_base_url = 'https://'+instance
     )
     userdict = mastodon.account_verify_credentials()
     if suid == uuid:
         kspic = userdict.avatar
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
 
-@get("/api/v1/getemoji/<username>/<uuid>")
-def getemoji(username, uuid):
+@get("/api/v1/getemoji/<username>/<uuid>/<instance>")
+def getemoji(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    suid = str(r.get("nordcast/uuids/" + username)).replace("b'", "").replace("'", "")
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     mastodon = Mastodon(
-        access_token = 'authtokens/'+username+'.secret',
-        api_base_url = 'https://koyu.space'
+        access_token = 'authtokens/'+username+'.'+instance+'.secret',
+        api_base_url = 'https://'+instance
     )
     mastodon.account_verify_credentials().source.note
     if suid == uuid:

@@ -59,7 +59,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");
             }
             $("#img__cast2").attr("src", podcover);
-            $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret, function(data) {
+            $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret+"/"+localStorage.getItem("instance"), function(data) {
                 if (data["login"] === "error") {
                     player.currentTime = 0;
                     player.play();
@@ -83,7 +83,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             });
             if (localStorage.getItem("uuid") !== "dummy") {
                 window.setInterval(function() {
-                    $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime, function(data) { });
+                    $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime+"/"+localStorage.getItem("instance"), function(data) { });
                 }, 1000);
             }
             window.setInterval(function() {
