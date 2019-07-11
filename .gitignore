@@ -1,6 +1,6 @@
 # Secrets
 
-clientcred.secret
+*.secret
 authtokens/*.secret
 
 # Mac

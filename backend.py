@@ -39,8 +39,14 @@ def login():
     username = request.forms.get("username") # pylint: disable=no-member
     password = request.forms.get("password") # pylint: disable=no-member
     instance = request.forms.get("instance") # pylint: disable=no-member
+    if not os.path.exists('clientcred.'+instance+'.secret'):
+        Mastodon.create_app(
+            'Nordcast',
+            api_base_url = 'https://'+instance,
+            to_file = 'clientcred.'+instance+'.secret'
+        )
     mastodon = Mastodon(
-        client_id = 'clientcred.secret',
+        client_id = 'clientcred.'+instance+'.secret',
         api_base_url = 'https://'+instance
     )
     mastodon.log_in(
