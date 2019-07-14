@@ -16,7 +16,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         localStorage.setItem("secret", secret);
         localStorage.setItem("feed", feed);
         localStorage.setItem("author", author);
-        localStorage.setItem("title", title);
+        localStorage.setItem("title", Base64.decode(title));
         localStorage.setItem("podcover", podcover);
         localStorage.setItem("feedtitle", feedtitle);
         localStorage.setItem("file", file);
@@ -53,7 +53,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             if (author === "Nordisch Media Tobias Ain") {
                 author = "Nordisch Media";
             }
-            var podtitle = feedtitle + " - " + title;
+            var podtitle = feedtitle + " - " + Base64.decode(title);
             $("#podtitle").html(twemoji.parse(podtitle));
             if (podtitle.length > 50) {
                 $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");
