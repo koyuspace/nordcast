@@ -134,7 +134,10 @@ $(document).ready(function() {
                             var podurl = "";
                             item.links.forEach(function(el) {
                                 if (el.type.includes("audio")) {
-                                podurl = el.href;
+                                    podurl = el.href;
+                                }
+                                if (el.type.includes("video")) {
+                                    $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
                                 }
                             });
                             var shownotes = "";
