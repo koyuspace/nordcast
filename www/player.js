@@ -16,7 +16,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         localStorage.setItem("secret", secret);
         localStorage.setItem("feed", feed);
         localStorage.setItem("author", author);
-        localStorage.setItem("title", Base64.decode(title));
+        localStorage.setItem("title", title);
         localStorage.setItem("podcover", podcover);
         localStorage.setItem("feedtitle", feedtitle);
         localStorage.setItem("file", file);

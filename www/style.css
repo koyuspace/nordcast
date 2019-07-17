@@ -53,14 +53,13 @@ body {
 
 #nav img {
     margin: 0 auto;
-    margin-left: 37%;
     display: block;
 }
 
 #profile__picture {
     float: left;
-    margin-left: 5% !important;
-    margin-top: 22px !important;
+    margin-left: 20px !important;
+    margin-top: -70px !important;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -231,9 +231,11 @@ $(document).ready(function() {
                         } else {
                             if (data["podlist"] === "None") {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
-                                $("#view__main").show();
+                                window.setTimeout(function() {
+									$("#view__main").show();
+								}, 622*3);
                             } else {
-                                timeout = data["podlist"].split(",").length * 622;
+                                timeout = data["podlist"].split(",").length * 980;
                                 if (debug) {
                                     console.log(timeout);
                                 }
@@ -278,15 +280,19 @@ $(document).ready(function() {
                     });
 
                     $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-                        $(".placeholder__username").html(data["ksname"]);
-                        var ksemojis = data["ksemojis"];
-                        if (debug) {
-                            console.log(data["ksemojis"]);
-                        }
-                        ksemojis.forEach(function(emoji) {
-                            $(".placeholder__username").html($(".placeholder__username").html().replaceAll(":" + emoji["shortcode"] + ":", "<img src=\"" + emoji["url"] + "\" height=\"16\">"));
-                        });
-                        $(".placeholder__username").html(twemoji.parse($(".placeholder__username").html()));
+                        if (data["login"] === "ok") {
+							$(".placeholder__username").html(data["ksname"]);
+							var ksemojis = data["ksemojis"];
+							if (debug) {
+								console.log(data["ksemojis"]);
+							}
+							ksemojis.forEach(function(emoji) {
+								$(".placeholder__username").html($(".placeholder__username").html().replaceAll(":" + emoji["shortcode"] + ":", "<img src=\"" + emoji["url"] + "\" height=\"16\">"));
+							});
+							$(".placeholder__username").html(twemoji.parse($(".placeholder__username").html()));
+						} else {
+							$("#text__username").hide();
+						}
                     }).error(function() {
                         $("#text__username").hide();
                     });
@@ -296,8 +302,12 @@ $(document).ready(function() {
     }
 
     $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-        $("#profile__picture").attr("src", data["kspic"]);
-        $("#profile__picture").show();
+        if (data["login"] === "ok") {
+			$("#profile__picture").attr("src", data["kspic"]);
+			$("#profile__picture").show();
+		} else {
+			$("#profile__picture").hide();
+		}
     }).error(function() {
         $("#profile__picture").hide();
     });

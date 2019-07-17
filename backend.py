@@ -21,6 +21,7 @@ def getpodcast():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
+    response.set_header("Cache-Control", "public, max-age=604800")
     return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
 
 @get("/api/v1/getbanner/<val>")
@@ -125,43 +126,61 @@ def getname(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    mastodon = Mastodon(
-        access_token = 'authtokens/'+username+'.'+instance+'.secret',
-        api_base_url = 'https://'+instance
-    )
-    userdict = mastodon.account_verify_credentials()
-    if suid == uuid:
-        ksname = userdict.display_name
-        ksemojis = userdict.emojis
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
+    if not uuid == "dummy":
+        mastodon = Mastodon(
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
+        )
+        userdict = mastodon.account_verify_credentials()
+    try:
+        if suid == uuid:
+            ksname = userdict.display_name
+            ksemojis = userdict.emojis
+            return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
+        else:
+            return "{\"login\": \"error\"}"
+    except:
+        return "{\"login\": \"error\"}"
 
 @get("/api/v1/getpic/<username>/<uuid>/<instance>")
 def getpic(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    mastodon = Mastodon(
-        access_token = 'authtokens/'+username+'.'+instance+'.secret',
-        api_base_url = 'https://'+instance
-    )
-    userdict = mastodon.account_verify_credentials()
-    if suid == uuid:
-        kspic = userdict.avatar
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
+    if not uuid == "dummy":
+        mastodon = Mastodon(
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
+        )
+        userdict = mastodon.account_verify_credentials()
+    try:
+        if suid == uuid:
+            kspic = userdict.avatar
+            return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
+        else:
+            return "{\"login\": \"error\"}"
+    except:
+        return "{\"login\": \"error\"}"
 
 @get("/api/v1/getemoji/<username>/<uuid>/<instance>")
 def getemoji(username, uuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    mastodon = Mastodon(
-        access_token = 'authtokens/'+username+'.'+instance+'.secret',
-        api_base_url = 'https://'+instance
-    )
-    mastodon.account_verify_credentials().source.note
-    if suid == uuid:
-        ksemoji = mastodon.custom_emojis()
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksemoji": ksemoji})
+    if not uuid == "dummy":
+        mastodon = Mastodon(
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
+        )
+        userdict = mastodon.account_verify_credentials()
+    try:
+        if suid == uuid:
+            ksemoji = mastodon.custom_emojis()
+            return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksemoji": ksemoji})
+        else:
+            return "{\"login\": \"error\"}"
+    except:
+        return "{\"login\": \"error\"}"
 
 @get("/api/v1/search/<lang>/<query>")
 def search(lang,query):
