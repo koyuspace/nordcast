@@ -312,3 +312,7 @@ h1 .emoji {
 #element__author {
     text-align: center;
 }
+
+#object__noresults {
+    text-align: center;
+}

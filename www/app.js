@@ -116,7 +116,7 @@ $(document).ready(function() {
                         },200);
                         var feedtitle = callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0];
                         $("#text__cast").html(twemoji.parse(feedtitle));
-                        if (callback.feed.subtitle === undefined || callback.feed.subtitle === "") {
+                        if (callback.feed.subtitle === undefined || callback.feed.subtitle === "" || callback.feed.subtitle.includes("…")) {
                             $("#text__subtitle").hide();
                         } else {
                             $("#text__subtitle").html("<br><br>"+callback.feed.subtitle+"<br><br><br>");
@@ -127,7 +127,9 @@ $(document).ready(function() {
                             author = "Nordisch Media";
                         }
                         $("#text__author").html(author);
-                        $("#text__description").html(callback.feed.summary_detail.value.replaceAll("\n", "<br />"));
+                        try {
+                            $("#text__description").html(callback.feed.summary_detail.value.replaceAll("\n", "<br />"));
+                        } catch (e) {}
                         callback.entries.forEach(function(item) {
                             var secret = "";
                             secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "");
@@ -215,6 +217,9 @@ $(document).ready(function() {
                     data["results"].forEach(function(item) {
                         $("#searchtable tbody").append("<tr><td><a class=\"cardlink\" data-cast=\""+Base64.encode(item.feedUrl)+"\"><img src=\""+item.artworkUrl100+"\" class=\"card__small\"></a></td><td><a class=\"cardlink\" data-cast=\""+Base64.encode(item.feedUrl)+"\" style=\"color:#333;\">"+twemoji.parse(item.collectionName)+"</a></td></tr>");
                     });
+                    if (data["resultCount"] === 0) {
+                        $("#searchtable").html("<p id=\"object__noresults\"><b id=\"error__noresults\">No results found.</b></p>")
+                    }
                     $("#view__search").show();
                 });
             });
@@ -454,13 +459,14 @@ $(document).ready(function() {
                         $("#text__results").html("Suchergebnisse für");
                         $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
                         $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
+                        $("#error__noresults").html("Keine Suchergebnisse.");
                     }, 600);
                 } else {
                     localStorage.setItem("lang", "ca");
                 }
             });
         }
-    }, 200);
+    }, 1);
 });
 
 $(document).on('click', 'a[href^="http"]', function (e) {
