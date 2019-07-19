@@ -21,7 +21,7 @@ def getpodcast():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    response.set_header("Cache-Control", "public, max-age=604800")
+    response.set_header("Cache-Control", "public, max-age=600")
     return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
 
 @get("/api/v1/getbanner/<val>")
