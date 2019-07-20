@@ -1,4 +1,5 @@
 var playing = false;
+var platform = "";
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     var player = document.getElementById("player");
     if (feed === undefined) {
@@ -38,11 +39,23 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $("#bplay").attr("class", "playbutton ion-md-play");
             if ($("#player").attr("src") !== file) {
                 $("#player").attr("src", "");
-                player.pause();
+                if (platform !== "ios") {
+                    player.pause();
+                } else {
+                    addEventListener('touchstart', function (e) {
+                        player.pause();
+                    });
+                }
                 playing = false;
                 playcast(file);
             } else {
-                player.pause();
+                if (platform !== "ios") {
+                    player.pause();
+                } else {
+                    addEventListener('touchstart', function (e) {
+                        player.pause();
+                    });
+                }
                 playing = false;
             }
         }
@@ -62,24 +75,48 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret+"/"+localStorage.getItem("instance"), function(data) {
                 if (data["login"] === "error") {
                     player.currentTime = 0;
-                    player.play();
+                    if (platform !== "ios") {
+                        player.play();
+                    } else {
+                        addEventListener('touchstart', function (e) {
+                            player.play();
+                        });
+                    }
                 } else {
                     if (debug) {
                         console.log(data);
                     }
                     if (data["pos"] === "None") {
                         player.currentTime = 0;
-                        player.play();
+                        if (platform !== "ios") {
+                            player.play();
+                        } else {
+                            addEventListener('touchstart', function (e) {
+                                player.play();
+                            });
+                        }
                     } else {
                         player.currentTime = parseInt(data["pos"]);
-                        player.play();
+                        if (platform !== "ios") {
+                            player.play();
+                        } else {
+                            addEventListener('touchstart', function (e) {
+                                player.play();
+                            });
+                        }
                     }
                 }
             }).error(function() {
                 if (localStorage.getItem("uuid") !== "dummy") {
                     player.currentTime = 0;
                 }
-                player.play();
+                if (platform !== "ios") {
+                    player.play();
+                } else {
+                    addEventListener('touchstart', function (e) {
+                        player.play();
+                    });
+                }
             });
             if (localStorage.getItem("uuid") !== "dummy") {
                 window.setInterval(function() {
@@ -124,6 +161,7 @@ function onDeviceReady() {
         var player = document.getElementById("player");
         $("#timeleft").html("-"+String(player.duration - player.currentTime).toHHMMSS());
     }, 100);
+    platform = device.platform;
 }
 
 function ffw() {
