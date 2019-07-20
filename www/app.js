@@ -35,9 +35,8 @@ $(document).ready(function() {
         if (localStorage.getItem("uuid") !== "dummy") {
             if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
                 localStorage.clear();
-                window.setTimeout(function() {
-                    location.href = "index.html";
-                }, 200);
+                localStorage.setItem("uuid", "dummy");
+                location.reload();
             }
         }
     }).error(function() {
