@@ -119,7 +119,11 @@ $(document).ready(function() {
                         window.setTimeout(function() {
                             $("#img__cast").primaryColor({
                                 callback: function(color) {
-                                    $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
+                                    if (localStorage.getItem("darkmode") === "true") {
+                                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
+                                    } else {
+                                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
+                                    }
                                 }
                             });
                             $("#view__cast").show();
