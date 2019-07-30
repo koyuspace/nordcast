@@ -18,6 +18,11 @@ String.prototype.replaceAll = function(search, replacement) {
 var kicker = false;
 
 $(document).ready(function() {
+    window.setInterval(function() {
+        $.get("https://www.google.com", function() { }).fail(function() {
+            location.href = "index.html";
+        });
+    }, 500);
     if (localStorage.getItem("darkmode") === "true") {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__nav").attr("src", "logo_dark.png");
@@ -270,6 +275,8 @@ $(document).ready(function() {
                                 }
                                 window.setTimeout(function() {
                                     $("#view__main").show();
+                                    $(".fa__nav").show();
+                                    $(".fa__nav2").show();
                                 }, timeout);
                                 $("#section__list").html($("#section__list").html()+"<p>");
                                 data["podlist"].split(",").forEach(function(feed) {
@@ -540,7 +547,6 @@ function onDeviceReady() {
             location.href = "app.html#view=main";
             loadview();
         }
-        e.preventDefault();
     });
 }
 

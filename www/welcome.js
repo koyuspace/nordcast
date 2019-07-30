@@ -17,6 +17,18 @@ $(document).ready(function() {
             $("#logo__intro").hide();
             $("#view__welcome").show();
             $("#nav").show();
+            try {
+                if (!error) {
+                    $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                        if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
+                            location.href = "app.html#view=main";
+                        }
+                    });
+                    if (localStorage.getItem("uuid") === "dummy") {
+                        location.href = "app.html#view=main";
+                    }
+                }
+            } catch (e) {}
         }).fail(function() {
             error = true;
             $("#logo__intro").attr("style", "top: calc(50% - 50px)");
@@ -32,23 +44,13 @@ $(document).ready(function() {
                     es = true;
                 }
                 $.get("https://www.google.com", function() { }).done(function() {
-                    location.reload();
+                    if (error) {
+                        location.reload();
+                    }
                 });
             }, 500)
         });
     }, 2000);
-    try {
-        if (!error) {
-            $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-                if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
-                    location.href = "app.html#view=main";
-                }
-            });
-            if (localStorage.getItem("uuid") === "dummy") {
-                location.href = "app.html#view=main";
-            }
-        }
-    } catch (e) {}
     $("#kslogin").click(function() {
         //Blocking gab, don't judge me
         if ($("#instance").val().toLowerCase().includes("gab.com") || $("#instance").val().toLowerCase().includes("gab.ai")) {
