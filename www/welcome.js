@@ -38,7 +38,7 @@ $(document).ready(function() {
         });
     }, 2000);
     try {
-        if (error) {
+        if (!error) {
             $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                 if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
                     location.href = "app.html#view=main";
