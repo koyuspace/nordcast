@@ -10,3 +10,7 @@ a {
 #podtable tr:nth-child(even) {
     background: #111;
 }
+
+#player__controls {
+    background: #191919;
+}

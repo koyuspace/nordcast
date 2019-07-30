@@ -279,6 +279,7 @@ h1 .emoji {
 
 #timer {
     margin-right: 60px;
+    margin-left: -20px;
 }
 
 #img__cast2 {
@@ -316,4 +317,13 @@ h1 .emoji {
 
 #object__noresults {
     text-align: center;
+}
+
+#podtitle {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#timer, #timeleft {
+    line-height: 2;
 }
