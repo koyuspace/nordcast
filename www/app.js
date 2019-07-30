@@ -131,7 +131,12 @@ $(document).ready(function() {
                         } catch (e) {}
                         callback.entries.forEach(function(item) {
                             var secret = "";
-                            secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "");
+                            try {
+                                secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "");
+                            } catch (e) {}
+                            if (secret === "") {
+                                secret = Base64.encode(item.link).replace("==", "");
+                            }
                             var podurl = "";
                             item.links.forEach(function(el) {
                                 if (el.type.includes("audio")) {
@@ -142,11 +147,16 @@ $(document).ready(function() {
                                 }
                             });
                             var shownotes = "";
-                            item.content.forEach(function(el) {
-                                if (el.type === "text/html") {
-                                    shownotes = el.value;
-                                }
-                            });
+                            try {
+                                item.content.forEach(function(el) {
+                                    if (el.type === "text/html") {
+                                        shownotes = el.value;
+                                    }
+                                });
+                            } catch (e) {}
+                            if (shownotes === "") {
+                                shownotes = item.summary;
+                            }
                             if (shownotes === "") {
                                 shownotes = item.summary;
                             }
