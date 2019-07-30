@@ -21,7 +21,7 @@ $(document).ready(function() {
     } catch (e) {}
     $("#kslogin").click(function() {
         //Blocking gab, don't judge me
-        if ($("#instance").val().includes("gab.com") || $("#instance").val().includes("gab.ai")) {
+        if ($("#instance").val().toLowerCase().includes("gab.com") || $("#instance").val().toLowerCase().includes("gab.ai")) {
             $("#kslogin").removeAttr("disabled");
             $("#kslogin").html(oldHTML);
             window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_system');
