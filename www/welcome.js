@@ -1,26 +1,52 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 var warning_nologin = "Warning: If you don't login you'll be only able to listen to podcasts. This might be suitable for you, but you won't be able to follow podcasts or save your current listening position. Are you sure you want to continue?";
+var es = false;
+var error = false;
 $(document).ready(function() {
     if (localStorage.getItem("darkmode") === "true") {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__intro").attr("src", "logo_dark.png");
     }
+    $("#text__offline").hide();
     $("#welcome__error").hide();
     $("#view__welcome").hide();
     $("#nav").hide();
+    $("#logo__intro").attr("style", "top: 50%;");
     window.setTimeout(function() {
-        $("#logo__intro").hide();
-        $("#view__welcome").show();
-        $("#nav").show();
+        $.get("https://www.google.com", function() {
+            $("#logo__intro").hide();
+            $("#view__welcome").show();
+            $("#nav").show();
+        }).fail(function() {
+            error = true;
+            $("#logo__intro").attr("style", "top: calc(50% - 50px)");
+            $("#text__offline").show();
+            $("#view__welcome").hide();
+            $("#logo__intro").attr("src", "offline.svg");
+            window.setInterval(function() {
+                if (es) {
+                    $("#logo__intro").show();
+                    es = false;
+                } else {
+                    $("#logo__intro").hide();
+                    es = true;
+                }
+                $.get("https://www.google.com", function() { }).done(function() {
+                    location.reload();
+                });
+            }, 500)
+        });
     }, 2000);
     try {
-        $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-            if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
+        if (error) {
+            $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
+                    location.href = "app.html#view=main";
+                }
+            });
+            if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "app.html#view=main";
             }
-        });
-        if (localStorage.getItem("uuid") === "dummy") {
-            location.href = "app.html#view=main";
         }
     } catch (e) {}
     $("#kslogin").click(function() {
@@ -97,7 +123,7 @@ function onDeviceReady() {
         if (language.value.includes("de")) {
             $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
             $("#text__safe").html("Deine Daten sind sicher.");
-            $("h1").html("Willkommen bei Nordcast");
+            $("#header__welcome").html("Willkommen bei Nordcast");
             $("#text__welcome").html("Bitte melde dich mit deinem Mastodon-Account an. Solltest du noch keinen Account haben, kannst du dir <a href=\"#\" onclick=\"window.open('https://koyu.space/auth/sign_up', '_system'); return false;\">hier</a> einen machen.");
             $("#username").attr("placeholder", "E-Mailadresse");
             $("#password").attr("placeholder", "Passwort");

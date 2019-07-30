@@ -27,7 +27,13 @@ body {
 
 #logo__intro {
     position: absolute;
-    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#text__offline {
+    position: absolute;
+    top: calc(50% + 40px);
     left: 50%;
     transform: translate(-50%, -50%);
 }

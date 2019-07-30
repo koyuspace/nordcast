@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="jquery-ui.css">
         <script src="jquery-1.12.4.js"></script>
         <script src="jquery-ui.js"></script>
-        <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
+        <link href="ionicons.css" rel="stylesheet">
         <link rel="stylesheet" href="bootstrap.min.css">
         <script src="config.js"></script>
         <script src="cordova.js"></script>
@@ -19,8 +19,9 @@
     </head>
     <body>
         <img src="logo.png" height="128" alt="Logo" id="logo__intro" />
+        <h1><span id="text__offline">Offline</span></h1>
         <div id="view__welcome">
-            <h1>Welcome to Nordcast</h1>
+            <h1 id="header__welcome">Welcome to Nordcast</h1>
             <p id="text__welcome">Please log in with your koyu.space, Mastodon or Pleroma account. If you don't have an account, you can sign up <a href="#" onclick="window.open('https://koyu.space/auth/sign_up', '_system'); return false;">here</a>.</p>
             <p><input type="email" id="username" placeholder="E-mail"></p>
             <p><input type="password" id="password" placeholder="Password"></p>
