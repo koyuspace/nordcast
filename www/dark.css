@@ -1,0 +1,12 @@
+body, #nav, #wrapper__search {
+    background: #191919 !important;
+    color: #fff;
+}
+
+a {
+    color: #fff !important;
+}
+
+#podtable tr:nth-child(even) {
+    background: #111;
+}
