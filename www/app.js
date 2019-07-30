@@ -525,7 +525,6 @@ $(document).on('click', 'a[href^="http"]', function (e) {
 
 function onDeviceReady() {
     document.addEventListener("backbutton", function (e) {
-        e.preventDefault();
         if (!loading) {
             $("#view__cast").hide();
             $("#view__search").hide();
@@ -536,6 +535,7 @@ function onDeviceReady() {
             location.href = "app.html#view=main";
             loadview();
         }
+        e.preventDefault();
     });
 }
 
