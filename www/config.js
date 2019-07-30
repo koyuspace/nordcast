@@ -6,6 +6,9 @@ function onDeviceReady() {
         screen.orientation.lock('portrait');
         StatusBar.backgroundColorByHexString("#fff");
     }
+    document.addEventListener("backbutton", function (e) {
+        e.preventDefault();
+    });
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);

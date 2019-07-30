@@ -18,6 +18,10 @@ String.prototype.replaceAll = function(search, replacement) {
 var kicker = false;
 
 $(document).ready(function() {
+    if (localStorage.getItem("darkmode") === "true") {
+        $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
+        $("#logo__nav").attr("src", "logo_dark.png");
+    }
     var loading = false;
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
@@ -67,6 +71,13 @@ $(document).ready(function() {
             $("#wrapper__search").hide();
             searchtoggle = false;
             $("#view__settings").show();
+            if (localStorage.getItem("darkmode") === "true") {
+                $("#cdark__mode").attr("checked", "");
+                $("#starwars").attr("src", "clonetrooper.png");
+            } else {
+                $("#cdark__mode").removeAttr("checked");
+                $("#starwars").attr("src", "darth.png");
+            }
         }
         if (findGetParameter("view") === "cast") {
             $("#nav").show();
@@ -429,6 +440,30 @@ $(document).ready(function() {
         }
     });
 
+    $("#cdark__mode").click(function() {
+        if (localStorage.getItem("darkmode") === "true") {
+            localStorage.setItem("darkmode", "false");
+            $("#cdark__mode").removeAttr("checked");
+            $("#starwars").attr("src", "darth.png");
+            try {
+                $("head").html($("head").html().replace("<link rel=\"stylesheet\" href=\"dark.css\">", ""));
+            } catch (e) {}
+        } else {
+            localStorage.setItem("darkmode", "true");
+            $("#cdark__mode").attr("checked", "");
+            $("#starwars").attr("src", "clonetrooper.png");
+            $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
+        }
+        if (localStorage.getItem("darkmode") === "true") {
+            $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
+            $("#cdark__mode").attr("checked", "");
+        }
+        if (localStorage.getItem("darkmode") === "false") {
+            $("#logo__nav").attr("src", "logo.png?v="+new Date().getMilliseconds());
+            $("#cdark__mode").removeAttr("checked");
+        }
+    });
+
     $(document).on("click", "a", function(e) {
         if ($(this).attr("data-cast") && !loading) {
             $("#view__main").hide();
@@ -461,6 +496,10 @@ $(document).ready(function() {
                     $("#text__by").html("von");
                     $("#logout").html("Abmelden");
                     $("#view__settings h1").html("Einstellungen");
+                    $("#text__session").html("Sitzung");
+                    $("#text__darkmode").html("Dunklen Modus aktivieren");
+                    $("#text__theme").html("Theme");
+                    $("#text__about").html("Über");
                     $("#qq").attr("placeholder", "Suchbegriff");
                     $("#button__follow").html("Folgen");
                     $("#button__unfollow").html("Entfolgen");
