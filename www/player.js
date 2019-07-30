@@ -154,12 +154,27 @@ String.prototype.toHHMMSS = function () {
 function onDeviceReady() {
     window.setInterval(function() {
         var player = document.getElementById("player");
-        $("#timer").html(String(player.currentTime).toHHMMSS());
+        var timeleft = "-"+String(player.duration - player.currentTime).toHHMMSS();
+        if (!timeleft.includes("NaN")) {
+            $("#timer").html(String(player.currentTime).toHHMMSS());
+        }
     }, 1);
     
     window.setInterval(function() {
         var player = document.getElementById("player");
-        $("#timeleft").html("-"+String(player.duration - player.currentTime).toHHMMSS());
+        var timeleft = "-"+String(player.duration - player.currentTime).toHHMMSS();
+        if (timeleft.includes("NaN")) {
+            navigator.globalization.getPreferredLanguage(function (language) {
+                if (language.value.includes("de")) {
+                    $("#timer").html("<span id=\"text__loading\">Lädt...</span>");
+                } else {
+                    $("#timer").html("<span id=\"text__loading\">Loading...</span>");
+                }
+            });
+            $("#timeleft").html("");
+        } else {
+            $("#timeleft").html(timeleft);
+        }
     }, 100);
     platform = device.platform;
 }

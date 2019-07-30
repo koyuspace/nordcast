@@ -507,6 +507,7 @@ $(document).ready(function() {
                     $("#qq").attr("placeholder", "Suchbegriff");
                     $("#button__follow").html("Folgen");
                     $("#button__unfollow").html("Entfolgen");
+                    $("#text__loading").html("Lädt...");
                     window.setTimeout(function() {
                         $("#text__results").html("Suchergebnisse für");
                         $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
