@@ -20,7 +20,7 @@ var loading = false;
 
 $(document).ready(function() {
     window.setInterval(function() {
-        $.get("https://www.google.com", function() { }).fail(function() {
+        $.get("https://api.nordcast.app", function() { }).fail(function() {
             location.href = "index.html";
         });
     }, 500);

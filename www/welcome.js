@@ -13,8 +13,9 @@ $(document).ready(function() {
     $("#nav").hide();
     $("#logo__intro").attr("style", "top: 50%;");
     window.setTimeout(function() {
-        $.get("https://www.google.com", function() {
+        $.get("https://api.nordcast.app", function() {
             $("#logo__intro").hide();
+            $("#view__welcome").show();
             $("#nav").show();
             try {
                 if (!error) {
@@ -25,8 +26,6 @@ $(document).ready(function() {
                     });
                     if (localStorage.getItem("uuid") === "dummy") {
                         location.href = "app.html#view=main";
-                    } else {
-                        $("#view__welcome").show();
                     }
                 }
             } catch (e) {}
@@ -44,7 +43,7 @@ $(document).ready(function() {
                     $("#logo__intro").hide();
                     es = true;
                 }
-                $.get("https://www.google.com", function() { }).done(function() {
+                $.get("https://api.nordcast.app", function() { }).done(function() {
                     if (error) {
                         location.reload();
                     }
