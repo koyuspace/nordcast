@@ -418,7 +418,12 @@ $(document).ready(function() {
     $("#link__cast").click(function() {
         if (!loading) {
             window.setTimeout(function() {
+                $("#view__cast").hide();
+                $("#view__search").hide();
+                $("#view_settings").hide();
                 $("#view__main").hide();
+                $(".fa__nav").show();
+                $(".fa__nav2").show();
                 loadview();
             }, 500);
         }
@@ -456,6 +461,7 @@ $(document).ready(function() {
             localStorage.setItem("darkmode", "false");
             $("#cdark__mode").removeAttr("checked");
             $("#starwars").attr("src", "darth.png");
+            StatusBar.backgroundColorByHexString("#fff");
             try {
                 $("head").html($("head").html().replace("<link rel=\"stylesheet\" href=\"dark.css\">", ""));
             } catch (e) {}
@@ -463,15 +469,18 @@ $(document).ready(function() {
             localStorage.setItem("darkmode", "true");
             $("#cdark__mode").attr("checked", "");
             $("#starwars").attr("src", "clonetrooper.png");
+            StatusBar.backgroundColorByHexString("#333");
             $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         }
         if (localStorage.getItem("darkmode") === "true") {
             $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
             $("#cdark__mode").attr("checked", "");
+            StatusBar.backgroundColorByHexString("#333");
         }
         if (localStorage.getItem("darkmode") === "false") {
             $("#logo__nav").attr("src", "logo.png?v="+new Date().getMilliseconds());
             $("#cdark__mode").removeAttr("checked");
+            StatusBar.backgroundColorByHexString("#fff");
         }
     });
 

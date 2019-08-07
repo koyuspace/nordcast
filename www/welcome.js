@@ -15,7 +15,6 @@ $(document).ready(function() {
     window.setTimeout(function() {
         $.get("https://www.google.com", function() {
             $("#logo__intro").hide();
-            $("#view__welcome").show();
             $("#nav").show();
             try {
                 if (!error) {
@@ -26,6 +25,8 @@ $(document).ready(function() {
                     });
                     if (localStorage.getItem("uuid") === "dummy") {
                         location.href = "app.html#view=main";
+                    } else {
+                        $("#view__welcome").show();
                     }
                 }
             } catch (e) {}
