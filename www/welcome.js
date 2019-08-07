@@ -120,6 +120,7 @@ $(document).ready(function() {
 function onDeviceReady() {
     if (cordova.platformId == 'android') {
         StatusBar.backgroundColorByHexString("#fff");
+        StatusBar.styleDefault();
         if (localStorage.getItem("darkmode") === "true") {
             StatusBar.backgroundColorByHexString("#191919");
             StatusBar.styleLightContent();
