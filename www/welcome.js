@@ -120,6 +120,10 @@ $(document).ready(function() {
 function onDeviceReady() {
     if (cordova.platformId == 'android') {
         StatusBar.backgroundColorByHexString("#fff");
+        if (localStorage.getItem("darkmode") === "true") {
+            StatusBar.backgroundColorByHexString("#191919");
+            StatusBar.styleLightContent();
+        }
     }
     navigator.globalization.getPreferredLanguage(function (language) {
         //German

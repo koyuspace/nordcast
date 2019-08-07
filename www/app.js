@@ -16,6 +16,7 @@ String.prototype.replaceAll = function(search, replacement) {
 };
 
 var kicker = false;
+var loading = false;
 
 $(document).ready(function() {
     window.setInterval(function() {
@@ -27,7 +28,6 @@ $(document).ready(function() {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__nav").attr("src", "logo_dark.png");
     }
-    var loading = false;
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
     window.setInterval(function() {
@@ -462,6 +462,7 @@ $(document).ready(function() {
             $("#cdark__mode").removeAttr("checked");
             $("#starwars").attr("src", "darth.png");
             StatusBar.backgroundColorByHexString("#fff");
+            StatusBar.styleDefault();
             try {
                 $("head").html($("head").html().replace("<link rel=\"stylesheet\" href=\"dark.css\">", ""));
             } catch (e) {}
@@ -469,18 +470,21 @@ $(document).ready(function() {
             localStorage.setItem("darkmode", "true");
             $("#cdark__mode").attr("checked", "");
             $("#starwars").attr("src", "clonetrooper.png");
-            StatusBar.backgroundColorByHexString("#333");
+            StatusBar.backgroundColorByHexString("#191919");
+            StatusBar.styleLightContent();
             $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         }
         if (localStorage.getItem("darkmode") === "true") {
             $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
             $("#cdark__mode").attr("checked", "");
-            StatusBar.backgroundColorByHexString("#333");
+            StatusBar.backgroundColorByHexString("#191919");
+            StatusBar.styleLightContent();
         }
         if (localStorage.getItem("darkmode") === "false") {
             $("#logo__nav").attr("src", "logo.png?v="+new Date().getMilliseconds());
             $("#cdark__mode").removeAttr("checked");
             StatusBar.backgroundColorByHexString("#fff");
+            StatusBar.styleDefault();
         }
     });
 
@@ -545,18 +549,24 @@ $(document).on('click', 'a[href^="http"]', function (e) {
 });
 
 function onDeviceReady() {
-    document.addEventListener("backbutton", function (e) {
-        if (!loading) {
-            $("#view__cast").hide();
-            $("#view__search").hide();
-            $("#view_settings").hide();
-            $("#view__main").hide();
-            $(".fa__nav").show();
-            $(".fa__nav2").show();
-            location.href = "app.html#view=main";
-            loadview();
-        }
-    });
+    if (localStorage.getItem("darkmode") === "true") {
+        StatusBar.backgroundColorByHexString("#191919");
+        StatusBar.styleLightContent();
+    }
+    document.addEventListener("backbutton", onBackKeyDown, false);
+}
+
+function onBackKeyDown() {
+    if (!loading) {
+        $("#view__cast").hide();
+        $("#view__search").hide();
+        $("#view_settings").hide();
+        $("#view__main").hide();
+        $(".fa__nav").show();
+        $(".fa__nav2").show();
+        location.href = "app.html#view=main";
+        kicker = true;
+    }
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
