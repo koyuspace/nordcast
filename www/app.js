@@ -28,6 +28,9 @@ $(document).ready(function() {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__nav").attr("src", "logo_dark.png");
     }
+    if (!donator) {
+        $(".addfeed").hide();
+    }
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
     window.setInterval(function() {
@@ -66,6 +69,7 @@ $(document).ready(function() {
         $("#view__cast").hide();
         $("#view__settings").hide();
         $("#view__main").hide();
+        $("#view__addfeed").hide();
         $("#snclose").hide();
         if (findGetParameter("view") === "settings") {
             $("#view__main").hide();
@@ -73,6 +77,7 @@ $(document).ready(function() {
             $("#view__search").hide();
             $(".fa__nav").hide();
             $(".fa__nav2").hide();
+            $(".addfeed").hide();
             $("#wrapper__search").hide();
             searchtoggle = false;
             $("#view__settings").show();
@@ -253,6 +258,25 @@ $(document).ready(function() {
                 });
             });
         } 
+        if (findGetParameter("view") === "addfeed") {
+            $("#addfeed__rss").val("");
+            $("#view__addfeed").show();
+            $("#addfeed__rss").keypress(function(e) {
+                if (e.which === 13) {
+                    location.href = "app.html#view=cast&cast="+Base64.encode($("#addfeed__rss").val());
+                    window.setTimeout(function() {
+                        loadview();
+                    }, 200);
+                    return false;
+                }
+            });
+            $("#addfeed__submit").click(function() {
+                location.href = "app.html#view=cast&cast="+Base64.encode($("#addfeed__rss").val());
+                window.setTimeout(function() {
+                    loadview();
+                }, 200);
+            });
+        }
         if (findGetParameter("view") === "main") {
             $.get("views/mainview.html", function(data) {
                 $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
@@ -277,6 +301,9 @@ $(document).ready(function() {
                                     $("#view__main").show();
                                     $(".fa__nav").show();
                                     $(".fa__nav2").show();
+                                    if (donator) {
+                                        $(".addfeed").show();
+                                    }
                                 }, timeout);
                                 $("#section__list").html($("#section__list").html()+"<p>");
                                 data["podlist"].split(",").forEach(function(feed) {
@@ -410,6 +437,9 @@ $(document).ready(function() {
             $("#view__main").hide();
             $(".fa__nav").show();
             $(".fa__nav2").show();
+            if (donator) {
+                $(".addfeed").show();
+            }
             location.href = "app.html#view=main";
             loadview();
         }
@@ -424,6 +454,9 @@ $(document).ready(function() {
                 $("#view__main").hide();
                 $(".fa__nav").show();
                 $(".fa__nav2").show();
+                if (donator) {
+                    $(".addfeed").show();
+                }
                 loadview();
             }, 500);
         }
@@ -499,6 +532,13 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
+    $(".addfeed").click(function() {
+        if (!loading) {
+            location.href = "app.html#view=addfeed";
+            loadview();
+        }
+    });
+
     window.setInterval(function() {
         if (kicker === true) {
             kicker = false;
@@ -528,6 +568,9 @@ $(document).ready(function() {
                     $("#button__follow").html("Folgen");
                     $("#button__unfollow").html("Entfolgen");
                     $("#text__loading").html("Lädt...");
+                    $("#text__addfeed").html("RSS-Feed hinzufügen");
+                    $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
+                    $("#addfeed__rss").attr("placeholder", "RSS-Feed");
                     window.setTimeout(function() {
                         $("#text__results").html("Suchergebnisse für");
                         $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
@@ -564,6 +607,9 @@ function onBackKeyDown() {
         $("#view__main").hide();
         $(".fa__nav").show();
         $(".fa__nav2").show();
+        if (donator) {
+            $(".addfeed").show();
+        }
         location.href = "app.html#view=main";
         kicker = true;
     }

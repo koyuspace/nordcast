@@ -7,7 +7,7 @@
         <meta http-equiv="Content-Security-Policy" content="default-src *; style-src *  'unsafe-inline'; script-src *  'unsafe-inline'; media-src *">
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="jquery-ui.css">
-        <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
+        <link href="ionicons.css" rel="stylesheet">
         <script src="jquery-1.12.4.js"></script>
         <script src="jquery-ui.js"></script>
         <script src="base64.js"></script>
@@ -30,6 +30,7 @@
             <a href="#" onclick="window.open('https://'+localStorage.getItem('instance')+'/settings/profile', '_system'); return false;"><img height="96" alt="Profile picture" class="card__small1" id="profile__picture" /></a>
             <i class="ion-md-settings fa__nav"></i>
             <i class="fa__nav2 ion-md-search fa__nav2"></i>
+            <i class="addfeed ion-logo-rss"></i>
             <div id="wrapper__search">
                 <input type="text" id="qq" placeholder="Search term" />
             </div>
@@ -62,6 +63,14 @@
             <p>Nordcast 1.4.1</p>
             <p><a href="#" onclick="window.open('https://nordcast.app', '_system'); return false;">Website</a> | <a href="#" onclick="window.open('https://git.koyu.space/koyu/nordcast', '_system'); return false;">Source code</a></p>
             <p>&copy; koyu.space 2019</p>
+        </div>
+        <div id="view__addfeed">
+            <h1 id="text__addfeed">Load feed</h1>
+            <p id="feed__summary">From here you can load your RSS feeds manually into the app.</p><br />
+            <div style="text-align: center;">
+                <input type="text" placeholder="RSS feed" id="addfeed__rss">
+                <button id="addfeed__submit" class="btn btn-primary">Add RSS feed</button>
+            </div>
         </div>
         <script src="imagesloaded.js"></script>
     </body>

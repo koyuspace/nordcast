@@ -131,16 +131,23 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 15px;
 }
 
+.addfeed {
+    font-size: 24px;
+    margin-top: -65px;
+    margin-right: 110px;
+    float: right;
+}
+
 .fa__nav {
     font-size: 24px;
-    margin-top: -60px;
+    margin-top: -65px;
     margin-right: 25px;
     float: right;
 }
 
 .fa__nav2 {
     font-size: 24px;
-    margin-top: -60px;
+    margin-top: -65px;
     margin-right: 70px;
     float: right;
 }
@@ -184,7 +191,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #view__welcome input,
-#view__welcome input:focus {
+#view__welcome input:focus,
+#view__addfeed input,
+#view__addfeed input:focus {
     outline: 0;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -314,6 +323,10 @@ h1 .emoji {
     padding: 40px 20px 0px;
 }
 
+#view__addfeed {
+    padding: 90px 20px 0px;
+}
+
 #podtitle {
     text-align: center;
 }
@@ -333,4 +346,9 @@ h1 .emoji {
 
 #timer, #timeleft {
     line-height: 2;
+}
+
+#view__addfeed button {
+    height: 48px;
+    width: 85%;
 }
