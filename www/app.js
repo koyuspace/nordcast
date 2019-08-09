@@ -571,6 +571,7 @@ $(document).ready(function() {
                     $("#text__addfeed").html("RSS-Feed hinzufügen");
                     $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
                     $("#addfeed__rss").attr("placeholder", "RSS-Feed");
+                    $("#addfeed__submit"),html("RSS-Feed hinzufügen");
                     window.setTimeout(function() {
                         $("#text__results").html("Suchergebnisse für");
                         $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
