@@ -166,10 +166,10 @@ $(document).ready(function() {
                             item.links.forEach(function(el) {
                                 if (el.type.includes("audio")) {
                                     podurl = el.href;
-                                }
+                                } 
                                 if (el.type.includes("video")) {
-                                    $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
-                                }
+                                    podurl = el.href;
+                                } 
                             });
                             var shownotes = "";
                             try {
@@ -244,6 +244,11 @@ $(document).ready(function() {
         }
         if(findGetParameter("view") === "search") {
             $("#view__main").hide();
+            window.setInterval(function() {
+                $("img").on("load", function() {
+                    $("#view__"+findGetParameter("view")).show();
+                });
+            },1);
             $.get("views/searchview.html", function(data) {
                 $("#view__search").html(data);
                 $("#text__query").html(findGetParameter("q"));
@@ -254,7 +259,6 @@ $(document).ready(function() {
                     if (data["resultCount"] === 0) {
                         $("#searchtable").html("<p id=\"object__noresults\"><b id=\"error__noresults\">No results found.</b></p>")
                     }
-                    $("#view__search").show();
                 });
             });
         } 
@@ -278,6 +282,11 @@ $(document).ready(function() {
             });
         }
         if (findGetParameter("view") === "main") {
+            window.setTimeout(function() {
+                $("img").on("load", function() {
+                    $("#view__"+findGetParameter("view")).show();
+                });
+            },0);
             $.get("views/mainview.html", function(data) {
                 $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
                 window.setTimeout(function() {
@@ -289,11 +298,7 @@ $(document).ready(function() {
                         } else {
                             if (data["podlist"] === "None") {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
-                                window.setTimeout(function() {
-									$("#view__main").show();
-								}, 622*3);
                             } else {
-                                timeout = data["podlist"].split(",").length * 980;
                                 if (debug) {
                                     console.log(timeout);
                                 }
@@ -345,7 +350,7 @@ $(document).ready(function() {
                     $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "ok") {
 							$(".placeholder__username").html(data["ksname"]);
-							var ksemojis = data["ksemojis"];
+                            var ksemojis = data["ksemojis"];
 							if (debug) {
 								console.log(data["ksemojis"]);
 							}
@@ -549,40 +554,38 @@ $(document).ready(function() {
     $("#nav").show();
 
     window.setInterval(function() {
-        if (!$("#view__"+findGetParameter("view")).is(":visible")) {
-            navigator.globalization.getPreferredLanguage(function (language) {
-                //German
-                if (language.value.includes("de")) {
-                    localStorage.setItem("lang", "de");
-                    $("#text__featured").html("Angesagt");
-                    $("#text__list").html("Deine Liste");
-                    $("#text__hello").html("Hallo");
-                    $("#text__by").html("von");
-                    $("#logout").html("Abmelden");
-                    $("#view__settings h1").html("Einstellungen");
-                    $("#text__session").html("Sitzung");
-                    $("#text__darkmode").html("Dunklen Modus aktivieren");
-                    $("#text__theme").html("Theme");
-                    $("#text__about").html("Über");
-                    $("#qq").attr("placeholder", "Suchbegriff");
-                    $("#button__follow").html("Folgen");
-                    $("#button__unfollow").html("Entfolgen");
-                    $("#text__loading").html("Lädt...");
-                    $("#text__addfeed").html("RSS-Feed hinzufügen");
-                    $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
-                    $("#addfeed__rss").attr("placeholder", "RSS-Feed");
-                    $("#addfeed__submit"),html("RSS-Feed hinzufügen");
-                    window.setTimeout(function() {
-                        $("#text__results").html("Suchergebnisse für");
-                        $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
-                        $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
-                        $("#error__noresults").html("Keine Suchergebnisse.");
-                    }, 600);
-                } else {
-                    localStorage.setItem("lang", "ca");
-                }
-            });
-        }
+        navigator.globalization.getPreferredLanguage(function (language) {
+            //German
+            if (language.value.includes("de")) {
+                localStorage.setItem("lang", "de");
+                $("#text__featured").html("Angesagt");
+                $("#text__list").html("Deine Liste");
+                $("#text__hello").html("Hallo");
+                $("#text__by").html("von");
+                $("#logout").html("Abmelden");
+                $("#view__settings h1").html("Einstellungen");
+                $("#text__session").html("Sitzung");
+                $("#text__darkmode").html("Dunklen Modus aktivieren");
+                $("#text__theme").html("Theme");
+                $("#text__about").html("Über");
+                $("#qq").attr("placeholder", "Suchbegriff");
+                $("#button__follow").html("Folgen");
+                $("#button__unfollow").html("Entfolgen");
+                $("#text__loading").html("Lädt...");
+                $("#text__addfeed").html("RSS-Feed hinzufügen");
+                $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
+                $("#addfeed__rss").attr("placeholder", "RSS-Feed");
+                $("#addfeed__submit").html("RSS-Feed hinzufügen");
+                window.setTimeout(function() {
+                    $("#text__results").html("Suchergebnisse für");
+                    $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
+                    $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
+                    $("#error__noresults").html("Keine Suchergebnisse.");
+                }, 600);
+            } else {
+                localStorage.setItem("lang", "ca");
+            }
+        });
     }, 1);
 });
 
