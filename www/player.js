@@ -66,7 +66,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             if (author === "Nordisch Media Tobias Ain") {
                 author = "Nordisch Media";
             }
-            var podtitle = feedtitle + " - " + Base64.decode(title);
+            var podtitle = Base64.decode(feedtitle) + " - " + Base64.decode(title);
             $("#podtitle").html(twemoji.parse(podtitle));
             if (podtitle.length > 50) {
                 $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");

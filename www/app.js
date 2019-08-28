@@ -138,15 +138,27 @@ $(document).ready(function() {
                             });
                             $("#view__cast").show();
                         },200);
-                        var feedtitle = callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0];
-                        $("#text__cast").html(twemoji.parse(feedtitle));
+                        try {
+                            var feedtitle = callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0];
+                        } catch(e) {
+                            var feedtitle = callback.feed.title;
+                        }
+                        try {
+                            $("#text__cast").html(twemoji.parse(feedtitle));
+                        } catch (e) {
+                            $("#text__cast").html(feedtitle);
+                        }
                         if (callback.feed.subtitle === undefined || callback.feed.subtitle === "" || callback.feed.subtitle.includes("…")) {
                             $("#text__subtitle").hide();
                         } else {
                             $("#text__subtitle").html("<br><br>"+callback.feed.subtitle+"<br><br><br>");
                             $("#text__subtitle").show();
                         }
-                        var author = callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0];
+                        try {
+                            var author = callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0];
+                        } catch(e) {
+                            var author = callback.feed.author;
+                        }
                         if (author === "Nordisch Media Tobias Ain") {
                             author = "Nordisch Media";
                         }
@@ -185,7 +197,7 @@ $(document).ready(function() {
                             if (shownotes === "") {
                                 shownotes = item.summary;
                             }
-                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0]+"', '"+callback.feed.image.href+"', '"+feed+"', '"+feedtitle+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td></tr>");
+                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td></tr>");
                         });
                         $("#button__follow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0];
@@ -257,7 +269,8 @@ $(document).ready(function() {
                         $("#searchtable tbody").append("<tr><td><a class=\"cardlink\" data-cast=\""+Base64.encode(item.feedUrl)+"\"><img src=\""+item.artworkUrl100+"\" class=\"card__small\"></a></td><td><a class=\"cardlink\" data-cast=\""+Base64.encode(item.feedUrl)+"\" style=\"color:#333;\">"+twemoji.parse(item.collectionName)+"</a></td></tr>");
                     });
                     if (data["resultCount"] === 0) {
-                        $("#searchtable").html("<p id=\"object__noresults\"><b id=\"error__noresults\">No results found.</b></p>")
+                        $("#searchtable").html("<p id=\"object__noresults\"><b id=\"error__noresults\">No results found.</b></p>");
+                        $("#view__"+findGetParameter("view")).show();
                     }
                 });
             });
@@ -286,7 +299,7 @@ $(document).ready(function() {
                 $("img").on("load", function() {
                     $("#view__"+findGetParameter("view")).show();
                 });
-            },0);
+            },100);
             $.get("views/mainview.html", function(data) {
                 $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
                 window.setTimeout(function() {
