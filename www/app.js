@@ -311,6 +311,7 @@ $(document).ready(function() {
                         } else {
                             if (data["podlist"] === "None") {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
+                                $("#view__"+findGetParameter("view")).show();
                             } else {
                                 if (debug) {
                                     console.log(timeout);
