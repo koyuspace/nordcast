@@ -197,7 +197,10 @@ $(document).ready(function() {
                             if (shownotes === "") {
                                 shownotes = item.summary;
                             }
-                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td></tr>");
+                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+secret+"')\"></td></tr>");
+                            if (!donator) {
+                                $(".dlbutton").hide();
+                            }
                         });
                         $("#button__follow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0];
