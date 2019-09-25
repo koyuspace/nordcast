@@ -19,11 +19,6 @@ var kicker = false;
 var loading = false;
 
 $(document).ready(function() {
-    window.setInterval(function() {
-        $.get("https://api.nordcast.app", function() { }).fail(function() {
-            location.href = "index.html";
-        });
-    }, 500);
     if (localStorage.getItem("darkmode") === "true") {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__nav").attr("src", "logo_dark.png");
@@ -33,6 +28,10 @@ $(document).ready(function() {
     }
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
+    $("#view__cast").hide();
+    $("#view__search").hide();
+    $("#view_settings").hide();
+    $("#view__main").hide();
     window.setInterval(function() {
         if (!$("#view__"+findGetParameter("view")).is(":visible")) {
             $("#logo__intro").show();
@@ -41,7 +40,7 @@ $(document).ready(function() {
             $("#logo__intro").hide();
             loading = false;
         }
-    }, 10)
+    }, 200)
     $("#player__controls").hide();
     $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
         if (localStorage.getItem("uuid") !== "dummy") {
@@ -51,14 +50,7 @@ $(document).ready(function() {
                 location.reload();
             }
         }
-    }).error(function() {
-        if (localStorage.getItem("uuid") !== "dummy") {
-            localStorage.clear();
-            window.setTimeout(function() {
-                location.href = "index.html";
-            }, 200);
-        }
-    });
+    })
     var searchtoggle = false;
     $("#wrapper__search").hide();
     $("#profile__picture").hide();
@@ -114,6 +106,9 @@ $(document).ready(function() {
                             $("#button__follow").show();
                         }
                     }
+                }).error(function() {
+                    $("#button__follow").hide();
+                    $("#button__unfollow").hide();
                 });
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
@@ -197,7 +192,15 @@ $(document).ready(function() {
                             if (shownotes === "") {
                                 shownotes = item.summary;
                             }
-                            $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+secret+"')\"></td></tr>");
+                            try {
+                                if (!localStorage.getItem("downloaded").includes(secret)) {
+                                    $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                } else {
+                                    $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td><i class=\"ion-md-checkmark-circle downloaded\"></i></td></tr>");
+                                }
+                            } catch (e) {
+                                $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                            }
                             if (!donator) {
                                 $(".dlbutton").hide();
                             }
@@ -305,6 +308,7 @@ $(document).ready(function() {
             },100);
             $.get("views/mainview.html", function(data) {
                 $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
+                $("#offline__message").hide();
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "error") {
@@ -316,8 +320,15 @@ $(document).ready(function() {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                                 $("#view__"+findGetParameter("view")).show();
                             } else {
+                                localStorage.setItem("podlist", data["podlist"]);
                                 if (debug) {
                                     console.log(timeout);
+                                }
+                                var podlist = "";
+                                if (localStorage.getItem("podlist") !== "undefined") {
+                                    podlist = localStorage.getItem("podlist");
+                                } else {
+                                    podlist = data["podlist"];
                                 }
                                 window.setTimeout(function() {
                                     $("#view__main").show();
@@ -328,7 +339,7 @@ $(document).ready(function() {
                                     }
                                 }, timeout);
                                 $("#section__list").html($("#section__list").html()+"<p>");
-                                data["podlist"].split(",").forEach(function(feed) {
+                                podlist.split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
                                         try {
                                             $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
@@ -337,6 +348,29 @@ $(document).ready(function() {
                                 });
                                 $("#section__list").html($("#section__list").html()+"</p>");
                             }
+                        }
+                    }).error(function() {
+                        if (localStorage.getItem("username") !== "dummy" && donator) {
+                            $("#offline__message").show();
+                            $("#view__main").show();
+                            if (localStorage.getItem("podlist")) {
+                                podlist = localStorage.getItem("podlist");
+                            } else {
+                                podlist = data["podlist"];
+                            }
+                            $("#section__list").html($("#section__list").html()+"<p>");
+                            podlist.split(",").forEach(function(feed) {
+                                $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                                    try {
+                                        $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                    } catch (e) {}
+                                });
+                            });
+                            $("#section__list").html($("#section__list").html()+"</p>");
+                        } else {
+                            $("#offline__message").hide();
+                            $("#text__list").hide();
+                            $("#view__main").show();
                         }
                     });
                     $.get(backend+"/api/v1/getoriginals", function(data) {
@@ -349,6 +383,9 @@ $(document).ready(function() {
                             });
                             $("#section__originals").html($("#section__originals").html()+"</p>");
                         }
+                    }).error(function() {
+                        $("#section__originals").hide();
+                        $("#text__originals").hide();
                     });
 
                     $.get(backend+"/api/v1/getfeatured", function(data) {
@@ -362,6 +399,9 @@ $(document).ready(function() {
                                 }
                             });
                         },200);
+                    }).error(function() {
+                        $("#section__featured").hide();
+                        $("#text__featured").hide();
                     });
 
                     $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
@@ -593,6 +633,7 @@ $(document).ready(function() {
                 $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
                 $("#addfeed__rss").attr("placeholder", "RSS-Feed");
                 $("#addfeed__submit").html("RSS-Feed hinzufügen");
+                $(".msg-download").html("Herunterladen");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");

@@ -13,44 +13,22 @@ $(document).ready(function() {
     $("#nav").hide();
     $("#logo__intro").attr("style", "top: 50%;");
     window.setTimeout(function() {
-        $.get("https://api.nordcast.app", function() {
-            $("#logo__intro").hide();
-            $("#view__welcome").show();
-            $("#nav").show();
-            try {
-                if (!error) {
-                    $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-                        if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
-                            location.href = "app.html#view=main";
-                        }
-                    });
-                    if (localStorage.getItem("uuid") === "dummy") {
+        $("#logo__intro").hide();
+        $("#view__welcome").show();
+        $("#nav").show();
+        try {
+            if (!error) {
+                $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                    if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
                         location.href = "app.html#view=main";
                     }
-                }
-            } catch (e) {}
-        }).fail(function() {
-            error = true;
-            $("#logo__intro").attr("style", "top: calc(50% - 50px)");
-            $("#text__offline").show();
-            $("#view__welcome").hide();
-            $("#logo__intro").attr("src", "offline.svg");
-            window.setInterval(function() {
-                if (es) {
-                    $("#logo__intro").show();
-                    es = false;
-                } else {
-                    $("#logo__intro").hide();
-                    es = true;
-                }
-                $.get("https://api.nordcast.app", function() { }).done(function() {
-                    if (error) {
-                        location.reload();
-                    }
                 });
-            }, 500)
-        });
-    }, 2000);
+                if (localStorage.getItem("uuid") === "dummy") {
+                    location.href = "app.html#view=main";
+                }
+            }
+        } catch (e) {}
+    }, 200);
     $("#kslogin").click(function() {
         //Blocking gab, don't judge me
         if ($("#instance").val().toLowerCase().includes("gab.com") || $("#instance").val().toLowerCase().includes("gab.ai")) {

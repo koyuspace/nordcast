@@ -284,7 +284,8 @@ h1 .emoji {
 #snclose,
 #plclose,
 .dlbutton,
-.playbutton {
+.playbutton,
+.downloaded {
     font-size: 24px;
     height: 24px;
     width: 24px;
