@@ -307,7 +307,7 @@ $(document).ready(function() {
                 });
             },100);
             $.get("views/mainview.html", function(data) {
-                $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
+                $("#view__main").html(data);
                 $("#offline__message").hide();
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
@@ -320,7 +320,7 @@ $(document).ready(function() {
                                 $("#view__"+findGetParameter("view")).show();
                             }
                             if (data["podlist"] === "None") {
-                                $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
+                                $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;margin-top: -20px;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                                 $("#view__"+findGetParameter("view")).show();
                             } else {
                                 localStorage.setItem("podlist", data["podlist"]);
@@ -637,6 +637,7 @@ $(document).ready(function() {
                 $("#addfeed__rss").attr("placeholder", "RSS-Feed");
                 $("#addfeed__submit").html("RSS-Feed hinzufügen");
                 $(".msg-download").html("Herunterladen");
+                $("#text__originals").html("In Eigenproduktion");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
