@@ -201,7 +201,7 @@ $(document).ready(function() {
                             } catch (e) {
                                 $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                             }
-                            if (!donator) {
+                            if (!donator && !debug) {
                                 $(".dlbutton").hide();
                             }
                         });
@@ -316,6 +316,9 @@ $(document).ready(function() {
                             $("#text__list").hide();
                             $("#view__main").show();
                         } else {
+                            if (data["podlist"].length <= 1) {
+                                $("#view__"+findGetParameter("view")).show();
+                            }
                             if (data["podlist"] === "None") {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                                 $("#view__"+findGetParameter("view")).show();

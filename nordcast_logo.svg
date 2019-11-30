@@ -12,12 +12,12 @@
    viewBox="0 0 1000 1000"
    id="svg2335"
    sodipodi:version="0.32"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   inkscape:version="0.92.4 (unknown)"
    sodipodi:docname="nordcast_logo.svg"
    version="1.1"
    inkscape:export-filename="/home/koyu/nordcast/nordcast_logo.svg.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   inkscape:export-xdpi="268.79999"
+   inkscape:export-ydpi="268.79999">
   <head>
     <style
        id="dark-reader-style">@media screen {
@@ -102,8 +102,8 @@ html {
     </rdf:RDF>
   </svg:metadata>
   <sodipodi:namedview
-     inkscape:window-height="986"
-     inkscape:window-width="1632"
+     inkscape:window-height="1016"
+     inkscape:window-width="1920"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      guidetolerance="10.0"
@@ -113,11 +113,11 @@ html {
      bordercolor="#666666"
      pagecolor="#ffffff"
      id="base"
-     inkscape:zoom="0.49866667"
-     inkscape:cx="-455.98314"
-     inkscape:cy="565.18164"
-     inkscape:window-x="1328"
-     inkscape:window-y="107"
+     inkscape:zoom="0.826"
+     inkscape:cx="162.2276"
+     inkscape:cy="500"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:current-layer="svg2335"
      showgrid="false"
      inkscape:window-maximized="1" />
