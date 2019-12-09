@@ -12,6 +12,11 @@ import requests
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
+if os.environ.get('DEBUG') == "true":
+    debug = True
+else:
+    debug = False
+
 @get("/")
 def index():
     return redirect("https://nordcast.app", code=302)
@@ -40,9 +45,13 @@ def login():
     username = request.forms.get("username") # pylint: disable=no-member
     password = request.forms.get("password") # pylint: disable=no-member
     instance = request.forms.get("instance") # pylint: disable=no-member
+    if debug:
+        appname = "Nordcast (debug)"
+    else:
+        appname = "Nordcast"
     if not os.path.exists('clientcred.'+instance+'.secret'):
         Mastodon.create_app(
-            'Nordcast',
+            appname,
             api_base_url = 'https://'+instance,
             to_file = 'clientcred.'+instance+'.secret'
         )

@@ -22,6 +22,10 @@ $(document).ready(function() {
                     if (data["login"] === "ok" && data["uuid"] === localStorage.getItem("uuid")) {
                         location.href = "app.html#view=main";
                     }
+                }).fail(function() {
+                    if (localStorage.getItem("uuid")) {
+                        location.href = "app.html#view=main";
+                    }
                 });
                 if (localStorage.getItem("uuid") === "dummy") {
                     location.href = "app.html#view=main";

@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <title>Nordcast</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src *  'unsafe-inline'; script-src *  'unsafe-inline'; media-src *">
         <link rel="stylesheet" href="bootstrap.min.css">
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="jquery-ui.css">
@@ -36,8 +35,8 @@
                 <input type="text" id="qq" placeholder="Search term" />
             </div>
         </div><br />
-        <video id="player" src="" loop width="1" heigh="1"></video>
-        <video id="player2" src="" loop muted width="1" heigh="1"></video>
+        <audio id="player" src="" loop preload width="1" heigh="1"></audio>
+        <audio id="player2" src="" loop preload muted width="1" heigh="1"></audio>
         <p><i id="snclose" class="ion-md-close"></i></p>
         <div id="view__main">
             
@@ -62,7 +61,7 @@
             <p><span id="text__darkmode">Enable dark mode</span> <img src="darth.png" id="starwars" class="emoji"> <input id="cdark__mode" type="checkbox"></p>
             <br />
             <h2 id="text__about">About</h2>
-            <p>Nordcast 1.4.7</p>
+            <p>Nordcast 1.4.8</p>
             <p><a href="#" onclick="window.open('https://nordcast.app', '_system'); return false;">Website</a> | <a href="#" onclick="window.open('https://git.koyu.space/koyu/nordcast', '_system'); return false;">Source code</a></p>
             <p>&copy; koyu.space 2019</p>
         </div>

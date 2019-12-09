@@ -358,3 +358,12 @@ h1 .emoji {
 .invisible {
     visibility: visible !important;
 }
+
+#offline__message,
+#text__username {
+    margin-top: 60px;
+}
+
+#offline__message {
+    margin-bottom: 20px;
+}

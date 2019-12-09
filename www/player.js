@@ -1,5 +1,15 @@
 var playing = false;
 var platform = "";
+var fileTransfer;
+
+/*
+Filesystem access
+Sources:    https://www.tutorialspoint.com/cordova/cordova_file_system.htm
+            https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-file/
+            https://stackoverflow.com/questions/12874021/phonegap-download-mp3-file
+            https://stackoverflow.com/questions/34692092/cordova-check-if-file-in-url-exists
+*/
+
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     var player = document.getElementById("player");
     if (feed === undefined) {
@@ -29,15 +39,73 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
             $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
             $("#bplay").attr("class", "playbutton ion-md-pause");
+            var shoulddownload = true;
+            if (localStorage.getItem("download-")+secret !== null) {
+                shoulddownload = false;
+                try {
+                    if (!localStorage.getItem("downloaded").includes(secret)) {
+                        shoulddownload = true;
+                    }
+                } catch (e) {
+                    shoulddownload = true;
+                }
+            }
+            if (shoulddownload) {
+                window.setTimeout(function() {
+                    fileTransfer.download(
+                        file,
+                        'cdvfile://localhost/persistent/Nordcast/downloads/'+secret+'.mp3',
+                        function(entry) {
+                            if (debug) {
+                                console.log("download complete: " + entry.toURL());
+                            }
+                            player.src = entry.toURL();
+                            $("#dlbtn-"+secret+" i").attr("class", "ion-md-checkmark-circle dlbutton");
+                            localStorage.setItem("download-"+secret, entry.toURL());
+                            localStorage.setItem("downloaded", localStorage.getItem("downloaded")+","+secret);
+                            player.play();
+                        },
+                        function(error) {
+                            if (debug) {
+                                console.log("download error source " + error.source);
+                                console.log("download error target " + error.target);
+                                console.log("download error code " + error.code);
+                            }
+                            try {
+                                if (localStorage.getItem("downloaded").includes(secret)) {
+                                    $("#player").attr("src", localStorage.getItem("download-"+secret));
+                                    $("#dlbtn-"+secret+" i").attr("class", "ion-md-checkmark-circle dlbutton");
+                                    player.play();
+                                } else {
+                                    plclose();
+                                }
+                            } catch (e) {
+                                $("#player").attr("src", file);
+                                player.play();
+                                $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud dlbutton");
+                            }
+                        },
+                        false
+                    );
+                },0);
+            } else {
+                $("#player").attr("src", localStorage.getItem("download-"+secret));
+                $("#dlbtn-"+secret+" i").attr("class", "ion-md-checkmark-circle dlbutton");
+            }
             if ($("#player").attr("src") !== file) {
-                $("#player").attr("src", file);
+                if (localStorage.getItem("download-"+secret) !== undefined) {
+                    $("#player").attr("src", localStorage.getItem("download-"+secret));
+                    $("#dlbtn-"+secret+" i").attr("class", "ion-md-checkmark-circle dlbutton");
+                } else {
+                    $("#player").attr("src", file);
+                }
             }
             playing = true;
         } else {
             $(".playbutton").attr("class", "playbutton ion-md-play");
             $("#cast-"+secret).attr("class", "playbutton ion-md-play");
             $("#bplay").attr("class", "playbutton ion-md-play");
-            if ($("#player").attr("src") !== file) {
+            if ($("#player").attr("src") !== file && !playing) {
                 $("#player").attr("src", "");
                 if (platform !== "ios") {
                     player.pause();
@@ -176,6 +244,7 @@ function onDeviceReady() {
             $("#timeleft").html(timeleft);
         }
     }, 100);
+    fileTransfer = new FileTransfer();
     platform = device.platform;
 }
 
@@ -204,6 +273,7 @@ function plclose() {
     }
     $("#player__controls").hide();
     $("body").removeAttr("style");
+    $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud dlbutton");
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
