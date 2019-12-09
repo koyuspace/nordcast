@@ -1,5 +1,5 @@
 var backend = "https://api.nordcast.app";
-var debug = false;
+var debug = true;
 var donator = true;
 
 function onDeviceReady() {

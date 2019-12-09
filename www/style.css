@@ -354,3 +354,7 @@ h1 .emoji {
     height: 48px;
     width: 85%;
 }
+
+.invisible {
+    visibility: visible !important;
+}
