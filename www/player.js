@@ -31,15 +31,19 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
             $("#bplay").attr("class", "playbutton ion-md-pause");
             var shoulddownload = true;
-            if (localStorage.getItem("downloaded").includes(secret)) {
-                shoulddownload = false;
-                try {
-                    if (!localStorage.getItem("downloaded").includes(secret)) {
+            try {
+                if (localStorage.getItem("downloaded").includes(secret)) {
+                    shoulddownload = false;
+                    try {
+                        if (!localStorage.getItem("downloaded").includes(secret)) {
+                            shoulddownload = true;
+                        }
+                    } catch (e) {
                         shoulddownload = true;
                     }
-                } catch (e) {
-                    shoulddownload = true;
                 }
+            } catch (e) {
+                shoulddownload = false;
             }
             if (shoulddownload) {
                 if (localStorage.getItem("offline") === "false") {
@@ -50,12 +54,18 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                     plclose();
                 }
             } else {
-                if (localStorage.getItem("downloaded").includes(secret)) {
-                    player.src = localStorage.getItem("download-"+secret);
+                try {
+                    if (localStorage.getItem("downloaded").includes(secret)) {
+                        player.src = localStorage.getItem("download-"+secret);
+                        player.play();
+                        playing = true;
+                    } else {
+                        plclose();
+                    }
+                } catch (e) {
+                    player.src = localStorage.getItem("file");
                     player.play();
                     playing = true;
-                } else {
-                    plclose();
                 }
             }
         } else {

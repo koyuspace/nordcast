@@ -52,6 +52,7 @@ function download(file, secret) {
                         console.log("download error target " + error.target);
                         console.log("download error code " + error.code);
                     }
+                    $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
                     try {
                         if (localStorage.getItem("downloaded").includes(secret)) {
                             $("#player").attr("src", localStorage.getItem("download-"+secret));
