@@ -158,10 +158,10 @@ $(document).ready(function() {
                         } catch(e) {
                             var author = callback.feed.author;
                         }
-                        $("#text__author").html(author);
-                        if (callback.feed.author === undefined) {
-                            $("#element__author").hide();
+                        if (callback.feed.author === undefined || author.includes("Tobias Ain")) {
+                            author = "koyu.space";
                         }
+                        $("#text__author").html(author);
                         try {
                             $("#text__description").html(callback.feed.summary_detail.value.replaceAll("\n", "<br />"));
                         } catch (e) {}
@@ -209,22 +209,22 @@ $(document).ready(function() {
                                     hide = true;
                                 }
                             }
+                            if (localStorage.getItem("offline") === "true" && !localStorage.getItem("downloaded").includes(secret)) {
+                                hide = true;
+                            }
                             if (itemtitle === "") {
                                 itemtitle = item.title;
                             }
                             if (!hide) {
                                 try {
                                     if (!localStorage.getItem("downloaded").includes(secret)) {
-                                        $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle.replaceAll("'", ""))+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud dlbutton\"></td></tr>");
+                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                     } else {
-                                        $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle.replaceAll("'", ""))+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td><i class=\"ion-md-checkmark-circle downloaded\"></i></td></tr>");
+                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-done dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                     }
                                 } catch (e) {
-                                    $("#podtable tbody").append("<tr><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle.replaceAll("'", ""))+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud dlbutton\"></td></tr>");
+                                    $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(item.title.replaceAll("'", ""))+"', '"+Base64.encode(callback.feed.author.split(" | ")[0].split(" - ")[0].split(" – ")[0])+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(item.title)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                 }
-                            }
-                            if (!debug) {
-                                $(".dlbutton").hide();
                             }
                         });
                         $("#button__follow").click(function() {
@@ -331,6 +331,7 @@ $(document).ready(function() {
             $.get("views/mainview.html", function(data) {
                 $("#view__main").html(data);
                 $("#offline__message").hide();
+                localStorage.setItem("offline", "false");
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "error") {
@@ -377,6 +378,7 @@ $(document).ready(function() {
                     }).error(function() {
                         if (localStorage.getItem("username") !== "dummy" && donator) {
                             $("#offline__message").show();
+                            localStorage.setItem("offline", "true")
                             $("#view__main").show();
                             if (localStorage.getItem("podlist")) {
                                 podlist = localStorage.getItem("podlist");
@@ -394,6 +396,7 @@ $(document).ready(function() {
                             $("#section__list").html($("#section__list").html()+"</p>");
                         } else {
                             $("#offline__message").hide();
+                            localStorage.setItem("offline", "false");
                             $("#text__list").hide();
                             $("#view__main").show();
                         }

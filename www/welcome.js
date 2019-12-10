@@ -2,6 +2,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 var warning_nologin = "Warning: If you don't login you'll be only able to listen to podcasts. This might be suitable for you, but you won't be able to follow podcasts or save your current listening position. Are you sure you want to continue?";
 var es = false;
 var error = false;
+
 $(document).ready(function() {
     if (localStorage.getItem("darkmode") === "true") {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
