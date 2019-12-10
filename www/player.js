@@ -30,6 +30,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
             $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
             $("#bplay").attr("class", "playbutton ion-md-pause");
+            var shoulddownload = true;
             if (localStorage.getItem("downloaded").includes(secret)) {
                 shoulddownload = false;
                 try {
