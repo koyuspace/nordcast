@@ -269,6 +269,7 @@ $(document).ready(function() {
                                     if (element !== feed) {
                                         $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: podlist+","+feed},function(data) {
                                             $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                                                localStorage.setItem("podlist", data["podlist"]);
                                                 data["podlist"].split(",").forEach(function(item) {
                                                     if (data["podlist"].includes(feed)) {
                                                         $("#button__follow").hide();
@@ -294,6 +295,7 @@ $(document).ready(function() {
                                         $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: pl}, function(data) {
                                             if (data["action"] === "success") {
                                                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                                                    localStorage.setItem("podlist", data["podlist"]);
                                                     data["podlist"].split(",").forEach(function(item) {
                                                         if (data["podlist"].includes(feed)) {
                                                             $("#button__follow").hide();
@@ -372,21 +374,25 @@ $(document).ready(function() {
                             $("#text__list").hide();
                             $("#view__main").show();
                         } else {
-                            if (data["podlist"] === "None") {
+                            if (data["podlist"] === "None" ) {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                                 window.setTimeout(function() {
-								}, 622*3);
+                                    $("#view__main").show();
+                                    $(".fa__nav").show();
+                                    $(".fa__nav2").show();
+                                    $(".addfeed").show();
+                                }, 622*3);
+                                localStorage.setItem("podlist", data["podlist"]);
                             } else {
-                                timeout = data["podlist"].split(",").length * 300;
                                 if (debug) {
                                     console.log(timeout);
                                 }
                                 var podlist = "";
-                                localStorage.setItem("podlist", data["podlist"]);
-                                if (localStorage.getItem("podlist") !== "undefined") {
+                                if (localStorage.getItem("podlist") !== "None" && localStorage.getItem("offline") === "false") {
                                     podlist = localStorage.getItem("podlist");
                                 } else {
                                     podlist = data["podlist"];
+                                    localStorage.setItem("podlist", data["podlist"]);
                                 }
                                 window.setTimeout(function() {
                                     $("#view__main").show();
