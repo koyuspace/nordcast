@@ -18,13 +18,38 @@ String.prototype.replaceAll = function(search, replacement) {
 var kicker = false;
 var loading = false;
 
+// Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
+function loadjscssfile(filename, filetype){
+    if (filetype === "js") {
+        var fileref = document.createElement('script');
+        fileref.setAttribute("type","text/javascript");
+        fileref.setAttribute("src", filename);
+    } else if (filetype === "css") {
+        var fileref = document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", filename);
+    }
+    if (typeof fileref!="undefined") {
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+    }
+}
+
+function removejscssfile(filename, filetype){
+    var targetelement = (filetype=="js")? "script" : (filetype=="css")? "link" : "none";
+    var targetattr = (filetype=="js")? "src" : (filetype=="css")? "href" : "none";
+    var allsuspects = document.getElementsByTagName(targetelement);
+    for (var i=allsuspects.length; i>=0; i--) {
+        if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1) {
+            allsuspects[i].parentNode.removeChild(allsuspects[i]);
+        }
+    }
+}
+
 $(document).ready(function() {
     if (localStorage.getItem("darkmode") === "true") {
-        $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
+        loadjscssfile("dark.css", "css");
         $("#logo__nav").attr("src", "logo_dark.png");
-    }
-    if (!donator) {
-        $(".addfeed").hide();
     }
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
@@ -177,7 +202,7 @@ $(document).ready(function() {
                             item.links.forEach(function(el) {
                                 if (el.type.includes("audio")) {
                                     podurl = el.href;
-                                } 
+                                }
                                 if (el.type.includes("video")) {
                                     podurl = el.href;
                                 } 
@@ -209,8 +234,14 @@ $(document).ready(function() {
                                     hide = true;
                                 }
                             }
-                            if (localStorage.getItem("offline") === "true" && !localStorage.getItem("downloaded").includes(secret)) {
-                                hide = true;
+                            try {
+                                if (localStorage.getItem("offline") === "true" && !localStorage.getItem("downloaded").includes(secret)) {
+                                    hide = true;
+                                }
+                            } catch (e) {
+                                if (localStorage.getItem("offline") === "true") {
+                                    hide = true;
+                                }
                             }
                             if (itemtitle === "") {
                                 itemtitle = item.title;
@@ -227,6 +258,9 @@ $(document).ready(function() {
                                 }
                             }
                         });
+                        if ($("#podtable tbody").html() === "") {
+                            $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
+                        }
                         $("#button__follow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0];
                             $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
@@ -323,15 +357,14 @@ $(document).ready(function() {
             });
         }
         if (findGetParameter("view") === "main") {
-            window.setTimeout(function() {
-                $("img").on("load", function() {
-                    $("#view__"+findGetParameter("view")).show();
-                });
-            },100);
             $.get("views/mainview.html", function(data) {
-                $("#view__main").html(data);
-                $("#offline__message").hide();
                 localStorage.setItem("offline", "false");
+                $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
+                if (localStorage.getItem("offline") !== "true") {
+                    $("#offline__message").hide();
+                } else {
+                    $("#offline__message").show();
+                }
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "error") {
@@ -339,18 +372,17 @@ $(document).ready(function() {
                             $("#text__list").hide();
                             $("#view__main").show();
                         } else {
-                            if (data["podlist"].length <= 1) {
-                                $("#view__"+findGetParameter("view")).show();
-                            }
                             if (data["podlist"] === "None") {
-                                $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;margin-top: -20px;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
-                                $("#view__"+findGetParameter("view")).show();
+                                $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
+                                window.setTimeout(function() {
+								}, 622*3);
                             } else {
-                                localStorage.setItem("podlist", data["podlist"]);
+                                timeout = data["podlist"].split(",").length * 300;
                                 if (debug) {
                                     console.log(timeout);
                                 }
                                 var podlist = "";
+                                localStorage.setItem("podlist", data["podlist"]);
                                 if (localStorage.getItem("podlist") !== "undefined") {
                                     podlist = localStorage.getItem("podlist");
                                 } else {
@@ -360,9 +392,7 @@ $(document).ready(function() {
                                     $("#view__main").show();
                                     $(".fa__nav").show();
                                     $(".fa__nav2").show();
-                                    if (donator) {
-                                        $(".addfeed").show();
-                                    }
+                                    $(".addfeed").show();
                                 }, timeout);
                                 $("#section__list").html($("#section__list").html()+"<p>");
                                 podlist.split(",").forEach(function(feed) {
@@ -376,30 +406,23 @@ $(document).ready(function() {
                             }
                         }
                     }).error(function() {
-                        if (localStorage.getItem("username") !== "dummy" && donator) {
-                            $("#offline__message").show();
-                            localStorage.setItem("offline", "true")
-                            $("#view__main").show();
-                            if (localStorage.getItem("podlist")) {
-                                podlist = localStorage.getItem("podlist");
-                            } else {
-                                podlist = data["podlist"];
-                            }
-                            $("#section__list").html($("#section__list").html()+"<p>");
-                            podlist.split(",").forEach(function(feed) {
-                                $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                    try {
-                                        $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
-                                    } catch (e) {}
-                                });
-                            });
-                            $("#section__list").html($("#section__list").html()+"</p>");
+                        $("#offline__message").show();
+                        localStorage.setItem("offline", "true")
+                        $("#view__main").show();
+                        if (localStorage.getItem("podlist")) {
+                            podlist = localStorage.getItem("podlist");
                         } else {
-                            $("#offline__message").hide();
-                            localStorage.setItem("offline", "false");
-                            $("#text__list").hide();
-                            $("#view__main").show();
+                            podlist = data["podlist"];
                         }
+                        $("#section__list").html($("#section__list").html()+"<p>");
+                        podlist.split(",").forEach(function(feed) {
+                            $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                                try {
+                                    $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                } catch (e) {}
+                            });
+                        });
+                        $("#section__list").html($("#section__list").html()+"</p>");
                     });
                     $.get(backend+"/api/v1/getoriginals", function(data) {
                         if (data["podlist"] !== "") {
@@ -527,9 +550,7 @@ $(document).ready(function() {
             $("#view__main").hide();
             $(".fa__nav").show();
             $(".fa__nav2").show();
-            if (donator) {
-                $(".addfeed").show();
-            }
+            $(".addfeed").show();
             location.href = "app.html#view=main";
             loadview();
         }
@@ -544,9 +565,7 @@ $(document).ready(function() {
                 $("#view__main").hide();
                 $(".fa__nav").show();
                 $(".fa__nav2").show();
-                if (donator) {
-                    $(".addfeed").show();
-                }
+                $(".addfeed").show();
                 loadview();
             }, 500);
         }
@@ -587,7 +606,7 @@ $(document).ready(function() {
             StatusBar.backgroundColorByHexString("#fff");
             StatusBar.styleDefault();
             try {
-                $("head").html($("head").html().replace("<link rel=\"stylesheet\" href=\"dark.css\">", ""));
+                removejscssfile("dark.css", "css");
             } catch (e) {}
         } else {
             localStorage.setItem("darkmode", "true");
@@ -595,7 +614,7 @@ $(document).ready(function() {
             $("#starwars").attr("src", "clonetrooper.png");
             StatusBar.backgroundColorByHexString("#191919");
             StatusBar.styleLightContent();
-            $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
+            loadjscssfile("dark.css", "css");
         }
         if (localStorage.getItem("darkmode") === "true") {
             $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
@@ -669,6 +688,7 @@ $(document).ready(function() {
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
                     $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
                     $("#error__noresults").html("Keine Suchergebnisse.");
+                    $("#error__noepisodes").html("Keine Episoden gefunden. Vielleicht hat der Podcaster keine Episoden bis jetzt hochgeladen oder du bist offline und hast keine heruntergeladen.");
                 }, 600);
             } else {
                 localStorage.setItem("lang", "ca");
@@ -699,9 +719,7 @@ function onBackKeyDown() {
         $("#view__main").hide();
         $(".fa__nav").show();
         $(".fa__nav2").show();
-        if (donator) {
-            $(".addfeed").show();
-        }
+        $(".addfeed").show();
         location.href = "app.html#view=main";
         kicker = true;
     }

@@ -26,8 +26,7 @@ function download(file, secret) {
     if (shoulddownload) {
         window.setInterval(function() {
             if (tick < 10) {
-                $("#dlbtn-"+secret+" i").attr("class", "dlbutton");
-                $("#dlbtn-"+secret+" i").html("<img src=\"sync.svg\" height=\"16\" class=\"ion-spin\">");
+                $("#dlbtn-"+secret+" i").attr("class", "ion-md-sync dlbutton ion-spin-animation");
             }
             tick = tick+1;
         }, 1);
@@ -53,18 +52,24 @@ function download(file, secret) {
                         console.log("download error code " + error.code);
                     }
                     $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
-                    try {
-                        if (localStorage.getItem("downloaded").includes(secret)) {
-                            $("#player").attr("src", localStorage.getItem("download-"+secret));
-                            $("#dlbtn-"+secret+" i").html("");
-                            $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-done dlbutton");
+                    if (error.code !== 1) {
+                        try {
+                            if (localStorage.getItem("downloaded").includes(secret)) {
+                                $("#player").attr("src", localStorage.getItem("download-"+secret));
+                                $("#dlbtn-"+secret+" i").html("");
+                                $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-done dlbutton");
+                                player.play();
+                            } else {
+                                plclose();
+                            }
+                        } catch (e) {
+                            $("#player").attr("src", file);
                             player.play();
-                        } else {
-                            plclose();
+                            $("#dlbtn-"+secret+" i").html("");
+                            $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
                         }
-                    } catch (e) {
-                        $("#player").attr("src", file);
-                        player.play();
+                    } else {
+                        plclose();
                         $("#dlbtn-"+secret+" i").html("");
                         $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
                     }
@@ -73,15 +78,32 @@ function download(file, secret) {
             );
         },0);
     } else {
-        localStorage.removeItem("download-"+secret);
-        localStorage.setItem("downloaded", localStorage.getItem("downloaded").replace(","+secret, ""));
-        var tick = 0;
-        window.setInterval(function() {
-            if (tick < 10) {
-                $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
+        console.log("remove file");
+        var url = 'cdvfile://localhost/persistent/Nordcast/downloads/'+secret+'.mp3';
+        window.resolveLocalFileSystemURL(url, function(file) {
+            file.remove(function(){
+                if (debug) {
+                    console.log("File "+file+" removed!");
+                }
+                localStorage.removeItem("download-"+secret);
+                localStorage.setItem("downloaded", localStorage.getItem("downloaded").replace(","+secret, ""));
+                var tick = 0;
+                window.setInterval(function() {
+                    if (tick < 10) {
+                        $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
+                    }
+                    tick = tick+1;
+                }, 1);
+            }, function() {
+                if (debug) {
+                    console.log("Error removing file");
+                }
+            });
+        }, function() {
+            if (debug) {
+                console.log("Error removing file");
             }
-            tick = tick+1;
-        }, 1);
+        });
     }
     if ($("#player").attr("src") !== file) {
         if (localStorage.getItem("download-"+secret) !== undefined) {

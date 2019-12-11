@@ -239,9 +239,15 @@ ion-icon {
     margin-right: -20px;
 }
 
-#text__description {
+#text__description,
+#error__noepisodes {
     padding: 20px;
     margin-left: -20px;
+}
+
+#error__noepisodes {
+    margin-left: 0;
+    font-weight: bold;
 }
 
 table {
@@ -283,12 +289,16 @@ h1 .emoji {
 #snbutton,
 #snclose,
 #plclose,
-.dlbutton,
 .playbutton,
 .downloaded {
     font-size: 24px;
     height: 24px;
     width: 24px;
+}
+
+.dlbutton {
+    font-size: 24px;
+    display: block;
 }
 
 #player__controls i {
@@ -368,15 +378,17 @@ h1 .emoji {
     margin-bottom: 20px;
 }
 
-.ion-spin, .ion-loading-a, .ion-loading-b, .ion-loading-c, .ion-loading-d, .ion-looping, .ion-refreshing, .ion-ios7-reloading { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
+/* Hack for ionicicons v2 (no animation code) */
+.ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 
 @-moz-keyframes spin { 0% { -moz-transform: rotate(0deg); }
-  100% { -moz-transform: rotate(359deg); } }
+    100% { -moz-transform: rotate(359deg); } }
 @-webkit-keyframes spin { 0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(359deg); } }
+    100% { -webkit-transform: rotate(359deg); } }
 @-o-keyframes spin { 0% { -o-transform: rotate(0deg); }
-  100% { -o-transform: rotate(359deg); } }
+    100% { -o-transform: rotate(359deg); } }
 @-ms-keyframes spin { 0% { -ms-transform: rotate(0deg); }
-  100% { -ms-transform: rotate(359deg); } }
+    100% { -ms-transform: rotate(359deg); } }
 @keyframes spin { 0% { transform: rotate(0deg); }
-  100% { transform: rotate(359deg); } }
+    100% { transform: rotate(359deg); } }
+.ion-load-a.ion-spin-animation { -webkit-animation-timing-function: steps(8, start); -moz-animation-timing-function: steps(8, start); animation-timing-function: steps(8, start); }
