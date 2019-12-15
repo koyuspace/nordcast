@@ -109,7 +109,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $("#img__cast2").attr("src", podcover);
             $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret+"/"+localStorage.getItem("instance"), function(data) {
                 if (data["login"] === "error") {
-                    player.currentTime = 0;
+                    if (findGetParameter("time") === null) {
+                        player.currentTime = 0;
+                    } else {
+                        player.currentTime = Number(findGetParameter("time"));
+                    }
                     if (platform !== "ios") {
                         player.play();
                     } else {
@@ -122,7 +126,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                         console.log(data);
                     }
                     if (data["pos"] === "None") {
-                        player.currentTime = 0;
+                        if (findGetParameter("time") === null) {
+                            player.currentTime = 0;
+                        } else {
+                            player.currentTime = Number(findGetParameter("time"));
+                        }
                         if (platform !== "ios") {
                             player.play();
                         } else {
@@ -143,7 +151,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 }
             }).error(function() {
                 if (localStorage.getItem("uuid") !== "dummy") {
-                    player.currentTime = 0;
+                    if (findGetParameter("time") === null) {
+                        player.currentTime = 0;
+                    } else {
+                        player.currentTime = Number(findGetParameter("time"));
+                    }
                 }
                 if (platform !== "ios") {
                     player.play();

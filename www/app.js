@@ -247,6 +247,17 @@ $(document).ready(function() {
                                 itemtitle = item.title;
                             }
                             if (!hide) {
+                                if (findGetParameter("episode") !== null && findGetParameter("episode") === secret) {
+                                    window.setTimeout(function() {
+                                        playcast(podurl, secret, Base64.encode(itemtitle), Base64.encode(author), callback.feed.image.href, feed, Base64.encode(feedtitle));
+                                        window.setTimeout(function() {
+                                            if (playing && findGetParameter("time") !== null) {
+                                                var player = document.getElementById("player");
+                                                player.currentTime = Number(findGetParameter("time"));
+                                            }
+                                        }, 1500);
+                                    }, 1500);
+                                }
                                 try {
                                     if (!localStorage.getItem("downloaded").includes(secret)) {
                                         $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
