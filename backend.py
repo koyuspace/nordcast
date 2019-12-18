@@ -181,7 +181,7 @@ def getemoji(username, uuid, instance):
             access_token = 'authtokens/'+username+'.'+instance+'.secret',
             api_base_url = 'https://'+instance
         )
-        userdict = mastodon.account_verify_credentials()
+        userdict = mastodon.account_verify_credentials() # pylint: disable=unused-variable
     try:
         if suid == uuid:
             ksemoji = mastodon.custom_emojis()
