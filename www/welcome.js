@@ -8,6 +8,16 @@ $(document).ready(function() {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__intro").attr("src", "logo_dark.png");
     }
+    window.setTimeout(function() {
+        if (localStorage.getItem("darkmode") === "true") {
+            $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
+            $("#logo__intro").attr("src", "logo_dark.png");
+            if (device.platform === "Android" || device.platform === "iOS") {
+                StatusBar.backgroundColorByHexString("#191919");
+                StatusBar.styleLightContent();
+            }
+        }
+    }, 500);
     $("#text__offline").hide();
     $("#welcome__error").hide();
     $("#view__welcome").hide();
