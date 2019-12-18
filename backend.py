@@ -206,9 +206,30 @@ def searche(lang):
     response.content_type = "application/json"
     return ""
 
+@get("/api/v1/getoriginals/<lang>")
+def getoriginals(lang):
+    f = open("data/"+lang+"/originals", "r")
+    x = f.read()
+    f.close()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    return json.dumps({"podlist": x})
+
+@get("/api/v1/getfeatured/<lang>")
+def gefeatured(lang):
+    f = open("data/"+lang+"/featured", "r")
+    x = f.readlines()
+    f.close()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    l = []
+    for i in x:
+        l.append([i.split("#")[0], i.split("#")[1]])
+    return json.dumps(l)
+
 @get("/api/v1/getoriginals")
-def getoriginals():
-    f = open("data/originals", "r")
+def getoriginals_legacy():
+    f = open("data/en/originals", "r")
     x = f.read()
     f.close()
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -216,8 +237,8 @@ def getoriginals():
     return json.dumps({"podlist": x})
 
 @get("/api/v1/getfeatured")
-def gefeatured():
-    f = open("data/featured", "r")
+def gefeatured_legacy():
+    f = open("data/en/featured", "r")
     x = f.readlines()
     f.close()
     response.headers['Access-Control-Allow-Origin'] = '*'

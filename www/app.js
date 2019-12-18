@@ -372,7 +372,7 @@ $(document).ready(function() {
         if (findGetParameter("view") === "main") {
             $.get("views/mainview.html", function(data) {
                 localStorage.setItem("offline", "false");
-                $("#view__main").html(data.replaceAll("<style>\n#view__main {\n  padding: 40px 20px 0px !important;\n}\n</style>", ""));
+                $("#view__main").html(data);
                 if (localStorage.getItem("offline") !== "true") {
                     $("#offline__message").hide();
                 } else {
@@ -399,7 +399,7 @@ $(document).ready(function() {
                                     console.log(timeout);
                                 }
                                 var podlist = "";
-                                if (localStorage.getItem("podlist") !== "None" && localStorage.getItem("offline") === "false") {
+                                if (localStorage.getItem("podlist") !== "None" && localStorage.getItem("podlist") !== null && localStorage.getItem("offline") === "false") {
                                     podlist = localStorage.getItem("podlist");
                                 } else {
                                     podlist = data["podlist"];
@@ -441,36 +441,45 @@ $(document).ready(function() {
                         });
                         $("#section__list").html($("#section__list").html()+"</p>");
                     });
-                    $.get(backend+"/api/v1/getoriginals", function(data) {
-                        if (data["podlist"] !== "") {
-                            $("#section__originals").html($("#section__originals").html()+"<p>");
-                            data["podlist"].split(",").forEach(function(feed) {
-                                $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                    $("#section__originals").html($("#section__originals").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__smaller\" /></a>");
+                    window.setTimeout(function() {
+                        $.get(backend+"/api/v1/getoriginals/"+localStorage.getItem("lang"), function(data) {
+                            if (data["podlist"] !== "") {
+                                $("#section__originals").html($("#section__originals").html()+"<p>");
+                                data["podlist"].split(",").forEach(function(feed) {
+                                    $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                                        $("#section__originals").html($("#section__originals").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__smaller\" /></a>");
+                                    });
                                 });
-                            });
-                            $("#section__originals").html($("#section__originals").html()+"</p>");
-                        }
-                    }).error(function() {
-                        $("#section__originals").hide();
-                        $("#text__originals").hide();
-                    });
-
-                    $.get(backend+"/api/v1/getfeatured", function(data) {
-                        data.forEach(function(item) {
-                            $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
+                                $("#section__originals").html($("#section__originals").html()+"</p>");
+                            } else {
+                                $("#section__originals").hide();
+                                $("#text__originals").hide();
+                            }
+                        }).error(function() {
+                            $("#section__originals").hide();
+                            $("#text__originals").hide();
                         });
-                        window.setTimeout(function() {
-                            $(".card__big").primaryColor({
-                                callback: function(color) {
-                                    $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
-                                }
+    
+                        $.get(backend+"/api/v1/getfeatured/"+localStorage.getItem("lang"), function(data) {
+                            data.forEach(function(item) {
+                                $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
                             });
-                        },200);
-                    }).error(function() {
-                        $("#section__featured").hide();
-                        $("#text__featured").hide();
-                    });
+                            window.setTimeout(function() {
+                                $(".card__big").primaryColor({
+                                    callback: function(color) {
+                                        $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
+                                    }
+                                });
+                            },200);
+                            if (data === "") {
+                                $("#section__originals").hide();
+                                $("#text__originals").hide();
+                            }
+                        }).error(function() {
+                            $("#section__featured").hide();
+                            $("#text__featured").hide();
+                        });
+                    }, 500);
 
                     $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "ok") {
