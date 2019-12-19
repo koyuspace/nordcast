@@ -66,7 +66,10 @@ def login():
     )
     if not os.path.exists("usercred.secret"):
         suid = str(uuid.uuid1())
-        r.set("nordcast/uuids/" + username + "$$" + instance, suid)
+        if r.get("nordcast/uuids/" + username + "$$" + instance) == None:
+            r.set("nordcast/uuids/" + username + "$$" + instance, suid)
+        else:
+            r.set("nordcast/uuids/" + username + "$$" + instance, str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "") + "," + suid)
         return json.dumps({"login": "ok", "uuid": suid})
     else:
         return "{\"login\": \"error\"}"
@@ -84,7 +87,7 @@ def login2(username, uuid, instance):
         mastodon.account_verify_credentials().source.note
     except:
         pass
-    if suid == uuid:
+    if uuid in suid:
         return json.dumps({"login": "ok", "uuid": uuid})
     else:
         return "{\"login\": \"error\"}"
@@ -95,7 +98,7 @@ def setlist(username, uuid, instance):
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     podlist = request.forms.get("podlist") # pylint: disable=no-member
-    if suid == uuid:
+    if uuid in suid:
         r.set("nordcast/podlist/" + username + "$$" + instance, podlist)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
     else:
@@ -107,7 +110,7 @@ def getlist(username, uuid, instance):
     response.content_type = "application/json"
     podlist = str(r.get("nordcast/podlist/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if suid == uuid:
+    if uuid in suid:
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
     else:
         return "{\"login\": \"error\"}"
@@ -117,7 +120,7 @@ def setpos(username, uuid, secret, pos, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if suid == uuid:
+    if uuid in suid:
         r.set("nordcast/pos/" + username + "$$" + instance + "/" + secret, pos)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
 
@@ -126,7 +129,7 @@ def getpos(username, uuid, secret, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if suid == uuid:
+    if uuid in suid:
         pos = str(r.get("nordcast/pos/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "pos": pos, "secret": secret})
 
@@ -142,7 +145,7 @@ def getname(username, uuid, instance):
         )
         userdict = mastodon.account_verify_credentials()
     try:
-        if suid == uuid:
+        if uuid in suid:
             ksname = userdict.display_name
             ksemojis = userdict.emojis
             return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
@@ -163,7 +166,7 @@ def getpic(username, uuid, instance):
         )
         userdict = mastodon.account_verify_credentials()
     try:
-        if suid == uuid:
+        if uuid in suid:
             kspic = userdict.avatar
             return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
         else:
@@ -183,7 +186,7 @@ def getemoji(username, uuid, instance):
         )
         userdict = mastodon.account_verify_credentials() # pylint: disable=unused-variable
     try:
-        if suid == uuid:
+        if uuid in suid:
             ksemoji = mastodon.custom_emojis()
             return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksemoji": ksemoji})
         else:
