@@ -582,21 +582,6 @@ $(document).ready(function() {
         }
     });
 
-    $("#link__cast").click(function() {
-        if (!loading) {
-            window.setTimeout(function() {
-                $("#view__cast").hide();
-                $("#view__search").hide();
-                $("#view_settings").hide();
-                $("#view__main").hide();
-                $(".fa__nav").show();
-                $(".fa__nav2").show();
-                $(".addfeed").show();
-                loadview();
-            }, 500);
-        }
-    });
-
     $("#logout").click(function() {
         localStorage.clear()
         window.setTimeout(function() {
