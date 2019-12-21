@@ -257,6 +257,7 @@ def gefeatured_legacy():
 def getprimarycolor():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "text/plain"
+    response.set_header("Cache-Control", "public, max-age=600")
     url = request.query["url"] # pylint: disable=unsubscriptable-object
     filecache = ""
     filename = "files/"+url.split("/")[len(url.split("/")) - 1]

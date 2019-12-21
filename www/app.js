@@ -490,7 +490,30 @@ $(document).ready(function() {
                         podlist.split(",").forEach(function(feed) {
                             $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
                                 try {
-                                    $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                    var secret = Base64.encode(feed).replaceAll("=", "");
+                                    secret = secret.slice(0,secret.length / 2)
+                                    var summary = "";
+                                    if (callback.feed.summary !== undefined) {
+                                        summary = callback.feed.summary.replaceAll("\n", "<br>");
+                                    }
+                                    $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div></a>");
+                                    $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                        if (Number(color.split(",")[0]) > 140) {
+                                            if (summary !== "") {
+                                                $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
+                                            } else {
+                                                $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:2em;");
+                                                $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                            }
+                                        } else {
+                                            if (summary !== "") {
+                                                $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
+                                            } else {
+                                                $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:2em;");
+                                                $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                            }
+                                        }
+                                    });
                                 } catch (e) {}
                             });
                         });
