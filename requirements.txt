@@ -3,3 +3,4 @@ tornado
 feedparser
 Mastodon.py
 redis
+colorthief

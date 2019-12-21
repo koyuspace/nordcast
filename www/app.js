@@ -147,13 +147,11 @@ $(document).ready(function() {
                             $("#view__cast").show();
                         }
                         window.setTimeout(function() {
-                            $("#img__cast").primaryColor({
-                                callback: function(color) {
-                                    if (localStorage.getItem("darkmode") === "true") {
-                                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
-                                    } else {
-                                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
-                                    }
+                            $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                if (localStorage.getItem("darkmode") === "true") {
+                                    $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
+                                } else {
+                                    $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
                                 }
                             });
                             $("#view__cast").show();
@@ -415,7 +413,25 @@ $(document).ready(function() {
                                 podlist.split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
                                         try {
-                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /></a>");
+                                            var secret = "";
+                                            try {
+                                                secret = callback.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
+                                            } catch (e) {}
+                                            if (secret === "") {
+                                                secret = Base64.encode(feed).replaceAll("==", "");
+                                            }
+                                            var summary = "";
+                                            if (callback.feed.summary !== undefined) {
+                                                summary = callback.feed.summary;
+                                            }
+                                            $("#section__list").html($("#section__list").html()+"<div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /></a><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div>");
+                                            $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                                if (Number(color.split(",")[0]) > 128) {
+                                                    $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
+                                                } else {
+                                                    $("#itemcard-"+secret).css('background-color', 'rgb('+color+')');
+                                                }
+                                            });
                                         } catch (e) {}
                                     });
                                 });
@@ -462,15 +478,11 @@ $(document).ready(function() {
     
                         $.get(backend+"/api/v1/getfeatured/"+localStorage.getItem("lang"), function(data) {
                             data.forEach(function(item) {
-                                $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" /></a></div>");
-                            });
-                            window.setTimeout(function() {
-                                $(".card__big").primaryColor({
-                                    callback: function(color) {
-                                        $(this).css('box-shadow', '0px 0px 13px 2px rgba('+color+',0.75)');
-                                    }
+                                $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" id=\"featured-"+Base64.encode(item[1]).replaceAll("=", "")+"\"/></a></div>");
+                                $.get(backend+"/api/v1/getprimarycolor?url="+backend+"/api/v1/getbanner/"+item[0], function(color) {
+                                    $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("box-shadow: 0px 0px 13px 2px rgba('+color+',0.75);");
                                 });
-                            },200);
+                            });
                             if (data === "") {
                                 $("#section__originals").hide();
                                 $("#text__originals").hide();

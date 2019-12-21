@@ -19,3 +19,8 @@ resources/signing
 jsconfig.json
 .vscode/
 typings/
+
+# backend downloads
+files/*.png
+files/*.jpg
+files/*.gif

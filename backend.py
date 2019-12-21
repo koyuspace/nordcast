@@ -3,6 +3,7 @@
 
 from bottle import get, post, request, response, route, run, redirect
 from mastodon import Mastodon
+from colorthief import ColorThief
 import feedparser
 import json
 import os.path
@@ -250,5 +251,19 @@ def gefeatured_legacy():
     for i in x:
         l.append([i.split("#")[0], i.split("#")[1]])
     return json.dumps(l)
+
+@get("/api/v1/getprimarycolor")
+def getprimarycolor():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "text/plain"
+    url = request.query["url"] # pylint: disable=unsubscriptable-object
+    r = requests.get(url)
+    filename = "files/"+url.split("/")[len(url.split("/")) - 1]
+    with open(filename, 'wb') as f:
+        f.write(r.content)
+    color_thief = ColorThief(filename)
+    dominant_color = color_thief.get_color()
+    x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
+    return x
 
 run(server="tornado",port=9000,host="0.0.0.0")
