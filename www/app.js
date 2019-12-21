@@ -271,7 +271,7 @@ $(document).ready(function() {
                             $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
                         }
                         $("#button__follow").click(function() {
-                            var feed = Base64.decode(findGetParameter("cast")).split("\n")[0];
+                            var feed = Base64.decode(findGetParameter("cast")).split("\n")[0].split("?")[0];
                             $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                                 var podlist = data["podlist"];
                                 data["podlist"].split(",").forEach(function(element) {
@@ -292,6 +292,23 @@ $(document).ready(function() {
                                         });
                                     }
                                 });
+                            });
+                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                                if (data["login"] === "error") {
+                                    $("#button__follow").hide();
+                                    $("#button__unfollow").hide();
+                                } else {
+                                    if (data["podlist"].includes(feed)) {
+                                        $("#button__follow").hide();
+                                        $("#button__unfollow").show();
+                                    } else {
+                                        $("#button__unfollow").hide();
+                                        $("#button__follow").show();
+                                    }
+                                }
+                            }).error(function() {
+                                $("#button__follow").hide();
+                                $("#button__unfollow").hide();
                             });
                         });
                         $("#button__unfollow").click(function() {
@@ -319,6 +336,23 @@ $(document).ready(function() {
                                         });
                                     }
                                 });
+                            });
+                            $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                                if (data["login"] === "error") {
+                                    $("#button__follow").hide();
+                                    $("#button__unfollow").hide();
+                                } else {
+                                    if (data["podlist"].includes(feed)) {
+                                        $("#button__follow").hide();
+                                        $("#button__unfollow").show();
+                                    } else {
+                                        $("#button__unfollow").hide();
+                                        $("#button__follow").show();
+                                    }
+                                }
+                            }).error(function() {
+                                $("#button__follow").hide();
+                                $("#button__unfollow").hide();
                             });
                         });
                     }).error(function() {
@@ -397,7 +431,7 @@ $(document).ready(function() {
                                     console.log(timeout);
                                 }
                                 var podlist = "";
-                                if (localStorage.getItem("podlist") !== "None" && localStorage.getItem("podlist") !== null && localStorage.getItem("offline") === "false") {
+                                if (localStorage.getItem("podlist") !== "None" && localStorage.getItem("podlist") !== null && localStorage.getItem("offline") === "false" && localStorage.getItem("podlist") === data["podlist"]) {
                                     podlist = localStorage.getItem("podlist");
                                 } else {
                                     podlist = data["podlist"];
@@ -413,13 +447,8 @@ $(document).ready(function() {
                                 podlist.split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
                                         try {
-                                            var secret = "";
-                                            try {
-                                                secret = callback.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
-                                            } catch (e) {}
-                                            if (secret === "") {
-                                                secret = Base64.encode(feed).replaceAll("=", "");
-                                            }
+                                            var secret = Base64.encode(feed).replaceAll("=", "");
+                                            secret = secret.slice(0,secret.length / 2)
                                             var summary = "";
                                             if (callback.feed.summary !== undefined) {
                                                 summary = callback.feed.summary.replaceAll("\n", "<br>");

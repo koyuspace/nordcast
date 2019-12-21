@@ -7,6 +7,28 @@ Sources:    https://www.tutorialspoint.com/cordova/cordova_file_system.htm
 */
 
 function download(file, secret) {
+    var feed = Base64.decode(findGetParameter("cast")).split("\n")[0].split("?")[0];
+    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+        var podlist = data["podlist"];
+        data["podlist"].split(",").forEach(function(element) {
+            if (element !== feed) {
+                $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: podlist+","+feed},function(data) {
+                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                        localStorage.setItem("podlist", data["podlist"]);
+                        data["podlist"].split(",").forEach(function(item) {
+                            if (data["podlist"].includes(feed)) {
+                                $("#button__follow").hide();
+                                $("#button__unfollow").show();
+                            } else {
+                                $("#button__unfollow").hide();
+                                $("#button__follow").show();
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    });
     var fileTransfer = new FileTransfer();
     var shoulddownload = true;
     if (localStorage.getItem("download-")+secret !== null) {
@@ -78,32 +100,38 @@ function download(file, secret) {
             );
         },0);
     } else {
-        console.log("remove file");
-        var url = 'cdvfile://localhost/persistent/Nordcast/downloads/'+secret+'.mp3';
-        window.resolveLocalFileSystemURL(url, function(file) {
-            file.remove(function(){
-                if (debug) {
-                    console.log("File "+file+" removed!");
-                }
-                localStorage.removeItem("download-"+secret);
-                localStorage.setItem("downloaded", localStorage.getItem("downloaded").replace(","+secret, ""));
-                var tick = 0;
-                window.setInterval(function() {
-                    if (tick < 10) {
-                        $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
+        var rm_message = "Do you really want to remove this file?";
+        if (localStorage.getItem("lang") === "de") {
+            rm_message = "Möchtest du diese Datei wirklich löschen?";
+        }
+        if (confirm(rm_message)) {
+            console.log("remove file");
+            var url = 'cdvfile://localhost/persistent/Nordcast/downloads/'+secret+'.mp3';
+            window.resolveLocalFileSystemURL(url, function(file) {
+                file.remove(function(){
+                    if (debug) {
+                        console.log("File "+file+" removed!");
                     }
-                    tick = tick+1;
-                }, 1);
+                    localStorage.removeItem("download-"+secret);
+                    localStorage.setItem("downloaded", localStorage.getItem("downloaded").replace(","+secret, ""));
+                    var tick = 0;
+                    window.setInterval(function() {
+                        if (tick < 10) {
+                            $("#dlbtn-"+secret+" i").attr("class", "ion-md-cloud-download dlbutton");
+                        }
+                        tick = tick+1;
+                    }, 1);
+                }, function() {
+                    if (debug) {
+                        console.log("Error removing file");
+                    }
+                });
             }, function() {
                 if (debug) {
                     console.log("Error removing file");
                 }
             });
-        }, function() {
-            if (debug) {
-                console.log("Error removing file");
-            }
-        });
+        }
     }
     if ($("#player").attr("src") !== file) {
         if (localStorage.getItem("download-"+secret) !== undefined) {
