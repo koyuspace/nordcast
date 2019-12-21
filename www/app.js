@@ -418,18 +418,28 @@ $(document).ready(function() {
                                                 secret = callback.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
                                             } catch (e) {}
                                             if (secret === "") {
-                                                secret = Base64.encode(feed).replaceAll("==", "");
+                                                secret = Base64.encode(feed).replaceAll("=", "");
                                             }
                                             var summary = "";
                                             if (callback.feed.summary !== undefined) {
-                                                summary = callback.feed.summary;
+                                                summary = callback.feed.summary.replaceAll("\n", "<br>");
                                             }
                                             $("#section__list").html($("#section__list").html()+"<div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /></a><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
-                                                if (Number(color.split(",")[0]) > 128) {
-                                                    $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
+                                                if (Number(color.split(",")[0]) > 200) {
+                                                    if (summary !== "") {
+                                                        $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
+                                                    } else {
+                                                        $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:3em;");
+                                                        $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                    }
                                                 } else {
-                                                    $("#itemcard-"+secret).css('background-color', 'rgb('+color+')');
+                                                    if (summary !== "") {
+                                                        $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
+                                                    } else {
+                                                        $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:3em;");
+                                                        $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                    }
                                                 }
                                             });
                                         } catch (e) {}
@@ -479,9 +489,11 @@ $(document).ready(function() {
                         $.get(backend+"/api/v1/getfeatured/"+localStorage.getItem("lang"), function(data) {
                             data.forEach(function(item) {
                                 $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" id=\"featured-"+Base64.encode(item[1]).replaceAll("=", "")+"\"/></a></div>");
-                                $.get(backend+"/api/v1/getprimarycolor?url="+backend+"/api/v1/getbanner/"+item[0], function(color) {
-                                    $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("box-shadow: 0px 0px 13px 2px rgba('+color+',0.75);");
-                                });
+                                window.setTimeout(function() {
+                                    $.get(backend+"/api/v1/getprimarycolor?url="+backend+"/api/v1/getbanner/"+item[0], function(color) {
+                                        $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("style", "box-shadow: 0px 0px 13px 2px rgba('"+color+"',0.75);");
+                                    });
+                                },200);
                             });
                             if (data === "") {
                                 $("#section__originals").hide();

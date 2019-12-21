@@ -10,6 +10,7 @@ import os.path
 import redis
 import uuid
 import requests
+import subprocess
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -257,10 +258,11 @@ def getprimarycolor():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "text/plain"
     url = request.query["url"] # pylint: disable=unsubscriptable-object
-    r = requests.get(url)
-    filename = "files/"+url.split("/")[len(url.split("/")) - 1]
-    with open(filename, 'wb') as f:
-        f.write(r.content)
+    if "/api/v1/getbanner" in url:
+        filename = "banners/"+url.split("/")[len(url.split("/")) - 1]+".jpg"
+    else:
+        filename = "files/"+url.split("/")[len(url.split("/")) - 1]
+        subprocess.Popen(["wget", "-c", "-O", filename, url], shell=False).wait()
     color_thief = ColorThief(filename)
     dominant_color = color_thief.get_color()
     x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
