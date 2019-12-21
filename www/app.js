@@ -424,7 +424,7 @@ $(document).ready(function() {
                                             if (callback.feed.summary !== undefined) {
                                                 summary = callback.feed.summary.replaceAll("\n", "<br>");
                                             }
-                                            $("#section__list").html($("#section__list").html()+"<div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /></a><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div>");
+                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div></a>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
                                                 if (Number(color.split(",")[0]) > 140) {
                                                     if (summary !== "") {
@@ -491,7 +491,7 @@ $(document).ready(function() {
                                 $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" id=\"featured-"+Base64.encode(item[1]).replaceAll("=", "")+"\"/></a></div>");
                                 window.setTimeout(function() {
                                     $.get(backend+"/api/v1/getprimarycolor?url="+backend+"/api/v1/getbanner/"+item[0], function(color) {
-                                        $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("style", "box-shadow: 0px 0px 13px 2px rgba('"+color+"',0.75);");
+                                        $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("style", "box-shadow: 0px 0px 13px 2px rgba("+color+",0.75);");
                                     });
                                 },200);
                             });

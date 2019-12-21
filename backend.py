@@ -258,14 +258,36 @@ def getprimarycolor():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "text/plain"
     url = request.query["url"] # pylint: disable=unsubscriptable-object
+    filecache = ""
+    filename = "files/"+url.split("/")[len(url.split("/")) - 1]
     if "/api/v1/getbanner" in url:
         filename = "banners/"+url.split("/")[len(url.split("/")) - 1]+".jpg"
+    if os.path.exists("filecache"):
+        f = open("filecache", "r")
+        x = f.readlines()
+        f.close()
+        for i in x:
+            if i.split("#")[0] == filename:
+                filecache = i.split("#")[1]
+        if not filecache == "":
+            return filecache
+        else:
+            if not "/api/v1/getbanner" in url:
+                subprocess.Popen(["wget", "-O", filename, url], shell=False).wait()
+            color_thief = ColorThief(filename)
+            dominant_color = color_thief.get_color()
+            x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
+            f = open("filecache", "a+")
+            f.write(filename+"#"+x+"\n")
+            return x
     else:
-        filename = "files/"+url.split("/")[len(url.split("/")) - 1]
-        subprocess.Popen(["wget", "-O", filename, url], shell=False).wait()
-    color_thief = ColorThief(filename)
-    dominant_color = color_thief.get_color()
-    x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
-    return x
+        if not "/api/v1/getbanner" in url:
+            subprocess.Popen(["wget", "-O", filename, url], shell=False).wait()
+        color_thief = ColorThief(filename)
+        dominant_color = color_thief.get_color()
+        x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
+        f = open("filecache", "a+")
+        f.write(filename+"#"+x+"\n")
+        return x
 
 run(server="tornado",port=9000,host="0.0.0.0")

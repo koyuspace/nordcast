@@ -400,6 +400,11 @@ h1 .emoji {
     width: 90%;
 }
 
+#img__cast2 {
+    width: 64px !important;
+    height: 64px !important;
+}
+
 /* Hack for ionicicons v2 (no animation code) */
 .ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 
