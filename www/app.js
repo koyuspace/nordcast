@@ -426,18 +426,18 @@ $(document).ready(function() {
                                             }
                                             $("#section__list").html($("#section__list").html()+"<div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /></a><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
-                                                if (Number(color.split(",")[0]) > 200) {
+                                                if (Number(color.split(",")[0]) > 140) {
                                                     if (summary !== "") {
                                                         $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
                                                     } else {
-                                                        $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:3em;");
+                                                        $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:2em;");
                                                         $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
                                                     }
                                                 } else {
                                                     if (summary !== "") {
                                                         $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
                                                     } else {
-                                                        $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:3em;");
+                                                        $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:2em;");
                                                         $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
                                                     }
                                                 }

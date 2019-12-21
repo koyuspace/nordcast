@@ -262,7 +262,7 @@ def getprimarycolor():
         filename = "banners/"+url.split("/")[len(url.split("/")) - 1]+".jpg"
     else:
         filename = "files/"+url.split("/")[len(url.split("/")) - 1]
-        subprocess.Popen(["wget", "-c", "-O", filename, url], shell=False).wait()
+        subprocess.Popen(["wget", "-O", filename, url], shell=False).wait()
     color_thief = ColorThief(filename)
     dominant_color = color_thief.get_color()
     x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
