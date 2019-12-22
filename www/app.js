@@ -62,6 +62,12 @@ function removejscssfile(filename, filetype){
 }
 
 $(document).ready(function() {
+    window.setInterval(function() {
+        if (localStorage.getItem("uuid") === "dummy") {
+            $(".dlbutton").hide();
+        }
+        $(".problemreporting").hide();
+    },0);
     $(window).on('popstate',function(event) {
         loadview();
         $("#view__report").hide();
@@ -69,10 +75,9 @@ $(document).ready(function() {
             $(".fa__nav").show();
             $(".fa__nav2").show();
             $(".addfeed").show();
-            $(".problemreporting").show();
-        }
-        if (findGetParameter("view") === "cast") {
-            $("#view__main").hide();
+            if (localStorage.getItem("uuid") !== "dummy") {
+                $(".problemreporting").show();
+            }
         }
     });
     if (localStorage.getItem("darkmode") === "true") {
@@ -170,7 +175,6 @@ $(document).ready(function() {
                 $("#view__settings").attr("style", "padding: 90px 20px 0px;");
                 $("#view__addfeed").hide();
                 $("#view__settings").hide();
-                $("#view__main").hide();
                 $("#view__cast").html(data);
                 if (detectmob() && findGetParameter("share") === "true") {
                     $("#banner__openapp").attr("style", "");
@@ -468,6 +472,7 @@ $(document).ready(function() {
                             });
                         }
                     });
+                    $("#view__main").hide();
                 }, 1000);
             });
         }
@@ -964,6 +969,7 @@ $(document).ready(function() {
                 $("#text__data__eptitle").html("Titel der Episode");
                 $("#text__data__eplength").html("Länge der Episode");
                 $("#text__automatic").html("Weil du keinen Podcast ausgewählt oder abgespielt hast haben wir automatisch eine Option für dich gewählt.");
+                $("#text__openapp").html("In der App öffnen");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
