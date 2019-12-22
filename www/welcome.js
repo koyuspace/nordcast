@@ -17,16 +17,18 @@ $(document).ready(function() {
                 StatusBar.styleLightContent();
             }
         }
+        if (localStorage.getItem("uuid") === null || localStorage.getItem("uuid") === "dummy") {
+            $("#view__welcome").attr("style", "");
+            $("#logo__intro").hide();
+        } else {
+            $("#logo__intro").show();
+        }
     }, 500);
     $("#text__offline").hide();
     $("#welcome__error").hide();
     $("#view__welcome").hide();
-    $("#nav").hide();
     $("#logo__intro").attr("style", "top: 50%;");
     window.setTimeout(function() {
-        $("#logo__intro").hide();
-        $("#view__welcome").show();
-        $("#nav").show();
         try {
             if (!error) {
                 $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {

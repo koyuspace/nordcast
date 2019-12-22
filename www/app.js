@@ -17,6 +17,7 @@ String.prototype.replaceAll = function(search, replacement) {
 
 var kicker = false;
 var loading = false;
+var firstload = true;
 
 // Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
 function loadjscssfile(filename, filetype){
@@ -463,13 +464,33 @@ $(document).ready(function() {
                                     podlist = data["podlist"];
                                     localStorage.setItem("podlist", data["podlist"]);
                                 }
-                                window.setTimeout(function() {
-                                    $("#view__main").show();
-                                    $(".fa__nav").show();
-                                    $(".fa__nav2").show();
-                                    $(".addfeed").show();
-                                }, timeout);
                                 $("#section__list").html($("#section__list").html()+"<p>");
+                                var goaltime = Date.now() + 600000;
+                                if (localStorage.getItem("lastloaded") !== null) {
+                                    if (goaltime < Number(localStorage.getItem("lastloaded"))) {
+                                        localStorage.setItem("lastloaded", Date.now());
+                                        timeout = podlist.split(",").length * 622;
+                                    } else {
+                                        timeout = 1500;
+                                    }
+                                } else {
+                                    localStorage.setItem("lastloaded", Date.now());
+                                    timeout = podlist.split(",").length * 622;
+                                }
+                                if (firstload) {
+                                    localStorage.setItem("lastloaded", Date.now());
+                                    timeout = podlist.split(",").length * 622;
+                                    firstload = false;
+                                }
+                                window.setTimeout(function() {
+                                    window.setTimeout(function() {
+                                        $("#section__list").html($("#section__list").html()+"</p>");
+                                        $("#view__main").show();
+                                        $(".fa__nav").show();
+                                        $(".fa__nav2").show();
+                                        $(".addfeed").show();
+                                    }, timeout);
+                                }, 20);
                                 podlist.split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
                                         try {
@@ -500,7 +521,6 @@ $(document).ready(function() {
                                         } catch (e) {}
                                     });
                                 });
-                                $("#section__list").html($("#section__list").html()+"</p>");
                             }
                         }
                     }).error(function() {
