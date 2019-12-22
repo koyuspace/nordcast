@@ -309,19 +309,6 @@ $(document).ready(function() {
                             if ($("#podtable tbody").html() === "") {
                                 $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
                             }
-                            window.setTimeout(function() {
-                                $.get(backend+"/api/v1/getreversed", function(data) {
-                                    if (data.includes(feed)) {
-                                        $(function(){
-                                            $("#podtable tbody").each(function(elem,index){
-                                            var arr = $.makeArray($("tr",this).detach());
-                                            arr.reverse();
-                                                $(this).append(arr);
-                                            });
-                                        });
-                                    }
-                                });
-                            }, 1000);
                             $.get(backend+"/api/v1/gethiddendownloads", function(data) {
                                 data.split("\n").forEach(function(vl) {
                                     if (feed.includes(vl)) {
@@ -419,6 +406,25 @@ $(document).ready(function() {
                         $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
                     });
                 }, 700);
+                window.setTimeout(function() {
+                    $.get(backend+"/api/v1/getreversed", function(data) {
+                        var reverse = false;
+                        data.split("\n").forEach(function(vl) {
+                            if (vl.includes(feed)) {
+                                reverse = true;
+                            }
+                        });
+                        if (reverse) {
+                            $(function(){
+                                $("#podtable tbody").each(function(elem,index){
+                                var arr = $.makeArray($("tr",this).detach());
+                                arr.reverse();
+                                    $(this).append(arr);
+                                });
+                            });
+                        }
+                    });
+                }, 1000);
             });
         }
         if(findGetParameter("view") === "search") {
@@ -790,7 +796,13 @@ $(document).ready(function() {
 
     $(document).on("click", "a", function(e) {
         if ($(this).attr("data-cast") && !loading) {
-            $("#view__main").hide();
+            var counter = 0;
+            window.setInterval(function() {
+                if (counter < 10) {
+                    $("#view__main").hide();
+                }
+                counter = counter + 1;
+            }, 20);
             location.href = "app.html#view=cast&cast="+$(this).attr("data-cast");
         }
         e.preventDefault();
