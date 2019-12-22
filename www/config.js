@@ -33,6 +33,7 @@ function onDeviceReady() {
         window.setInterval(function() {
             $(".dlbutton").hide();
             $(".share").hide();
+            $(".problemreporting").hide();
         });
     }
     if (device.platform === "Android") {
