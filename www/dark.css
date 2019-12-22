@@ -4,6 +4,10 @@ body, #nav, #wrapper__search {
 }
 
 a {
+    color: #0099ff !important;
+}
+
+a i {
     color: #fff !important;
 }
 

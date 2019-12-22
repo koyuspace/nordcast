@@ -849,6 +849,7 @@ $(document).ready(function() {
                 $(".msg-download").html("Herunterladen");
                 $("#text__originals").html("In Eigenproduktion");
                 $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
+                $("#text__sourcecode").html("Quelltext");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");

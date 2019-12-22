@@ -6,7 +6,7 @@ function shownotes(shownotes) {
     $(".addfeed").hide();
     $("#view__cast").html("<div id=\"shownotes\">"+twemoji.parse(Base64.decode(shownotes))+"</div>");
     $("#view__cast").css("padding", "20px");
-    $("#view__cast").css("padding-top", "100px");
+    $("#view__cast").css("padding-top", "79px");
     $("#snclose").show();
     scrollTo(0,0);
 }
