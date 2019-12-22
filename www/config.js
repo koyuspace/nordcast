@@ -52,7 +52,7 @@ function onDeviceReady() {
         });
     }
     if (device.platform === "browser" && findGetParameter("view") === "cast" && findGetParameter("shared") === "true") {
-        window.open('nordcast://cast/'+findGetParameter("cast"), '_system');
+        location.href = "nordcast://cast/"+findGetParameter("cast");
     }
 }
 
