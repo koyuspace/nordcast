@@ -14,6 +14,20 @@ String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
+function detectmob() { 
+    if( navigator.userAgent.match(/Android/i)
+    || navigator.userAgent.match(/webOS/i)
+    || navigator.userAgent.match(/iPhone/i)
+    || navigator.userAgent.match(/iPad/i)
+    || navigator.userAgent.match(/iPod/i)
+    || navigator.userAgent.match(/BlackBerry/i)
+    || navigator.userAgent.match(/Windows Phone/i)
+    ){
+        return true;
+    } else {
+        return false;
+    }
+}
 
 var kicker = false;
 var loading = false;
@@ -158,6 +172,10 @@ $(document).ready(function() {
                 $("#view__settings").hide();
                 $("#view__main").hide();
                 $("#view__cast").html(data);
+                if (detectmob() && findGetParameter("share") === "true") {
+                    $("#banner__openapp").attr("style", "");
+                    $("#banner__openapp").attr("onclick", "window.open('nordcast://cast/"+findGetParameter("cast")+"', '_system')");
+                }
                 $("#link__report").attr("onclick", "location.href = 'app.html#view=report&cast="+findGetParameter("cast")+"'");
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                     if (data["login"] === "error") {

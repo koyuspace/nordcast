@@ -447,6 +447,16 @@ h1 .emoji {
     vertical-align: middle;
 }
 
+#banner__openapp {
+    padding-top: 60px;
+    padding-bottom: 20px;
+    text-align: center;
+    background: rgb(39, 176, 226);
+    width: 100vw;
+    margin-left: -20px;
+    color: #fff;
+}
+
 /* Hack for ionicicons v2 (no animation code) */
 .ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 

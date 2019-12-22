@@ -51,9 +51,6 @@ function onDeviceReady() {
             }
         });
     }
-    if (device.platform === "browser" && findGetParameter("view") === "cast" && findGetParameter("shared") === "true") {
-        window.location.replace("nordcast://cast/"+findGetParameter("cast"));
-    }
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
