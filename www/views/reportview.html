@@ -1,0 +1,32 @@
+<i class="ion-md-close" style="float: right; font-size: 18pt;" onclick="history.back();"></i><h1 id="text__report">Report an issue</h1>
+<p id="text__type">What type of issue do you want to report?</p>
+<select id="data__issue">
+    <option value="downloads" id="text__issue__downloads">I can't download episodes</option>
+    <option value="metadata" id="text__issue__metadata">The podcast metadata such as description is inaccurate</option>
+    <option value="reverse" id="text__issue__reverse">The podcast episodes seem to be in reverse order</option>
+    <option value="missing" id="text__issue__missing">I'm missing a podcast</option>
+</select><br><br>
+<div id="section__issue__downloads">
+    <button id="btn__reportsubmit__downloads" class="btn btn-primary btn-submit">Submit</button>
+</div>
+<div id="section__issue__reverse">
+    <button id="btn__reportsubmit__reverse" class="btn btn-primary btn-submit">Submit</button>
+</div>
+<div id="section__issue__missing">
+    <p id="text__automatic" style="display: none;">Since you haven't selected or played any podcast we automatically selected an option for you.</p><br>
+    <p id="text__whatsmissing">What podcast do you miss?</p><p><input type="text" placeholder="Enter podcast name here" id="data__podcasttitle"></p><br>
+    <button id="btn__reportsubmit__missing" class="btn btn-primary btn-submit">Submit</button>
+</div>
+<div id="section__issue__metadata">
+    <p id="text__incorrectmetadata">Which type of metadata seems to be incorrect?</p>
+    <fieldset id="data__metadatatype">
+        <input type="checkbox" name="data__metadatatype" value="title"> <span id="text__data__title">Title</span><br>
+        <input type="checkbox" name="data__metadatatype" value="subtitle"> <span id="text__data__subtitle">Description</span><br>
+        <input type="checkbox" name="data__metadatatype" value="author"> <span id="text__data__author">Author</span><br>
+        <input type="checkbox" name="data__metadatatype" value="picture"> <span id="text__data__cover">Cover picture</span><br>
+        <input type="checkbox" name="data__metadatatype" class="only-ep" value="shownotes"> <span id="text__data__shownotes" class="only-ep">Shownotes</span><br>
+        <input type="checkbox" name="data__metadatatype" class="only-ep" value="ep_title"> <span id="text__data__eptitle" class="only-ep">Episode title</span><br>
+        <input type="checkbox" name="data__metadatatype" class="only-ep" value="length"> <span id="text__data__eplength" class="only-ep">Episode length</span><br>
+    </select><br>
+    <p><button id="btn__reportsubmit__metadata" class="btn btn-primary btn-submit">Submit</button></p>
+</div>

@@ -156,6 +156,7 @@ $(document).ready(function() {
                 $("#view__settings").attr("style", "padding: 90px 20px 0px;");
                 $("#view__addfeed").hide();
                 $("#view__settings").hide();
+                $("#view__main").hide();
                 $("#view__cast").html(data);
                 $("#link__report").attr("onclick", "location.href = 'app.html#view=report&cast="+findGetParameter("cast")+"'");
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
