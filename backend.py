@@ -291,4 +291,34 @@ def getprimarycolor():
         f.write(filename+"#"+x+"\n")
         return x
 
+@get("/api/v1/gethiddenauthors")
+def gethiddenauthors():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "text/plain"
+    response.set_header("Cache-Control", "public, max-age=600")
+    f = open("data/hiddenauthors")
+    x = f.read()
+    f.close()
+    return x
+
+@get("/api/v1/gethiddensubtitles")
+def gethiddensubtitles():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "text/plain"
+    response.set_header("Cache-Control", "public, max-age=600")
+    f = open("data/hiddensubtitles")
+    x = f.read()
+    f.close()
+    return x
+
+@get("/api/v1/gethiddendownloads")
+def gethiddendownloads():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "text/plain"
+    response.set_header("Cache-Control", "public, max-age=600")
+    f = open("data/hiddendownloads")
+    x = f.read()
+    f.close()
+    return x
+
 run(server="tornado",port=9000,host="0.0.0.0")

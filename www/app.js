@@ -201,7 +201,7 @@ $(document).ready(function() {
                         } catch(e) {
                             var author = callback.feed.author;
                         }
-                        if (callback.feed.author === undefined || findGetParameter("cast").replaceAll("=", "") === "aHR0cDovL2ZlZWRzLm5pZ2h0dmFsZXByZXNlbnRzLmNvbS93ZWxjb21ldG9uaWdodHZhbGVwb2RjYXN0") {
+                        if (callback.feed.author === undefined) {
                            $("#element__author").hide();
                         } else {
                             if (author.includes("and") && localStorage.getItem("lang") === "de") {
@@ -214,9 +214,16 @@ $(document).ready(function() {
                                 author = "Nordcast";
                             }
                         }
-                        if (findGetParameter("cast").replaceAll("=", "") === "aHR0cHM6Ly9mZWVkcy5mZWVkYnVybmVyLmNvbS9yZi9rc21wCg") {
-                            $("#text__subtitle").hide();
-                        }
+                        $.get(backend+"/api/v1/gethiddenauthors", function(data) {
+                            if (data.includes(findGetParameter("cast"))) {
+                                $("#element__author").hide();
+                            }
+                        });
+                        $.get(backend+"/api/v1/gethiddensubtitles", function(data) {
+                            if (data.includes(findGetParameter("cast"))) {
+                                $("#text__subtitle").hide();
+                            }
+                        });
                         $("#text__author").html(author);
                         try {
                             $("#text__description").html(callback.feed.summary_detail.value.replaceAll("\n", "<br />"));
@@ -278,9 +285,11 @@ $(document).ready(function() {
                                 itemtitle = item.title;
                             }
                             var download_available = true;
-                            if (feed.includes("nexx.cloud") || feed.includes("feedburner.com")) {
-                                var download_available = false;
-                            }
+                            $.get(backend+"/api/v1/gethiddendownloads", function(data) {
+                                if (data.includes(feed)) {
+                                    download_available = false;
+                                }
+                            });
                             if (!hide) {
                                 if (findGetParameter("episode") !== null && findGetParameter("episode") === secret) {
                                     window.setTimeout(function() {
