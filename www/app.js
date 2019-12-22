@@ -176,7 +176,7 @@ $(document).ready(function() {
                 $("#view__addfeed").hide();
                 $("#view__settings").hide();
                 $("#view__cast").html(data);
-                if (detectmob() && findGetParameter("share") === "true") {
+                if (detectmob() && findGetParameter("shared") === "true") {
                     $("#banner__openapp").attr("style", "");
                     $("#banner__openapp").attr("onclick", "window.open('nordcast://cast/"+findGetParameter("cast")+"', '_system')");
                 }
