@@ -8,27 +8,29 @@ Sources:    https://www.tutorialspoint.com/cordova/cordova_file_system.htm
 
 function download(file, secret) {
     var feed = Base64.decode(findGetParameter("cast")).split("\n")[0].split("?")[0];
-    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-        var podlist = data["podlist"];
-        data["podlist"].split(",").forEach(function(element) {
-            if (element !== feed) {
-                $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: podlist+","+feed},function(data) {
-                    $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
-                        localStorage.setItem("podlist", data["podlist"]);
-                        data["podlist"].split(",").forEach(function(item) {
-                            if (data["podlist"].includes(feed)) {
-                                $("#button__follow").hide();
-                                $("#button__unfollow").show();
-                            } else {
-                                $("#button__unfollow").hide();
-                                $("#button__follow").show();
-                            }
+    if (!localStorage.getItem("podlist").includes(feed)) {
+        $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+            var podlist = data["podlist"];
+            data["podlist"].split(",").forEach(function(element) {
+                if (element !== feed) {
+                    $.post(backend+"/api/v1/setlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), {podlist: podlist+","+feed},function(data) {
+                        $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                            localStorage.setItem("podlist", data["podlist"]);
+                            data["podlist"].split(",").forEach(function(item) {
+                                if (data["podlist"].includes(feed)) {
+                                    $("#button__follow").hide();
+                                    $("#button__unfollow").show();
+                                } else {
+                                    $("#button__unfollow").hide();
+                                    $("#button__follow").show();
+                                }
+                            });
                         });
                     });
-                });
-            }
+                }
+            });
         });
-    });
+    }
     var fileTransfer = new FileTransfer();
     var shoulddownload = true;
     if (localStorage.getItem("download-")+secret !== null) {

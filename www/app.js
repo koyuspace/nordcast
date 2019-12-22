@@ -51,6 +51,22 @@ $(document).ready(function() {
         loadjscssfile("dark.css", "css");
         $("#logo__nav").attr("src", "logo_dark.png");
     }
+    var reloaded = false;
+    window.setInterval(function() {
+        $.get(backend, function(data) {
+            $("#nav").attr("style", "border-bottom: 3px solid rgb(39, 176, 226);");
+            if (reloaded) {
+                loadview();
+            }
+            reloaded = false;
+        }).error(function() {
+            $("#nav").attr("style", "border-bottom: 3px solid red;");
+            if (!reloaded) {
+                loadview();
+                reloaded = true;
+            }
+        })
+    }, 1500);
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
     $("#view__cast").hide();
@@ -181,8 +197,21 @@ $(document).ready(function() {
                         } catch(e) {
                             var author = callback.feed.author;
                         }
-                        if (callback.feed.author === undefined || author.includes("Tobias Ain")) {
-                            author = "koyu.space";
+                        if (callback.feed.author === undefined || findGetParameter("cast") === "aHR0cDovL2ZlZWRzLm5pZ2h0dmFsZXByZXNlbnRzLmNvbS93ZWxjb21ldG9uaWdodHZhbGVwb2RjYXN0") {
+                           $("#element__author").hide();
+                        } else {
+                            if (author.includes("and") && localStorage.getItem("lang") === "de") {
+                                author = author.replaceAll("and", "und");
+                            }
+                            if (author.includes("backed by") && localStorage.getItem("lang") === "de") {
+                                author = author.replaceAll("backed by", "unterstützt von");
+                            }
+                            if (author.includes("Tobias Ain"))  {
+                                author = "Nordcast";
+                            }
+                        }
+                        if (findGetParameter("cast") === "aHR0cHM6Ly9mZWVkcy5mZWVkYnVybmVyLmNvbS9yZi9rc21w") {
+                            $("#text__subtitle").hide();
                         }
                         $("#text__author").html(author);
                         try {
@@ -453,7 +482,7 @@ $(document).ready(function() {
                                             if (callback.feed.summary !== undefined) {
                                                 summary = callback.feed.summary.replaceAll("\n", "<br>");
                                             }
-                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div></a>");
+                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
                                                 if (Number(color.split(",")[0]) > 140) {
                                                     if (summary !== "") {
@@ -496,7 +525,7 @@ $(document).ready(function() {
                                     if (callback.feed.summary !== undefined) {
                                         summary = callback.feed.summary.replaceAll("\n", "<br>");
                                     }
-                                    $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title+"</b></div><br><p>"+summary+"</p></div></a>");
+                                    $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                     $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
                                         if (Number(color.split(",")[0]) > 140) {
                                             if (summary !== "") {
