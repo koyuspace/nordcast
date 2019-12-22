@@ -11,6 +11,7 @@ import redis
 import uuid
 import requests
 import subprocess
+import urllib.parse
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -331,5 +332,27 @@ def getreversed():
     x = f.read()
     f.close()
     return x
+
+@post("/api/v1/toot/<username>/<uuid>/<instance>/<visibility>")
+def toot(username, uuid, instance, visibility):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    content = request.forms.get("content") # pylint: disable=no-member
+    try:
+        mastodon = Mastodon(
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
+        )
+        mastodon.account_verify_credentials().source.note
+    except:
+        pass
+    if uuid in suid:
+        if "%20" in content:
+            content = urllib.parse.unquote(content)
+        mastodon.status_post(content, visibility=visibility)
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+    else:
+        return "{\"login\": \"error\"}"
 
 run(server="tornado",port=9000,host="0.0.0.0")

@@ -66,17 +66,37 @@ $(document).ready(function() {
         if (localStorage.getItem("uuid") === "dummy") {
             $(".dlbutton").hide();
         }
-        $(".problemreporting").hide();
+        if (localStorage.getItem("offline") === "true") {
+            $(".fa__nav2").hide();
+            $(".addfeed").hide();
+            $(".problemreporting").hide();
+            $("#logo__nav").attr("style", "left:0 !important;");
+        }
+        if (findGetParameter("view") !== "settings") {
+            if (localStorage.getItem("uuid") !== "dummy") {
+                $(".problemreporting").show();
+                $("#logo__nav").attr("style", "");
+            } else {
+                $(".problemreporting").hide();
+                $("#logo__nav").attr("style", "left:0 !important;");
+            }
+            if (localStorage.getItem("offline") === "true") {
+                $(".problemreporting").hide();
+                $("#logo__nav").attr("style", "left:0 !important;");
+            }
+        }
     },0);
     $(window).on('popstate',function(event) {
         loadview();
         $("#view__report").hide();
         if (findGetParameter("view") !== "settings") {
-            $(".fa__nav").show();
-            $(".fa__nav2").show();
-            $(".addfeed").show();
+            if (localStorage.getItem("offline") === "false") {
+                $(".fa__nav").show();
+                $(".fa__nav2").show();
+                $(".addfeed").show();
+            }
             if (localStorage.getItem("uuid") !== "dummy") {
-                $(".problemreporting").show();
+                $(".problemreporting").hide();
             }
         }
     });
@@ -96,6 +116,9 @@ $(document).ready(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "index.html#mode=offline";
             }
+            $(".fa__nav2").hide();
+            $(".addfeed").hide();
+            $(".problemreporting").hide();
             $("#nav").attr("style", "border-bottom: 3px solid red;");
             if (!reloaded) {
                 loadview();
@@ -176,6 +199,8 @@ $(document).ready(function() {
                 $("#view__addfeed").hide();
                 $("#view__settings").hide();
                 $("#view__cast").html(data);
+                $("#text__koyushare").html("Auf koyu.space teilen");
+                $("#text__tootshare").html("Teilen auf");
                 if (detectmob() && findGetParameter("shared") === "true") {
                     $("#banner__openapp").attr("style", "");
                     $("#banner__openapp").attr("onclick", "window.open('nordcast://cast/"+findGetParameter("cast")+"', '_system')");
@@ -453,6 +478,13 @@ $(document).ready(function() {
                     }).error(function() {
                         $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
                     });
+                    if (localStorage.getItem("instance") === "koyu.space") {
+                        $(".koyushare").attr("style", "");
+                    } else {
+                        if (localStorage.getItem("instance") !== null) {
+                            $(".tootshare").attr("style", "");
+                        }
+                    }
                 }, 700);
                 window.setTimeout(function() {
                     $.get(backend+"/api/v1/getreversed", function(data) {
@@ -540,6 +572,44 @@ $(document).ready(function() {
                     $("#section__issue__missing").attr("style", "margin-top: -40px;")
                     $("#section__issue__missing").show();
                 }
+                $(".btn-submit").click(function() {
+                    var report = "@nordcast@koyu.space"; //Recipient for the report
+                    var report_type = $("#data__issue").val();
+                    if (onlymissing) {
+                        report_type = "missing";
+                    }
+                    report = report+"\nReport for Nordcast version "+$("#version").html()+"\n\n";
+                    report = report+"Report type: "+report_type+"\n";
+                    if (report_type === "downloads" || report_type === "reverse") {
+                        report = report+"Podcast ID: "+findGetParameter("cast")+"\n";
+                    }
+                    if (report_type === "missing") {
+                        if ($("#data__podcasttitle").val() === "") {
+                            alert("Podcast title can't be empty");
+                            report = "";
+                        } else {
+                            report = report+"Podcast name: "+$("#data__podcasttitle").val();
+                        }
+                    }
+                    if (report_type === "metadata") {
+                        $("#data__metadatatype:checkbox").each(function () {
+                            report = report+(this.checked ? $(this).val()+": yes" : $(this).val()+": no")+"\n";
+                       });
+                    }
+                    if (report !== "") {
+                        $.post(backend+"/api/v1/toot/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/direct", {content: report}, function(data) {
+                            if (data["login"] === "ok") {
+                                $("#view__report").html($("#content__report__success").html());
+                            } else {
+                                alert("Failed to send report. Now returning to main app.");
+                                location.href = "app.html#view=main";
+                            }
+                        }).error(function() {
+                            alert("Failed to send report. Now returning to main app.");
+                            location.href = "app.html#view=main";
+                        });
+                    }
+                });
             });
         }
         if (findGetParameter("view") === "addfeed") {
@@ -556,6 +626,16 @@ $(document).ready(function() {
             });
         }
         if (findGetParameter("view") === "main") {
+            $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+                if (data["login"] === "ok") {
+                    $("#profile__picture").attr("src", data["kspic"]);
+                    $("#profile__picture").show();
+                } else {
+                    $("#profile__picture").hide();
+                }
+            }).error(function() {
+                $("#profile__picture").hide();
+            });
             $.get("views/mainview.html", function(data) {
                 localStorage.setItem("offline", "false");
                 $("#view__main").html(data);
@@ -970,6 +1050,9 @@ $(document).ready(function() {
                 $("#text__data__eplength").html("Länge der Episode");
                 $("#text__automatic").html("Weil du keinen Podcast ausgewählt oder abgespielt hast haben wir automatisch eine Option für dich gewählt.");
                 $("#text__openapp").html("In der App öffnen");
+                $("#text__thankyou").html("Danke!");
+                $("#text__report__success").html("Dein Fehlerbericht wurde erfolgreich an unser Team versandt. Wir werden auf dich über <span id=\"instance\">koyu.space</span> zurückkommen sobald wir uns um den Bericht gekümmert haben.");
+                $("#btn__return").html("Zur App zurückkehren");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
@@ -981,6 +1064,9 @@ $(document).ready(function() {
                 localStorage.setItem("lang", "ca");
             }
         });
+        try {
+            $("#instance").html(localStorage.getItem("instance"));
+        } catch(e) {}
     }, 500);
 });
 

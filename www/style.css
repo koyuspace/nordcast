@@ -457,6 +457,24 @@ h1 .emoji {
     color: #fff;
 }
 
+.koyushare {
+    background: #fe53e1;
+    color: #fff;
+    margin-left: 3px;
+}
+
+.tootshare {
+    margin-top: 10px;
+}
+
+.koyushare img,
+.tootshare img {
+    width: 24px;
+    height: 24px;
+    margin-top: -4px;
+    vertical-align: middle;
+}
+
 /* Hack for ionicicons v2 (no animation code) */
 .ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 

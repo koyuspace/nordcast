@@ -30,10 +30,10 @@ function onDeviceReady() {
         screen.orientation.lock('portrait');
         StatusBar.backgroundColorByHexString("#fff");
     } else {
-        window.setInterval(function() {
+/*         window.setInterval(function() {
             $(".dlbutton").hide();
             $(".share").hide();
-        });
+        }); */
     }
     if (device.platform === "Android") {
         darkmode.isDarkModeEnabled(

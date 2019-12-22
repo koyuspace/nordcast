@@ -66,7 +66,7 @@
             <p><span id="text__darkmode">Enable dark mode</span> <img src="darth.png" id="starwars" class="emoji"> <input id="cdark__mode" type="checkbox"></p>
             <br />
             <h2 id="text__about">About</h2>
-            <p>Nordcast 1.6.1</p>
+            <p>Nordcast <span id="version">1.6.2</span></p>
             <p><a href="#" onclick="window.open('https://nordcast.app', '_system'); return false;" id="text__website">Website</a> | <a href="#" onclick="window.open('https://git.koyu.space/koyu/nordcast', '_system'); return false;" id="text__sourcecode">Source code</a></p>
             <p>&copy; koyu.space 2019</p>
         </div>
@@ -77,5 +77,10 @@
                 <input type="text" placeholder="RSS feed" id="addfeed__rss"><button id="addfeed__submit" class="btn btn-primary"><i class="ion-md-arrow-dropright"></i></button>
             </div>
         </div>
+        <span id="content__report__success" style="display: none;">
+            <h1 id="text__thankyou">Thank you</h1>
+            <p id="text__report__success">Your report has been successfully sent to our team. We will have a look at it and send you a DM on <span id="instance">koyu.space</span> once we processed it.</p><br>
+            <button id="btn__return" class="btn btn-primary" onclick="history.back()">Return to app</button>
+        </span>
     </body>
 </html>
