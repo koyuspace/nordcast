@@ -321,4 +321,14 @@ def gethiddendownloads():
     f.close()
     return x
 
+@get("/api/v1/getreversed")
+def getreversed():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "text/plain"
+    response.set_header("Cache-Control", "public, max-age=600")
+    f = open("data/reversed")
+    x = f.read()
+    f.close()
+    return x
+
 run(server="tornado",port=9000,host="0.0.0.0")
