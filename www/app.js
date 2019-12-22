@@ -311,7 +311,7 @@ $(document).ready(function() {
                             }
                             $.get(backend+"/api/v1/gethiddendownloads", function(data) {
                                 data.split("\n").forEach(function(vl) {
-                                    if (feed.includes(vl)) {
+                                    if (feed.includes(vl) && vl !== "") {
                                         $(".dlbutton").hide();
                                     }
                                 })
