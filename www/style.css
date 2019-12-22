@@ -12,8 +12,23 @@ body {
     margin: 0;
 }
 
-#view__search {
+#view__search,
+#view__report {
     padding: 90px 20px 0px;
+}
+
+select {
+    width: 80%;
+    outline: 0;
+    background: url(dropdown.svg) 96% / 38px no-repeat #eee;
+    border: 1px solid #ccc;
+    font-size: 14pt;
+    padding: 10px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-top: 10px;
 }
 
 #view__cast,
@@ -47,6 +62,11 @@ body {
     padding-bottom: 10px;
     z-index: 1;
     border-bottom: 3px solid rgb(39, 176, 226);
+}
+
+#logo__nav {
+    position: relative;
+    left: -16px;
 }
 
 #player__controls {
@@ -139,6 +159,13 @@ h1, h2, h3, h4, h5, h6 {
     float: right;
 }
 
+.problemreporting {
+    font-size: 24pt;
+    margin-top: -65px;
+    margin-right: 145px;
+    float: right;
+}
+
 .fa__nav {
     font-size: 24px;
     margin-top: -65px;
@@ -194,23 +221,27 @@ h1, h2, h3, h4, h5, h6 {
 #view__welcome input,
 #view__welcome input:focus,
 #view__addfeed input,
-#view__addfeed input:focus {
-    outline: 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    background: #fff;
-    color: #333;
-    height: 48px;
+#view__addfeed input:focus,
+#view__report input[type="text"],
+#view__report input[type="text"]:focus {
     width: 80%;
-    font-size: 24pt;
-    font-family: 'open_sanslight';
-    font-weight: 300;
-    padding: 12px 20px;
-    margin: 8px 0;
+    outline: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-size: 14pt;
+    padding: 10px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-top: 10px;
+}
+
+.checkbox-grid li {
+    list-style: none;
 }
 
 #view__settings {
-    padding-top: 120px;
     padding-left: 20px;
 }
 
@@ -337,7 +368,7 @@ h1 .emoji {
 }
 
 #view__addfeed {
-    padding: 90px 20px 0px;
+    padding: 20px 20px 0px;
 }
 
 #podtitle {
@@ -362,8 +393,10 @@ h1 .emoji {
 }
 
 #view__addfeed button {
-    height: 48px;
-    width: 85%;
+    height: 34px;
+    width: 10px;
+    margin-left: 5px;
+    margin-top: -7.3px;
 }
 
 .invisible {
@@ -406,17 +439,17 @@ h1 .emoji {
     height: 64px !important;
 }
 
+.problemreporting,
+.share {
+    font-size: 24px;
+    display: inline;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
 /* Hack for ionicicons v2 (no animation code) */
 .ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 
 @-moz-keyframes spin { 0% { -moz-transform: rotate(0deg); }
     100% { -moz-transform: rotate(359deg); } }
-@-webkit-keyframes spin { 0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(359deg); } }
-@-o-keyframes spin { 0% { -o-transform: rotate(0deg); }
-    100% { -o-transform: rotate(359deg); } }
-@-ms-keyframes spin { 0% { -ms-transform: rotate(0deg); }
-    100% { -ms-transform: rotate(359deg); } }
-@keyframes spin { 0% { transform: rotate(0deg); }
-    100% { transform: rotate(359deg); } }
-.ion-load-a.ion-spin-animation { -webkit-animation-timing-function: steps(8, start); -moz-animation-timing-function: steps(8, start); animation-timing-function: steps(8, start); }
+@-webkit-keyframes spin { &ep=0f3bb946-c3ea-44bd-a444-c9bf55cee074

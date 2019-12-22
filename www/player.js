@@ -174,9 +174,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 if (playing) {
                     $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
                     $("#bplay").attr("class", "playbutton ion-md-pause");
+                    $("#link__report").attr("onclick", "location.href = 'app.html#view=report&cast="+findGetParameter("cast")+"&ep="+secret+"'");
                 } else {
                     $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
                     $("#bplay").attr("class", "playbutton ion-md-play");
+                    $("#link__report").attr("onclick", "location.href = 'app.html#view=report&cast="+findGetParameter("cast")+"'");
                 }
             }, 1)
         } else {

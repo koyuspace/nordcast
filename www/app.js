@@ -50,6 +50,16 @@ function removejscssfile(filename, filetype){
 $(document).ready(function() {
     $(window).on('popstate',function(event) {
         loadview();
+        $("#view__report").hide();
+        if (findGetParameter("view") !== "settings") {
+            $(".fa__nav").show();
+            $(".fa__nav2").show();
+            $(".addfeed").show();
+            $(".problemreporting").show();
+        }
+        if (findGetParameter("view") === "cast") {
+            $("#view__main").hide();
+        }
     });
     if (localStorage.getItem("darkmode") === "true") {
         loadjscssfile("dark.css", "css");
@@ -64,6 +74,9 @@ $(document).ready(function() {
             }
             reloaded = false;
         }).error(function() {
+            if (localStorage.getItem("uuid") === "dummy") {
+                location.href = "index.html#mode=offline";
+            }
             $("#nav").attr("style", "border-bottom: 3px solid red;");
             if (!reloaded) {
                 loadview();
@@ -115,6 +128,7 @@ $(document).ready(function() {
             $(".fa__nav").hide();
             $(".fa__nav2").hide();
             $(".addfeed").hide();
+            $(".problemreporting").hide();
             $("#wrapper__search").hide();
             searchtoggle = false;
             $("#view__settings").show();
@@ -137,11 +151,19 @@ $(document).ready(function() {
                 $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
             }
             $.get("views/podview.html", function(data) {
+                $("#view__report").hide();
+                $("#view__addfeed").attr("style", "padding: 90px 20px 0px;");
+                $("#view__settings").attr("style", "padding: 90px 20px 0px;");
+                $("#view__addfeed").hide();
+                $("#view__settings").hide();
                 $("#view__cast").html(data);
+                $("#link__report").attr("onclick", "location.href = 'app.html#view=report&cast="+findGetParameter("cast")+"'");
                 $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                     if (data["login"] === "error") {
                         $("#button__follow").hide();
                         $("#button__unfollow").hide();
+                        $("#btn-padding").hide();
+                        $(".problemreporting").hide();
                     } else {
                         if (data["podlist"].includes(feed)) {
                             $("#button__follow").hide();
@@ -316,6 +338,9 @@ $(document).ready(function() {
                                     }
                                 })
                             });
+                            if (localStorage.getItem("uuid") === "dummy") {
+                                $(".dlbutton").hide();
+                            }
                         });
                         $("#button__follow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0].split("?")[0];
@@ -427,7 +452,7 @@ $(document).ready(function() {
                 }, 1000);
             });
         }
-        if(findGetParameter("view") === "search") {
+        if (findGetParameter("view") === "search") {
             $("#view__main").hide();
             window.setInterval(function() {
                 $("img").on("load", function() {
@@ -447,7 +472,52 @@ $(document).ready(function() {
                     }
                 });
             });
-        } 
+        }
+        if (findGetParameter("view") === "report") {
+            window.setTimeout(function() {
+                $("#view__"+findGetParameter("view")).show();
+            }, 20);
+            $.get("views/reportview.html", function(data) {
+                $("#view__report").html(data);
+                $("#section__issue__reverse").hide();
+                $("#section__issue__missing").hide();
+                $("#section__issue__metadata").hide();
+                var onlymissing = false;
+                try {
+                    if (findGetParameter("cast") === null || findGetParameter("cast") === "null") {
+                        onlymissing = true;
+                    }
+                } catch (e) {
+                    onlymissing = true;
+                }
+                if (!onlymissing) {
+                    window.setTimeout(function() {
+                        $("#data__issue").change(function() {
+                            $("#section__issue__downloads").hide();
+                            $("#section__issue__reverse").hide();
+                            $("#section__issue__missing").hide();
+                            $("#section__issue__metadata").hide();
+                            window.setTimeout(function() {
+                                $("#section__issue__"+$("#data__issue").val()).show();
+                                if (findGetParameter("ep") === null) {
+                                    $(".only-ep").hide();
+                                    $("#btn__reportsubmit__metadata").attr("style", "margin-top: -160px;");
+                                } else {
+                                    $("#btn__reportsubmit__metadata").attr("style", "margin-top: -30px;");
+                                }
+                            }, 20);
+                        });
+                    }, 500);
+                } else {
+                    $("#data__issue").hide();
+                    $("#section__issue__downloads").hide();
+                    $("#text__type").hide();
+                    $("#text__automatic").attr("style", "");
+                    $("#section__issue__missing").attr("style", "margin-top: -40px;")
+                    $("#section__issue__missing").show();
+                }
+            });
+        }
         if (findGetParameter("view") === "addfeed") {
             $("#addfeed__rss").val("");
             $("#view__addfeed").show();
@@ -465,6 +535,14 @@ $(document).ready(function() {
             $.get("views/mainview.html", function(data) {
                 localStorage.setItem("offline", "false");
                 $("#view__main").html(data);
+                $("#view__report").hide();
+                $("#view__addfeed").attr("style", "padding: 90px 20px 0px;");
+                $("#view__settings").attr("style", "padding: 90px 20px 0px;");
+                $("#view__addfeed").hide();
+                $("#view__settings").hide();
+                if (!playing) {
+                    $("#link__report").attr("onclick", "location.href = 'app.html#view=report"+"'");
+                }
                 if (localStorage.getItem("offline") !== "true") {
                     $("#offline__message").hide();
                 } else {
@@ -558,7 +636,7 @@ $(document).ready(function() {
                         }
                     }).error(function() {
                         $("#offline__message").show();
-                        localStorage.setItem("offline", "true")
+                        localStorage.setItem("offline", "true");
                         $("#view__main").show();
                         if (localStorage.getItem("podlist")) {
                             podlist = localStorage.getItem("podlist");
@@ -845,11 +923,28 @@ $(document).ready(function() {
                 $("#text__addfeed").html("RSS-Feed hinzufügen");
                 $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
                 $("#addfeed__rss").attr("placeholder", "RSS-Feed");
-                $("#addfeed__submit").html("RSS-Feed hinzufügen");
                 $(".msg-download").html("Herunterladen");
                 $("#text__originals").html("In Eigenproduktion");
                 $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
                 $("#text__sourcecode").html("Quelltext");
+                $(".btn-submit").html("Absenden");
+                $("#text__report").html("Fehler melden");
+                $("#text__type").html("Welchen Fehler möchtest du melden?");
+                $("#text__issue__downloads").html("Ich kann keine Episoden herunterladen");
+                $("#text__issue__metadata").html("Ein paar Informationen sind fehlerhaft");
+                $("#text__issue__reverse").html("Die Episoden sind in der verkehrten Reihenfolge");
+                $("#text__issue__missing").html("Ich vermisse einen Podcast");
+                $("#text__whatsmissing").html("Welchen Podcast vermisst du?");
+                $("#data__podcasttitle").attr("placeholder", "Bitte Podcastnamen hier eingeben");
+                $("#text__incorrectmetadata").html("Welche Informationen sind fehlerhaft?");
+                $("#text__data__title").html("Titel");
+                $("#text__data__subtitle").html("Beschreibung");
+                $("#text__data__author").html("Autor");
+                $("#text__data__cover").html("Cover-Foto");
+                $("#text__data__shownotes").html("Shownotes");
+                $("#text__data__eptitle").html("Titel der Episode");
+                $("#text__data__eplength").html("Länge der Episode");
+                $("#text__automatic").html("Weil du keinen Podcast ausgewählt oder abgespielt hast haben wir automatisch eine Option für dich gewählt.");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");

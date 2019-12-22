@@ -3,7 +3,35 @@ var warning_nologin = "Warning: If you don't login you'll be only able to listen
 var es = false;
 var error = false;
 
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    window.location.href
+        .split("#")[1]
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
 $(document).ready(function() {
+    window.setInterval(function() {
+        $.get(backend, function(data) {
+            if (localStorage.getItem("uuid") === "dummy") {
+                location.href = "app.html#view=main";
+            }
+        }).error(function() {
+            if (localStorage.getItem("uuid") === "dummy") {
+                location.href = "index.html#mode=offline";
+            }
+        })
+    }, 1500);
     if (localStorage.getItem("darkmode") === "true") {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__intro").attr("src", "logo_dark.png");
@@ -17,7 +45,7 @@ $(document).ready(function() {
                 StatusBar.styleLightContent();
             }
         }
-        if (localStorage.getItem("uuid") === null || localStorage.getItem("uuid") === "dummy") {
+        if (localStorage.getItem("uuid") === null || localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") !== "offline") {
             $("#view__welcome").attr("style", "");
             $("#logo__intro").hide();
         } else {
@@ -40,7 +68,18 @@ $(document).ready(function() {
                         location.href = "app.html#view=main";
                     }
                 });
-                if (localStorage.getItem("uuid") === "dummy") {
+                try {
+                    if (localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") === "offline") {
+                        $("#text__offline").show();
+                        $("#logo__intro").attr("style", "margin-top:-32px;");
+                        $("#logo__intro").show();
+                        $("#view__welcome").hide();
+                    } else {
+                        if (localStorage.getItem("uuid") === "dummy") {
+                            location.href = "app.html#view=main";
+                        }
+                    }
+                } catch(e) {
                     location.href = "app.html#view=main";
                 }
             }

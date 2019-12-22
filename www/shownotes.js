@@ -8,11 +8,13 @@ function shownotes(shownotes) {
     $("#view__cast").css("padding", "20px");
     $("#view__cast").css("padding-top", "79px");
     $("#snclose").show();
+    $("#snclose").attr("onclick", "restoreview()");
     scrollTo(0,0);
 }
 
 function restoreview() {
     $(".fa__nav2").show();
+    $("#snclose").hide();
     if (donator) {
         $(".addfeed").show();
     }

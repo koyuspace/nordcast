@@ -21,6 +21,7 @@
         <script src="player.js"></script>
         <script src="shownotes.js"></script>
         <script src="download.js"></script>
+        <script src="share.js"></script>
         <link rel="shortcut icon" href="logo.png">
     </head>
     <body>
@@ -31,6 +32,7 @@
             <i class="ion-md-settings fa__nav"></i>
             <i class="fa__nav2 ion-md-search fa__nav2"></i>
             <i class="addfeed ion-logo-rss"></i>
+            <a id="link__report"><i class="ion-md-megaphone problemreporting"></i></a>
             <div id="wrapper__search">
                 <input type="text" id="qq" placeholder="Search term" />
             </div>
@@ -45,6 +47,9 @@
 
         </div>
         <div id="view__search">
+
+        </div>
+        <div id="view__report">
 
         </div>
         <div id="player__controls">
@@ -69,8 +74,7 @@
             <h1 id="text__addfeed">Load feed</h1>
             <p id="feed__summary">From here you can load your RSS feeds manually into the app.</p><br />
             <div style="text-align: center;">
-                <input type="text" placeholder="RSS feed" id="addfeed__rss">
-                <button id="addfeed__submit" class="btn btn-primary">Add RSS feed</button>
+                <input type="text" placeholder="RSS feed" id="addfeed__rss"><button id="addfeed__submit" class="btn btn-primary"><i class="ion-md-arrow-dropright"></i></button>
             </div>
         </div>
     </body>

@@ -19,6 +19,7 @@
     </head>
     <body>
         <img src="logo.png" height="128" alt="Logo" id="logo__intro" />
+        <span id="text__offline">You are offline</span>
         <div id="view__welcome" style="display: none;">
             <h1 id="header__welcome">Welcome to Nordcast</h1>
             <p id="text__welcome">Please log in with your koyu.space account. If you don't have an account, you can sign up <a href="#" onclick="window.open('https://koyu.space/auth/sign_up', '_system'); return false;">here</a>.</p>
@@ -28,7 +29,7 @@
             <p><a href="#" onclick="window.open('https://koyu.space/terms', '_system'); return false;"><i class="ion-md-lock"></i> <span id="text__safe">Your data is safe.</span></a></p>
             <button class="btn btn-primary btn-lg" id="kslogin" style="width: 80%;">Login</button>
             <div id="welcome__error"><p><b style="color:red;">Your username and/or password is wrong.</b></p></div>
-            <p style="display: none;"><small><a href="#" id="nologin">Continue without account</a></small></p>
+            <small><a href="#" id="nologin">Continue without account</a></small>
         </div>
     </body>
 </html>

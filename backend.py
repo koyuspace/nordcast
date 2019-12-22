@@ -21,6 +21,7 @@ else:
 
 @get("/")
 def index():
+    response.headers['Access-Control-Allow-Origin'] = '*'
     return redirect("https://nordcast.app", code=302)
 
 @get("/api/v1/getpodcast")
