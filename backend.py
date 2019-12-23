@@ -401,7 +401,7 @@ def addfav(username, uuid, secret, instance):
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     if uuid in suid:
-        if int(str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")) == None:
+        if str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "") == "None":
             favs = 1
         else:
             favs = int(str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")) + 1
