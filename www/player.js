@@ -127,6 +127,19 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         var percent = player.currentTime/ player.duration * 100;
         $("#range-control").val(percent).change();
     });
+
+    if (feed !== localStorage.getItem("feed")) {
+        window.setTimeout(function() {
+            $("#view__cast").hide();
+            kicker = true;
+            window.setTimeout(function() {
+                playcast(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
+                playcast(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
+                playing = true;
+            }, 2700);
+        });
+    }
+
     if (feed === undefined) {
         location.href = "app.html#view=cast&cast="+Base64.encode(localStorage.getItem("feed"));
         window.setTimeout(function() {
@@ -136,7 +149,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 playcast(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
                 playcast(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
                 playing = true;
-            }, 2700)
+            }, 2700);
         });
     } else {
         localStorage.setItem("secret", secret);

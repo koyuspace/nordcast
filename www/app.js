@@ -550,6 +550,30 @@ $(document).ready(function() {
                 $("#section__issue__reverse").hide();
                 $("#section__issue__missing").hide();
                 $("#section__issue__metadata").hide();
+                if (localStorage.getItem("lang") === "de") {
+                    $("#text__report").html("Fehler melden");
+                    $("#text__type").html("Welchen Fehler möchtest du melden?");
+                    $("#text__issue__downloads").html("Ich kann keine Episoden herunterladen");
+                    $("#text__issue__metadata").html("Ein paar Informationen sind fehlerhaft");
+                    $("#text__issue__reverse").html("Die Episoden sind in der verkehrten Reihenfolge");
+                    $("#text__issue__missing").html("Ich vermisse einen Podcast");
+                    $("#text__whatsmissing").html("Welchen Podcast vermisst du?");
+                    $("#data__podcasttitle").attr("placeholder", "Bitte Podcastnamen hier eingeben");
+                    $("#text__incorrectmetadata").html("Welche Informationen sind fehlerhaft?");
+                    $("#text__data__title").html("Titel");
+                    $("#text__data__subtitle").html("Beschreibung");
+                    $("#text__data__author").html("Autor");
+                    $("#text__data__cover").html("Cover-Foto");
+                    $("#text__data__shownotes").html("Shownotes");
+                    $("#text__data__eptitle").html("Titel der Episode");
+                    $("#text__data__eplength").html("Länge der Episode");
+                    $("#text__automatic").html("Weil du keinen Podcast ausgewählt oder abgespielt hast haben wir automatisch eine Option für dich gewählt.");
+                    $("#text__openapp").html("In der App öffnen");
+                    $("#text__thankyou").html("Danke!");
+                    $("#text__report__success").html("Dein Fehlerbericht wurde erfolgreich an unser Team versandt. Wir werden auf dich über <span id=\"instance\">koyu.space</span> zurückkommen sobald wir uns um den Bericht gekümmert haben.");
+                    $("#btn__return").html("Zur App zurückkehren");
+                    $(".btn-submit").html("Absenden");
+                }
                 var onlymissing = false;
                 try {
                     if (findGetParameter("cast") === null || findGetParameter("cast") === "null") {
@@ -1038,28 +1062,6 @@ $(document).ready(function() {
                 $("#text__originals").html("In Eigenproduktion");
                 $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
                 $("#text__sourcecode").html("Quelltext");
-                $(".btn-submit").html("Absenden");
-                $("#text__report").html("Fehler melden");
-                $("#text__type").html("Welchen Fehler möchtest du melden?");
-                $("#text__issue__downloads").html("Ich kann keine Episoden herunterladen");
-                $("#text__issue__metadata").html("Ein paar Informationen sind fehlerhaft");
-                $("#text__issue__reverse").html("Die Episoden sind in der verkehrten Reihenfolge");
-                $("#text__issue__missing").html("Ich vermisse einen Podcast");
-                $("#text__whatsmissing").html("Welchen Podcast vermisst du?");
-                $("#data__podcasttitle").attr("placeholder", "Bitte Podcastnamen hier eingeben");
-                $("#text__incorrectmetadata").html("Welche Informationen sind fehlerhaft?");
-                $("#text__data__title").html("Titel");
-                $("#text__data__subtitle").html("Beschreibung");
-                $("#text__data__author").html("Autor");
-                $("#text__data__cover").html("Cover-Foto");
-                $("#text__data__shownotes").html("Shownotes");
-                $("#text__data__eptitle").html("Titel der Episode");
-                $("#text__data__eplength").html("Länge der Episode");
-                $("#text__automatic").html("Weil du keinen Podcast ausgewählt oder abgespielt hast haben wir automatisch eine Option für dich gewählt.");
-                $("#text__openapp").html("In der App öffnen");
-                $("#text__thankyou").html("Danke!");
-                $("#text__report__success").html("Dein Fehlerbericht wurde erfolgreich an unser Team versandt. Wir werden auf dich über <span id=\"instance\">koyu.space</span> zurückkommen sobald wir uns um den Bericht gekümmert haben.");
-                $("#btn__return").html("Zur App zurückkehren");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
@@ -1074,7 +1076,7 @@ $(document).ready(function() {
         try {
             $("#instance").html(localStorage.getItem("instance"));
         } catch(e) {}
-    }, 500);
+    }, 1500);
 });
 
 $(document).on('click', 'a[href^="http"]', function (e) {
