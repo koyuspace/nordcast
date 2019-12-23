@@ -542,6 +542,16 @@ h1 .emoji {
     margin-top: 7px;
 }
 
+#showall {
+    text-align: center;
+    background: #ccc;
+    width: 100vw;
+    font-size: 14pt;
+    font-weight: bold;
+    padding: 20px;
+    margin-left: -20px;
+}
+
 /* Hack for ionicicons v2 (no animation code) */
 .ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 

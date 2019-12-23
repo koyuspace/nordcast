@@ -7,4 +7,6 @@
 </div>
 <br><span id="btn-padding"><br><br></span><p><button id="button__follow" style="display: inline;" class="btn btn-primary">Follow</button><button id="button__unfollow" style="display: inline;" class="btn btn-danger">Unfollow</button><i class="ion-md-share share" onclick="share(findGetParameter('cast'))"></i> <i class="ion-md-heart fav" style="display: none;" onclick="fav(Base64.encode(Base64.decode(findGetParameter('cast'))).replaceAll('=', '').slice(0,30))"></i> <span class="pod__favs" style="display: none;">0</span> <br><button class="btn koyushare" onclick="tootshare()" style="display: none;"><img src="koyuglyph.svg"> <span id="text__koyushare">Share on koyu.space</span></button> <button class="btn btn-primary tootshare" onclick="tootshare()" style="display: none;"><img src="fediverse.svg"> <span id="text__tootshare">Share on</span> <span id="instance">koyu.space</span></button></p>
 <br><br><h6 id="text__description"></h6>
-<div id="podtable"><div style="overflow-x:auto;"><table><tbody></tbody></table></div></div>
+<div id="podtable"><div style="overflow-x:auto;"><table><tbody></tbody></table>
+<div id="showall" style="display: none;">Show all</div>
+</div></div>

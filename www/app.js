@@ -33,6 +33,8 @@ var kicker = false;
 var loading = false;
 var firstload = true;
 var isfaving = false;
+var showallwasclicked = false;
+var showall_warning = "Warning: Loading every episode on this podcast may freeze your device. Continue?"
 
 // Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
 function loadjscssfile(filename, filetype){
@@ -303,7 +305,23 @@ $(document).ready(function() {
                         try {
                             $("#text__description").html(callback.feed.summary_detail.value.replaceAll("\n", "<br />"));
                         } catch (e) {}
-                        callback.entries.forEach(function(item) {
+                        if (callback.entries.length >= 100 && !showallwasclicked) {
+                            $("#showall").attr("style", "");
+                        }
+                        $("#showall").click(function() {
+                            if (confirm(showall_warning)) {
+                                showallwasclicked = true;
+                                loadview();
+                            }
+                        });
+                        var entries;
+                        if (!showallwasclicked) {
+                            entries = callback.entries.slice(0,100);
+                        } else {
+                            entries = callback.entries;
+                            showallwasclicked = false;
+                        }
+                        entries.forEach(function(item) {
                             var secret = "";
                             try {
                                 secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
@@ -1062,6 +1080,8 @@ $(document).ready(function() {
                 $("#text__originals").html("In Eigenproduktion");
                 $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
                 $("#text__sourcecode").html("Quelltext");
+                $("#showall").html("Alle anzeigen");
+                showall_warning = "Warnung: Jede Podcast-Episode zu laden könnte möglicherweise dein Gerät zum Stillstand bringen. Möchtest du wirklich fortfahren?"
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
