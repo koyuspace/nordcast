@@ -1,6 +1,113 @@
 var playing = false;
 var platform = "";
 var plmax = false;
+var duration = 0;
+var elapsed = 0;
+
+function addControls(file, secret, title, author, podcover, feed, feedtitle) {
+    // Taken from the docs on https://github.com/ghenry22/cordova-music-controls-plugin
+
+    var player = document.getElementById("player");
+    try {
+        var artist = "";
+        if (Base64.decode(author) === "undefined") {
+            artist = Base64.decode(feedtitle);
+        } else {
+            artist = Base64.decode(author);
+        }
+        MusicControls.create({
+            track       : Base64.decode(title),
+            artist      : artist,
+            album       : feedtitle,
+            cover       : podcover,
+            isPlaying   : playing,							// optional, default : true
+            dismissable : false,							// optional, default : false
+
+            hasPrev   : false,		// show previous button, optional, default: true
+            hasNext   : false,		// show next button, optional, default: true
+            hasClose  : true,		// show close button, optional, default: false
+        
+            // iOS only, optional
+            
+            duration : duration, // optional, default: 0
+            elapsed : elapsed, // optional, default: 0
+            hasSkipForward : true, //optional, default: false. true value overrides hasNext.
+            hasSkipBackward : true, //optional, default: false. true value overrides hasPrev.
+            skipForwardInterval : 10, //optional. default: 0.
+            skipBackwardInterval : 10, //optional. default: 0.
+            hasScrubbing : true, //optional. default to false. Enable scrubbing from control center progress bar 
+        
+            // Android only, optional
+            // text displayed in the status bar when the notification (and the ticker) are updated
+            ticker	  : 'Now playing "'+feedtitle+'"',
+            //All icons default to their built-in android equivalents
+            //The supplied drawable name, e.g. 'media_play', is the name of a drawable found under android/res/drawable* folders
+            playIcon: 'media_play',
+            pauseIcon: 'media_pause',
+            prevIcon: 'media_prev',
+            nextIcon: 'media_next',
+            closeIcon: 'media_close',
+            notificationIcon: 'notification'
+        }, function() {
+            if (debug) {
+                console.log("Media controls initalized");
+            }
+        }, function() {
+            if (debug) {
+                console.log("Cannot initialize media controls");
+            }
+        });
+        function events(action) {
+
+            const message = JSON.parse(action).message;
+              switch(message) {
+                  case 'music-controls-pause':
+                      playcast(file, secret, title, author, podcover, feed, feedtitle);
+                      break;
+                  case 'music-controls-play':
+                      playcast(file, secret, title, author, podcover, feed, feedtitle);
+                      break;
+                  case 'music-controls-destroy':
+                      plclose();
+                      break;
+          
+                  // External controls (iOS only)
+                  case 'music-controls-toggle-play-pause' :
+                      bplay();
+                      break;
+                  case 'music-controls-seek-to':
+                      const seekToInSeconds = JSON.parse(action).position;
+                      MusicControls.updateElapsed({
+                          elapsed: seekToInSeconds,
+                          isPlaying: true
+                      });
+                      player.currentTime = seekToInSeconds;
+                      // Do something
+                      break;
+          
+                  // Headset events (Android only)
+                  // All media button events are listed below
+                  case 'music-controls-media-button' :
+                      playcast(file, secret, title, author, podcover, feed, feedtitle);
+                      break;
+                  case 'music-controls-headset-unplugged':
+                      if (playing) {
+                        playcast(file, secret, title, author, podcover, feed, feedtitle);
+                      }
+                      break;
+                  default:
+                      break;
+              }
+          }
+          
+          // Register callback
+          MusicControls.subscribe(events);
+          
+          // Start listening for events
+          // The plugin will run the events function each time an event is fired
+          MusicControls.listen();
+    } catch(e) {}
+}
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     if (!playing && $("#player__controls").attr("style") === "display: none;" && !plmax) {
@@ -67,6 +174,19 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                     player.src = localStorage.getItem("file");
                     player.play();
                     playing = true;
+                    if (device.platform !== "browser") {
+                        MusicControls.destroy(function() {
+                            if (debug) {
+                                console.log("Media controls destroyed")
+                            }
+                        }, function() {
+                            if (debug) {
+                                console.log("Error destroying media controls")
+                            }
+                        });
+                        addControls(file, secret, title, author, podcover, feed, feedtitle);
+                    }
+
                 } else {
                     plclose();
                 }
@@ -76,6 +196,18 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                         player.src = localStorage.getItem("download-"+secret);
                         player.play();
                         playing = true;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(file, secret, title, author, podcover, feed, feedtitle);
+                        }
                     } else {
                         plclose();
                     }
@@ -83,6 +215,18 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                     player.src = localStorage.getItem("file");
                     player.play();
                     playing = true;
+                    if (device.platform !== "browser") {
+                        MusicControls.destroy(function() {
+                            if (debug) {
+                                console.log("Media controls destroyed")
+                            }
+                        }, function() {
+                            if (debug) {
+                                console.log("Error destroying media controls")
+                            }
+                        });
+                        addControls(file, secret, title, author, podcover, feed, feedtitle);
+                    }
                 }
             }
         } else {
@@ -93,19 +237,70 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 $("#player").attr("src", "");
                 if (platform !== "ios") {
                     player.pause();
+                    playing = false;
+                    if (device.platform !== "browser") {
+                        MusicControls.destroy(function() {
+                            if (debug) {
+                                console.log("Media controls destroyed")
+                            }
+                        }, function() {
+                            if (debug) {
+                                console.log("Error destroying media controls")
+                            }
+                        });
+                        addControls(file, secret, title, author, podcover, feed, feedtitle);
+                    }
                 } else {
                     addEventListener('touchstart', function (e) {
                         player.pause();
+                        playing = false;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(file, secret, title, author, podcover, feed, feedtitle);
+                        }
                     });
                 }
                 playing = false;
-                playcast(file);
             } else {
                 if (platform !== "ios") {
                     player.pause();
+                    playing = false;
+                    if (device.platform !== "browser") {
+                        MusicControls.destroy(function() {
+                            if (debug) {
+                                console.log("Media controls destroyed")
+                            }
+                        }, function() {
+                            if (debug) {
+                                console.log("Error destroying media controls")
+                            }
+                        });
+                        addControls(file, secret, title, author, podcover, feed, feedtitle);
+                    }
                 } else {
                     addEventListener('touchstart', function (e) {
                         player.pause();
+                        playing = false;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(file, secret, title, author, podcover, feed, feedtitle);
+                        }
                     });
                 }
                 playing = false;
@@ -133,9 +328,35 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                     }
                     if (platform !== "ios") {
                         player.play();
+                        playing = true;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(file, secret, title, author, podcover, feed, feedtitle);
+                        }
                     } else {
                         addEventListener('touchstart', function (e) {
                             player.play();
+                            playing = true;
+                            if (device.platform !== "browser") {
+                                MusicControls.destroy(function() {
+                                    if (debug) {
+                                        console.log("Media controls destroyed")
+                                    }
+                                }, function() {
+                                    if (debug) {
+                                        console.log("Error destroying media controls")
+                                    }
+                                });
+                                addControls(file, secret, title, author, podcover, feed, feedtitle);
+                            }
                         });
                     }
                 } else {
@@ -150,18 +371,70 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                         }
                         if (platform !== "ios") {
                             player.play();
+                            playing = true;
+                            if (device.platform !== "browser") {
+                                MusicControls.destroy(function() {
+                                    if (debug) {
+                                        console.log("Media controls destroyed")
+                                    }
+                                }, function() {
+                                    if (debug) {
+                                        console.log("Error destroying media controls")
+                                    }
+                                });
+                                addControls(file, secret, title, author, podcover, feed, feedtitle);
+                            }
                         } else {
                             addEventListener('touchstart', function (e) {
                                 player.play();
+                                playing = true;
+                                if (device.platform !== "browser") {
+                                    MusicControls.destroy(function() {
+                                        if (debug) {
+                                            console.log("Media controls destroyed")
+                                        }
+                                    }, function() {
+                                        if (debug) {
+                                            console.log("Error destroying media controls")
+                                        }
+                                    });
+                                    addControls(file, secret, title, author, podcover, feed, feedtitle);
+                                }
                             });
                         }
                     } else {
                         player.currentTime = parseInt(data["pos"]);
                         if (platform !== "ios") {
                             player.play();
+                            playing = true;
+                            if (device.platform !== "browser") {
+                                MusicControls.destroy(function() {
+                                    if (debug) {
+                                        console.log("Media controls destroyed")
+                                    }
+                                }, function() {
+                                    if (debug) {
+                                        console.log("Error destroying media controls")
+                                    }
+                                });
+                                addControls(file, secret, title, author, podcover, feed, feedtitle);
+                            }
                         } else {
                             addEventListener('touchstart', function (e) {
                                 player.play();
+                                playing = true;
+                                if (device.platform !== "browser") {
+                                    MusicControls.destroy(function() {
+                                        if (debug) {
+                                            console.log("Media controls destroyed")
+                                        }
+                                    }, function() {
+                                        if (debug) {
+                                            console.log("Error destroying media controls")
+                                        }
+                                    });
+                                    addControls(file, secret, title, author, podcover, feed, feedtitle);
+                                }
                             });
                         }
                     }
@@ -176,9 +449,35 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 }
                 if (platform !== "ios") {
                     player.play();
+                    playing = true;
+                    if (device.platform !== "browser") {
+                        MusicControls.destroy(function() {
+                            if (debug) {
+                                console.log("Media controls destroyed")
+                            }
+                        }, function() {
+                            if (debug) {
+                                console.log("Error destroying media controls")
+                            }
+                        });
+                        addControls(file, secret, title, author, podcover, feed, feedtitle);
+                    }
                 } else {
                     addEventListener('touchstart', function (e) {
                         player.play();
+                        playing = true;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(file, secret, title, author, podcover, feed, feedtitle);
+                        }
                     });
                 }
             });
@@ -206,7 +505,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
-    if (playing && !plmax) {
+    if (!plmax) {
         window.setTimeout(function() {
             anime({
                 targets: "#player__controls",
@@ -237,6 +536,13 @@ function onDeviceReady() {
         var timeleft = "-"+String(player.duration - player.currentTime).toHHMMSS();
         if (!timeleft.includes("NaN")) {
             $("#timer").html(String(player.currentTime).toHHMMSS());
+            elapsed = player.currentTime;
+            if (device.platform !== "browser") {
+                MusicControls.updateElapsed({
+                    elapsed: elapsed, // seconds
+                    isPlaying: true
+                });
+            }
         }
     }, 1);
     
@@ -254,6 +560,7 @@ function onDeviceReady() {
             $("#timeleft").html("");
         } else {
             $("#timeleft").html(timeleft);
+            duration = player.duration;
         }
     }, 100);
     platform = device.platform;
@@ -292,6 +599,17 @@ function plclose() {
         $("#player__controls").hide();
     }, 510);
     $("body").removeAttr("style");
+    if (device.platform !== "browser") {
+        MusicControls.destroy(function() {
+            if (debug) {
+                console.log("Media controls destroyed")
+            }
+        }, function() {
+            if (debug) {
+                console.log("Error destroying media controls")
+            }
+        });
+    }
 }
 
 function plout() {

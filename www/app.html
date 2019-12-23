@@ -61,7 +61,7 @@
             <a id="link__cast"><img id="img__cast2" class="card__small"></a>
             <div id="plcontrols">
                 <div class="timers"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>
-                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i> <i class="ion-md-share share" style="position: absolute; margin-left: 2px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i></div>
+                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i class="ion-md-share share" style="position: absolute;font-size: 18pt;margin-left: 31px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
             </div>
         </div>
         <div id="view__settings">
@@ -73,7 +73,7 @@
             <p><span id="text__darkmode">Enable dark mode</span> <img src="darth.png" id="starwars" class="emoji"> <input id="cdark__mode" type="checkbox"></p>
             <br />
             <h2 id="text__about">About</h2>
-            <p>Nordcast <span id="version">1.6.5</span></p>
+            <p>Nordcast <span id="version">1.6.6</span></p>
             <p><a href="#" onclick="window.open('https://nordcast.app', '_system'); return false;" id="text__website">Website</a> | <a href="#" onclick="window.open('https://git.koyu.space/koyu/nordcast', '_system'); return false;" id="text__sourcecode">Source code</a></p>
             <p>&copy; koyu.space 2019</p>
         </div>

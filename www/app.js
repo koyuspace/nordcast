@@ -71,20 +71,6 @@ $(document).ready(function() {
             $(".fa__nav2").hide();
             $(".addfeed").hide();
             $(".problemreporting").hide();
-            $("#logo__nav").attr("style", "left:0 !important;");
-        }
-        if (findGetParameter("view") !== "settings") {
-            if (localStorage.getItem("uuid") !== "dummy") {
-                $(".problemreporting").show();
-                $("#logo__nav").attr("style", "");
-            } else {
-                $(".problemreporting").hide();
-                $("#logo__nav").attr("style", "left:0 !important;");
-            }
-            if (localStorage.getItem("offline") === "true") {
-                $(".problemreporting").hide();
-                $("#logo__nav").attr("style", "left:0 !important;");
-            }
         }
         if (!detectmob()) {
             $(".share").hide();
@@ -93,17 +79,12 @@ $(document).ready(function() {
     $(window).on('popstate',function(event) {
         loadview();
         $("#view__report").hide();
+        plout();
         if (findGetParameter("view") !== "settings") {
-            if (localStorage.getItem("offline") === "false") {
+            if (localStorage.getItem("offline") === "true") {
                 $(".fa__nav").show();
-                $(".fa__nav2").show();
-                $(".addfeed").show();
-            }
-            if (localStorage.getItem("uuid") !== "dummy") {
-                $(".problemreporting").hide();
             }
         }
-        plout();
     });
     if (localStorage.getItem("darkmode") === "true") {
         loadjscssfile("dark.css", "css");
@@ -112,6 +93,17 @@ $(document).ready(function() {
     var reloaded = false;
     window.setInterval(function() {
         $.get(backend+"?"+Date.now(), function(data) {
+            localStorage.setItem("offline", "false");
+            if (findGetParameter("view") !== "settings") {
+                if (localStorage.getItem("offline") === "false") {
+                    $(".fa__nav").show();
+                    $(".fa__nav2").show();
+                    $(".addfeed").show();
+                }
+                if (localStorage.getItem("uuid") !== "dummy") {
+                    $(".problemreporting").show();
+                }
+            }
             $("#nav").attr("style", "border-bottom: 3px solid rgb(39, 176, 226);");
             if (reloaded) {
                 loadview();
@@ -121,10 +113,15 @@ $(document).ready(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "index.html#mode=offline";
             }
+            localStorage.setItem("offline", "true");
             $(".fa__nav2").hide();
             $(".addfeed").hide();
             $(".problemreporting").hide();
             $(".fav").hide();
+            $(".tootshare").hide();
+            $(".koyushare").hide();
+            $(".pod__favs").hide();
+            $(".share").hide();
             $("#nav").attr("style", "border-bottom: 3px solid red;");
             if (!reloaded) {
                 loadview();
@@ -496,7 +493,7 @@ $(document).ready(function() {
                     if (localStorage.getItem("uuid") !== "dummy") {
                         $(".pod__favs").attr("style", "");
                         $(".fav").attr("style", "");
-                        $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+findGetParameter("cast")+"/"+localStorage.getItem("instance"), function(data) {
+                        $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+Base64.encode(Base64.decode(findGetParameter('cast'))).replaceAll('=', '').slice(0,30)+"/"+localStorage.getItem("instance"), function(data) {
                             $(".pod__favs").html(data["favs"]);
                         });
                     }
@@ -652,7 +649,6 @@ $(document).ready(function() {
                 $("#profile__picture").hide();
             });
             $.get("views/mainview.html", function(data) {
-                localStorage.setItem("offline", "false");
                 $("#view__main").html(data);
                 $("#view__report").hide();
                 $("#view__addfeed").attr("style", "padding: 90px 20px 0px;");
@@ -678,9 +674,6 @@ $(document).ready(function() {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                                 window.setTimeout(function() {
                                     $("#view__main").show();
-                                    $(".fa__nav").show();
-                                    $(".fa__nav2").show();
-                                    $(".addfeed").show();
                                 }, 622*3);
                                 localStorage.setItem("podlist", data["podlist"]);
                             } else {
@@ -716,9 +709,6 @@ $(document).ready(function() {
                                     window.setTimeout(function() {
                                         $("#section__list").html($("#section__list").html()+"</p>");
                                         $("#view__main").show();
-                                        $(".fa__nav").show();
-                                        $(".fa__nav2").show();
-                                        $(".addfeed").show();
                                     }, timeout);
                                 }, 20);
                                 podlist.split(",").forEach(function(feed) {
@@ -755,7 +745,6 @@ $(document).ready(function() {
                         }
                     }).error(function() {
                         $("#offline__message").show();
-                        localStorage.setItem("offline", "true");
                         $("#view__main").show();
                         if (localStorage.getItem("podlist")) {
                             podlist = localStorage.getItem("podlist");
@@ -925,9 +914,12 @@ $(document).ready(function() {
             $("#view__search").hide();
             $("#view_settings").hide();
             $("#view__main").hide();
-            $(".fa__nav").show();
-            $(".fa__nav2").show();
-            $(".addfeed").show();
+            if (localStorage.getItem("offline") === "false") {
+                $(".fa__nav").show();
+                $(".fa__nav2").show();
+                $(".addfeed").show();
+                $(".problemreporting").show();
+            }
             location.href = "app.html#view=main";
         }
     });

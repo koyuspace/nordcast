@@ -22,12 +22,14 @@
       "cordova-plugin-x-socialsharing": {},
       "cordova-plugin-customurlscheme": {
         "URL_SCHEME": "nordcast"
-      }
+      },
+      "cordova-music-controls": {}
     }
   },
   "dependencies": {
     "cordova-android": "^7.1.4",
     "cordova-file-cache": "^1.2.2",
+    "cordova-music-controls": "git+https://github.com/ghenry22/cordova-music-controls-plugin.git",
     "cordova-plugin-android-window-background": "^1.0.2",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-darkmode": "1.0.0",
