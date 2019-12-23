@@ -7,9 +7,9 @@ function share(cast) {
 }
 
 function tootshare() {
-    var sharetext = "Hey, I found this podcast on #Nordcast and you should definitely grab a listen: https://web.nordcast.app/app.html#view=cast&cast="+Base64.encode(localStorage.getItem("feed"))+"&shared=true";
+    var sharetext = "Hey, I found this podcast on #Nordcast and you should definitely grab a listen: https://web.nordcast.app/app.html#view=cast&cast="+findGetParameter("cast")+"&shared=true";
     if (localStorage.getItem("lang") === "de") {
-        sharetext = "Hey, ich habe diesen Podcast auf #Nordcast gefunden und du solltest ihn dir unbedingt anhören: https://web.nordcast.app/app.html#view=cast&cast="+Base64.encode(localStorage.getItem("feed"))+"&shared=true";
+        sharetext = "Hey, ich habe diesen Podcast auf #Nordcast gefunden und du solltest ihn dir unbedingt anhören: https://web.nordcast.app/app.html#view=cast&cast="+findGetParameter("cast")+"&shared=true";
     }
     sharetext = encodeURI(sharetext);
     $.post(backend+"/api/v1/toot/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/public", {content: sharetext}, function(data) {
