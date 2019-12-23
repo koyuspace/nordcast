@@ -391,6 +391,8 @@ def getfavs(username, uuid, instance, secret):
         pass
     if uuid in suid:
         favs = str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")
+        if favs == "None":
+            favs = "0"
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "favs": favs, "secret": secret})
 
 @get("/api/v1/addfav/<username>/<uuid>/<secret>/<instance>")
