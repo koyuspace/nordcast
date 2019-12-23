@@ -205,6 +205,10 @@ $(document).ready(function() {
                 $("#view__addfeed").hide();
                 $("#view__settings").hide();
                 $("#view__cast").html(data);
+                if (localStorage.getItem("lang") === "de") {
+                    $("#text__koyushare").html("Auf koyu.space teilen");
+                    $("#text__tootshare").html("Teilen auf");
+                }
                 if (detectmob() && findGetParameter("shared") === "true") {
                     $("#banner__openapp").attr("style", "");
                     $("#banner__openapp").attr("onclick", "window.open('nordcast://cast/"+findGetParameter("cast")+"', '_system')");
@@ -1064,8 +1068,6 @@ $(document).ready(function() {
                 $("#text__thankyou").html("Danke!");
                 $("#text__report__success").html("Dein Fehlerbericht wurde erfolgreich an unser Team versandt. Wir werden auf dich über <span id=\"instance\">koyu.space</span> zurückkommen sobald wir uns um den Bericht gekümmert haben.");
                 $("#btn__return").html("Zur App zurückkehren");
-                $("#text__koyushare").html("Auf koyu.space teilen");
-                $("#text__tootshare").html("Teilen auf");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
