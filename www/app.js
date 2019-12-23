@@ -32,6 +32,7 @@ function detectmob() {
 var kicker = false;
 var loading = false;
 var firstload = true;
+var isfaving = false;
 
 // Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
 function loadjscssfile(filename, filetype){
@@ -85,6 +86,9 @@ $(document).ready(function() {
                 $("#logo__nav").attr("style", "left:0 !important;");
             }
         }
+        if (!detectmob()) {
+            $(".share").hide();
+        }
     },0);
     $(window).on('popstate',function(event) {
         loadview();
@@ -99,6 +103,7 @@ $(document).ready(function() {
                 $(".problemreporting").hide();
             }
         }
+        plout();
     });
     if (localStorage.getItem("darkmode") === "true") {
         loadjscssfile("dark.css", "css");
@@ -106,7 +111,7 @@ $(document).ready(function() {
     }
     var reloaded = false;
     window.setInterval(function() {
-        $.get(backend, function(data) {
+        $.get(backend+"?"+Date.now(), function(data) {
             $("#nav").attr("style", "border-bottom: 3px solid rgb(39, 176, 226);");
             if (reloaded) {
                 loadview();
@@ -119,6 +124,7 @@ $(document).ready(function() {
             $(".fa__nav2").hide();
             $(".addfeed").hide();
             $(".problemreporting").hide();
+            $(".fav").hide();
             $("#nav").attr("style", "border-bottom: 3px solid red;");
             if (!reloaded) {
                 loadview();
@@ -484,6 +490,13 @@ $(document).ready(function() {
                         if (localStorage.getItem("instance") !== null) {
                             $(".tootshare").attr("style", "");
                         }
+                    }
+                    if (localStorage.getItem("uuid") !== "dummy") {
+                        $(".pod__favs").attr("style", "");
+                        $(".fav").attr("style", "");
+                        $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+findGetParameter("cast")+"/"+localStorage.getItem("instance"), function(data) {
+                            $(".pod__favs").html(data["favs"]);
+                        });
                     }
                 }, 700);
                 window.setTimeout(function() {
@@ -1080,6 +1093,33 @@ function onDeviceReady() {
     if (localStorage.getItem("darkmode") === "true") {
         StatusBar.backgroundColorByHexString("#191919");
         StatusBar.styleLightContent();
+    }
+}
+
+function fav(cast) {
+    if (!isfaving) {
+        isfaving = true;
+        $(".fav").attr("class", "ion-md-heart-half fav");
+        $.get(backend+"/api/v1/isfav/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function(data) {
+            if (data["isfav"] === true) {
+                $.get(backend+"/api/v1/delfav/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function() {
+                    isfaving = false;
+                    $(".fav").attr("class", "ion-md-heart fav");
+                    $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function(data) {
+                        $(".pod__favs").html(data["favs"]);
+                        $(".fav").attr("class", "ion-md-heart fav");
+                    });
+                });
+            } else {
+                $.get(backend+"/api/v1/addfav/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function() {
+                    isfaving = false;
+                    $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function(data) {
+                        $(".pod__favs").html(data["favs"]);
+                        $(".fav").attr("class", "ion-md-heart fav");
+                    });
+                });
+            }
+        });
     }
 }
 

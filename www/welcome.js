@@ -1,5 +1,5 @@
 document.addEventListener("deviceready", onDeviceReady, false);
-var warning_nologin = "Warning: If you don't login you'll be only able to listen to podcasts. This might be suitable for you, but you won't be able to follow podcasts or save your current listening position. Are you sure you want to continue?";
+var warning_nologin = "Warning: If you don't login you'll be only able to listen to podcasts. This might be suitable for you, but you won't be able to follow podcasts, download them or tell your fediverse friends about them. Are you sure you want to continue?";
 var es = false;
 var error = false;
 
@@ -22,7 +22,7 @@ String.prototype.replaceAll = function(search, replacement) {
 
 $(document).ready(function() {
     window.setInterval(function() {
-        $.get(backend, function(data) {
+        $.get(backend+"?"+Date.now(), function(data) {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "app.html#view=main";
             }
@@ -64,7 +64,7 @@ $(document).ready(function() {
                         location.href = "app.html#view=main";
                     }
                 }).fail(function() {
-                    if (localStorage.getItem("uuid")) {
+                    if (localStorage.getItem("uuid") && findGetParameter("mode") !== "offline") {
                         location.href = "app.html#view=main";
                     }
                 });
@@ -171,7 +171,7 @@ function onDeviceReady() {
             $("#instance").attr("placeholder", "Instanz");
             $("#kslogin").html("Anmelden");
             $("#nologin").html("Weiter ohne Account");
-            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein Podcasts zu hören. Das mag zwar passend für dich sein, aber du kannst dann weder Podcasts folgen noch dort weiterhören, wo du aufgehört hast. Möchtest du wirklich fortfahren?";
+            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein Podcasts zu hören. Das mag zwar passend für dich sein, aber du kannst dann weder Podcasts folgen noch herunterladen oder im Fediverse mit deinen Freunden teilen. Möchtest du wirklich fortfahren?";
         }
     });
 }

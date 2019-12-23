@@ -355,4 +355,90 @@ def toot(username, uuid, instance, visibility):
     else:
         return "{\"login\": \"error\"}"
 
+@get("/api/v1/isfav/<username>/<uuid>/<secret>/<instance>")
+def isfav(username, uuid, instance, secret):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    try:
+        mastodon = Mastodon(
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
+        )
+        mastodon.account_verify_credentials().source.note
+    except:
+        pass
+    if uuid in suid:
+        isfav = str(r.get("nordcast/isfav/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
+        if isfav == "true":
+            isfav = True
+        else:
+            isfav = False
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "isfav": isfav, "secret": secret})
+
+@get("/api/v1/getfavs/<username>/<uuid>/<secret>/<instance>")
+def getfavs(username, uuid, instance, secret):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    try:
+        mastodon = Mastodon(
+            access_token = 'authtokens/'+username+'.'+instance+'.secret',
+            api_base_url = 'https://'+instance
+        )
+        mastodon.account_verify_credentials().source.note
+    except:
+        pass
+    if uuid in suid:
+        favs = str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "favs": favs, "secret": secret})
+
+@get("/api/v1/addfav/<username>/<uuid>/<secret>/<instance>")
+def addfav(username, uuid, secret, instance):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    if uuid in suid:
+        if int(str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")) == None:
+            favs = 1
+        else:
+            favs = int(str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")) + 1
+        if favs < 0:
+            favs = 0
+        isfav = str(r.get("nordcast/isfav/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
+        if isfav == "true":
+            isfav = True
+        else:
+            isfav = False
+        if isfav == False:
+            r.set("nordcast/favs/" + secret, favs)
+            r.set("nordcast/isfav/" + username + "$$" + instance + "/" + secret, "true")
+            return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+        else:
+            return "{\"action\": \"error\"}"
+
+@get("/api/v1/delfav/<username>/<uuid>/<secret>/<instance>")
+def delfav(username, uuid, secret, instance):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    if uuid in suid:
+        if str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "") == "None":
+            favs = 0
+        else:
+            favs = int(str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")) - 1
+        if favs < 0:
+            favs = 0
+        isfav = str(r.get("nordcast/isfav/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
+        if isfav == "true":
+            isfav = True
+        else:
+            isfav = False
+        if isfav == True:
+            r.set("nordcast/favs/" + secret, favs)
+            r.set("nordcast/isfav/" + username + "$$" + instance + "/" + secret, "false")
+            return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+        else:
+            return "{\"action\": \"error\"}"
+
 run(server="tornado",port=9000,host="0.0.0.0")

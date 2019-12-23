@@ -1,8 +1,25 @@
 var playing = false;
 var platform = "";
+var plmax = false;
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
+    if (!playing && $("#player__controls").attr("style") === "display: none;" && !plmax) {
+        $("#player__controls").css("height", "0%");
+    }
     var player = document.getElementById("player");
+    $("#range-control").rangeslider({
+        polyfill: false,
+        onSlideEnd: function(position, value){
+            var player = document.getElementById("player");
+            player.currentTime = player.duration * value / 100;
+        }
+    });
+    
+    $(player).bind('timeupdate', function(){
+        var player = document.getElementById("player");
+        var percent = player.currentTime/ player.duration * 100;
+        $("#range-control").val(percent).change();
+    });
     if (feed === undefined) {
         location.href = "app.html#view=cast&cast="+Base64.encode(localStorage.getItem("feed"));
         window.setTimeout(function() {
@@ -98,8 +115,8 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
             $("#cast-"+secret).attr("class", "playbutton ion-md-pause");
             $("#bplay").attr("class", "playbutton ion-md-pause");
-            if (author === "Nordisch Media Tobias Ain") {
-                author = "Nordisch Media";
+            if (localStorage.getItem("uuid") === "dummy") {
+                player.currentTime = Number(localStorage.getItem("time-"+secret));
             }
             var podtitle = Base64.decode(feedtitle) + " - " + Base64.decode(title);
             $("#podtitle").html(twemoji.parse(podtitle));
@@ -109,10 +126,10 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $("#img__cast2").attr("src", podcover);
             $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret+"/"+localStorage.getItem("instance"), function(data) {
                 if (data["login"] === "error") {
-                    if (findGetParameter("time") === null) {
-                        player.currentTime = 0;
-                    } else {
+                    if (findGetParameter("time") !== null) {
                         player.currentTime = Number(findGetParameter("time"));
+                    } else {
+                        player.currentTime = Number(localStorage.getItem("time-"+secret));
                     }
                     if (platform !== "ios") {
                         player.play();
@@ -126,10 +143,10 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                         console.log(data);
                     }
                     if (data["pos"] === "None") {
-                        if (findGetParameter("time") === null) {
-                            player.currentTime = 0;
-                        } else {
+                        if (findGetParameter("time") !== null) {
                             player.currentTime = Number(findGetParameter("time"));
+                        } else {
+                            player.currentTime = Number(localStorage.getItem("time-"+secret));
                         }
                         if (platform !== "ios") {
                             player.play();
@@ -151,10 +168,10 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 }
             }).error(function() {
                 if (localStorage.getItem("uuid") !== "dummy") {
-                    if (findGetParameter("time") === null) {
-                        player.currentTime = 0;
-                    } else {
+                    if (findGetParameter("time") !== null) {
                         player.currentTime = Number(findGetParameter("time"));
+                    } else {
+                        player.currentTime = Number(localStorage.getItem("time-"+secret));
                     }
                 }
                 if (platform !== "ios") {
@@ -165,9 +182,13 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                     });
                 }
             });
-            if (localStorage.getItem("uuid") !== "dummy") {
+            if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
                 window.setInterval(function() {
                     $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime+"/"+localStorage.getItem("instance"), function(data) { });
+                }, 1000);
+            } else {
+                window.setInterval(function() {
+                    localStorage.setItem("time-"+secret, player.currentTime);
                 }, 1000);
             }
             window.setInterval(function() {
@@ -184,6 +205,16 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         } else {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
+    }
+    if (playing && !plmax) {
+        window.setTimeout(function() {
+            anime({
+                targets: "#player__controls",
+                height: 166,
+                duration: 500,
+                autoplay: true
+            });
+        }, 500);
     }
 }
 
@@ -251,8 +282,63 @@ function plclose() {
         $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
         $("#bplay").attr("class", "playbutton ion-md-play");
     }
-    $("#player__controls").hide();
+    anime({
+        targets: "#player__controls",
+        height: 0,
+        duration: 500,
+        autoplay: true
+    });
+    window.setTimeout(function() {
+        $("#player__controls").hide();
+    }, 510);
     $("body").removeAttr("style");
+}
+
+function plout() {
+    anime({
+        targets: "#player__controls",
+        height: 166,
+        duration: 500,
+        autoplay: true
+    });
+    anime({
+        targets: "#img__cast2",
+        width: 64,
+        height: 64,
+        duration: 500,
+        autoplay: true
+    });
+    plmax = false;
+    $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
+    $("#plcontrols").attr("css", "margin-left: 60px;");
+    $("#img__cast2").attr("style", "");
+}
+
+function plin() {
+    anime({
+        targets: "#player__controls",
+        height: $(window).height() - 103,
+        duration: 500,
+        autoplay: true
+    });
+    anime({
+        targets: "#img__cast2",
+        width: 330,
+        height: 330,
+        duration: 500,
+        autoplay: true
+    });
+    $("#img__cast2").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px;");
+    $(".plchangesize").attr("class", "ion-ios-arrow-down plchangesize");
+    plmax = true;
+}
+
+function plchangesize() {
+    if (!plmax) {
+        plin();
+    } else {
+        plout();
+    }
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
