@@ -12,6 +12,7 @@ import uuid
 import requests
 import subprocess
 import urllib.parse
+import urllib.request
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -32,12 +33,34 @@ def getpodcast():
     response.content_type = "application/json"
     try:
         if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
-            response.set_header("Cache-Control", "public, max-age=31556952000") # If people live longer than a thousand years let me know
+            response.set_header("Cache-Control", "public, max-age=31536000")
         else:
             response.set_header("Cache-Control", "public, max-age=600")
     except:
         response.set_header("Cache-Control", "public, max-age=600")
     return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
+
+@get("/api/v1/getimage")
+def getimage():
+    q = request.query["q"] # pylint: disable=unsubscriptable-object
+    response.headers['Access-Control-Allow-Origin'] = '*' # pylint: disable=used-before-assignment
+    with urllib.request.urlopen(q) as response:
+        info = response.info()
+        if info.get_content_maintype() == "image":
+            response.content_type = info.get_content_type()
+    try:
+        if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
+            response.set_header("Cache-Control", "public, max-age=31536000")
+        else:
+            response.set_header("Cache-Control", "public, max-age=600")
+    except:
+        response.set_header("Cache-Control", "public, max-age=600")
+    if info.get_content_maintype() == "image":
+        image = requests.get(q).content
+        return image
+    else:
+        response.content_type = "text/json"
+        return "{\"proxy\": \"error\"}"
 
 @get("/api/v1/getbanner/<val>")
 def getbanner(val):
