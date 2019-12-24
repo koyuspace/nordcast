@@ -530,6 +530,39 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     }
 }
 
+window.setInterval(function() {
+    var player = document.getElementById("player");
+    if (!player.paused) {
+        $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
+        $("#bplay").attr("class", "playbutton ion-md-pause");
+        playing = true;
+    } else {
+        $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
+        $("#bplay").attr("class", "playbutton ion-md-play");
+        playing = false;
+    }
+});
+
+$(document).on("keydown", function (e) {
+    var player = document.getElementById("player");
+    if (e.which === 32) {
+        if (player.paused) {
+            player.play();
+        } else {
+            player.pause();
+        }
+        return false;
+    }
+    if (e.which === 37) {
+        player.currentTime = player.currentTime - 10;
+        return false;
+    }
+    if (e.which === 39) {
+        player.currentTime = player.currentTime + 10;
+        return false;
+    }
+});
+
 //Thanks to https://stackoverflow.com/a/6313008
 String.prototype.toHHMMSS = function () {
     var sec_num = parseInt(this, 10);
@@ -623,6 +656,7 @@ function plclose() {
             }
         });
     }
+    $("#player").attr("src", "");
 }
 
 function plout() {

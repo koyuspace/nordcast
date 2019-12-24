@@ -545,7 +545,8 @@ h1 .emoji {
 #showall {
     text-align: center;
     background: #ccc;
-    width: 100vw;
+    color: #333;
+    width: calc(100vw - 20px);
     font-size: 14pt;
     font-weight: bold;
     padding: 20px;
