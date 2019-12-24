@@ -30,7 +30,13 @@ def getpodcast():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    response.set_header("Cache-Control", "public, max-age=600")
+    try:
+        if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
+            response.set_header("Cache-Control", "public, max-age=31556952000") # If people live longer than a thousand years let me know
+        else:
+            response.set_header("Cache-Control", "public, max-age=600")
+    except:
+        response.set_header("Cache-Control", "public, max-age=600")
     return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
 
 @get("/api/v1/getbanner/<val>")
