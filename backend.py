@@ -44,7 +44,14 @@ def getpodcast():
 def getimage():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*' # pylint: disable=used-before-assignment
-    with urllib.request.urlopen(q) as rep:
+    req2 = urllib.request.Request(
+        q,
+        data=None,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+        }
+    )
+    with urllib.request.urlopen(req2) as rep:
         info = rep.info()
         if info.get_content_maintype() == "image":
             response.content_type = info.get_content_type()
