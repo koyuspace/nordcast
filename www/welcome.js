@@ -29,6 +29,8 @@ $(document).ready(function() {
         }).error(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "index.html#mode=offline";
+            } else {
+                location.href = "app.html#view=main";
             }
         })
     }, 1500);

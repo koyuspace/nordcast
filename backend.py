@@ -44,8 +44,8 @@ def getpodcast():
 def getimage():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*' # pylint: disable=used-before-assignment
-    with urllib.request.urlopen(q) as response:
-        info = response.info()
+    with urllib.request.urlopen(q) as rep:
+        info = rep.info()
         if info.get_content_maintype() == "image":
             response.content_type = info.get_content_type()
     try:
@@ -55,10 +55,14 @@ def getimage():
             response.set_header("Cache-Control", "public, max-age=600")
     except:
         response.set_header("Cache-Control", "public, max-age=600")
-    if info.get_content_maintype() == "image":
-        image = requests.get(q).content
-        return image
-    else:
+    try:
+        if info.get_content_maintype() == "image":
+            image = requests.get(q).content
+            return image
+        else:
+            response.content_type = "text/json"
+            return "{\"proxy\": \"error\"}"
+    except:
         response.content_type = "text/json"
         return "{\"proxy\": \"error\"}"
 
