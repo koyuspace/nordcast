@@ -233,7 +233,8 @@ $(document).ready(function() {
                     $("#button__unfollow").hide();
                 });
                 window.setTimeout(function() {
-                    $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                    localStorage.setItem("downloaded_at-"+Base64.encode(feed).slice(0,40), Date.now());
+                    $.get(backend+"/api/v1/getpodcast?q="+feed+"&downloaded_at"+localStorage.getItem("downloaded_at"), function(callback) {
                         if (debug) {
                             console.log(callback);
                         }
@@ -754,7 +755,8 @@ $(document).ready(function() {
                                     }, timeout);
                                 }, 20);
                                 podlist.split(",").forEach(function(feed) {
-                                    $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                                    localStorage.setItem("downloaded_at-"+Base64.encode(feed).slice(0,40), Date.now());
+                                    $.get(backend+"/api/v1/getpodcast?q="+feed+"&downloaded_at"+localStorage.getItem("downloaded_at"), function(callback) {
                                         try {
                                             var secret = Base64.encode(feed).replaceAll("=", "");
                                             secret = secret.slice(0,secret.length / 2)
@@ -795,7 +797,7 @@ $(document).ready(function() {
                         }
                         $("#section__list").html($("#section__list").html()+"<p>");
                         podlist.split(",").forEach(function(feed) {
-                            $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                            $.get(backend+"/api/v1/getpodcast?q="+feed+"&downloaded_at"+localStorage.getItem("downloaded_at"), function(callback) {
                                 try {
                                     var secret = Base64.encode(feed).replaceAll("=", "");
                                     secret = secret.slice(0,secret.length / 2)
