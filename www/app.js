@@ -235,7 +235,7 @@ $(document).ready(function() {
                 window.setTimeout(function() {
                     var feedurl = backend+"/api/v1/getpodcast?q="+feed;
                     if (localStorage.getItem("offline") === "true") {
-                        feedurl = localStorage.getItem("feed-"+Base64.encode(feed).slice(0,40));
+                        feedurl = localStorage.getItem("feed-"+Base64.encode(feed).slice(0, -3));
                     }
                     $.getJSON(feedurl, function(callback) {
                         if (debug) {
@@ -246,11 +246,11 @@ $(document).ready(function() {
                             window.setTimeout(function() {
                                 fileTransfer.download(
                                     backend+"/api/v1/getpodcast?q="+feed,
-                                    'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0,40)+'.json',
+                                    'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0, -3)+'.json',
                                     function(entry) {
                                         if (debug) {
                                             console.log("Download: "+entry.toURL());
-                                            localStorage.setItem("feed-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                            localStorage.setItem("feed-"+Base64.encode(feed).slice(0, -3), entry.toURL());
                                         }
                                     },
                                     function(error) {
@@ -264,11 +264,11 @@ $(document).ready(function() {
                                 );
                                 fileTransfer.download(
                                     callback.feed.image.href,
-                                    'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0,40)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
+                                    'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0, -3)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
                                     function(entry) {
                                         if (debug) {
                                             console.log("Download: "+entry.toURL());
-                                            localStorage.setItem("image-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                            localStorage.setItem("image-"+Base64.encode(feed).slice(0, -3), entry.toURL());
                                         }
                                     },
                                     function(error) {
@@ -286,7 +286,7 @@ $(document).ready(function() {
                             if (localStorage.getItem("offline") === "false") {
                                 $("#img__cast").attr("src", callback.feed.image.href);
                             } else {
-                                $("#img__cast").attr("src", localStorage.getItem("image-"+Base64.encode(feed).slice(0,40)));
+                                $("#img__cast").attr("src", localStorage.getItem("image-"+Base64.encode(feed).slice(0, -3)));
                             }
                         } catch (e) {
                             $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
@@ -302,7 +302,7 @@ $(document).ready(function() {
                                     }
                                 });
                             } else {
-                                var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0,40));
+                                var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0, -3));
                                 if (localStorage.getItem("darkmode") === "true") {
                                     $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
                                 } else {
@@ -450,7 +450,7 @@ $(document).ready(function() {
                                 try {
                                     var image = callback.feed.image.href;
                                     if (localStorage.getItem("offline") === "true") {
-                                        var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0,40));
+                                        var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0, -3));
                                     }
                                     if (!localStorage.getItem("downloaded").includes(secret)) {
                                         $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
@@ -574,7 +574,7 @@ $(document).ready(function() {
                     if (localStorage.getItem("uuid") !== "dummy") {
                         $(".pod__favs").attr("style", "");
                         $(".fav").attr("style", "");
-                        $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+Base64.encode(Base64.decode(findGetParameter('cast'))).replaceAll('=', '').slice(0,30)+"/"+localStorage.getItem("instance"), function(data) {
+                        $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+Base64.encode(findGetParameter('cast')).slice(0, -3)+"/"+localStorage.getItem("instance"), function(data) {
                             $(".pod__favs").html(data["favs"]);
                         });
                     }
@@ -821,11 +821,11 @@ $(document).ready(function() {
                                         window.setTimeout(function() {
                                             fileTransfer.download(
                                                 backend+"/api/v1/getpodcast?q="+feed,
-                                                'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0,40)+'.json',
+                                                'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0, -3)+'.json',
                                                 function(entry) {
                                                     if (debug) {
                                                         console.log("Download: "+entry.toURL());
-                                                        localStorage.setItem("feed-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                                        localStorage.setItem("feed-"+Base64.encode(feed).slice(0, -3), entry.toURL());
                                                     }
                                                 },
                                                 function(error) {
@@ -839,11 +839,11 @@ $(document).ready(function() {
                                             );
                                             fileTransfer.download(
                                                 callback.feed.image.href,
-                                                'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0,40)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
+                                                'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0, -3)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
                                                 function(entry) {
                                                     if (debug) {
                                                         console.log("Download: "+entry.toURL());
-                                                        localStorage.setItem("image-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                                        localStorage.setItem("image-"+Base64.encode(feed).slice(0, -3), entry.toURL());
                                                     }
                                                 },
                                                 function(error) {
@@ -857,15 +857,14 @@ $(document).ready(function() {
                                             );
                                         });
                                         try {
-                                            var secret = Base64.encode(feed).replaceAll("=", "");
-                                            secret = secret.slice(0,secret.length / 2)
+                                            var secret = Base64.encode(feed).slice(0, -3)
                                             var summary = "";
                                             if (callback.feed.summary !== undefined) {
                                                 summary = callback.feed.summary.replaceAll("\n", "<br>");
                                             }
                                             $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
-                                                localStorage.setItem("color-"+Base64.encode(feed).slice(0,40), color);
+                                                localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
                                                 if (Number(color.split(",")[0]) > 140) {
                                                     if (summary !== "") {
                                                         $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
@@ -898,18 +897,17 @@ $(document).ready(function() {
                             podlist.split(",").forEach(function(feed) {
                                 try {
                                     if (debug) {
-                                        console.log("Read file: "+localStorage.getItem("feed-"+Base64.encode(feed).slice(0,40)));
+                                        console.log("Read file: "+localStorage.getItem("feed-"+Base64.encode(feed).slice(0, -3)));
                                     }
-                                    $.getJSON(localStorage.getItem("feed-"+Base64.encode(feed).slice(0,40)), function(callback) {
-                                        var secret = Base64.encode(feed).replaceAll("=", "");
-                                        secret = secret.slice(0,secret.length / 2)
+                                    $.getJSON(localStorage.getItem("feed-"+Base64.encode(feed).slice(0, -3)), function(callback) {
+                                        var secret = Base64.encode(feed).slice(0, -3)
                                         var summary = "";
                                         if (callback.feed.summary !== undefined) {
                                             summary = callback.feed.summary.replaceAll("\n", "<br>");
                                         }
-                                        var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0,40));
+                                        var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0, -3));
                                         $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+image+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
-                                        var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0,40));
+                                        var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0, -3));
                                         if (Number(color.split(",")[0]) > 140) {
                                             if (summary !== "") {
                                                 $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
