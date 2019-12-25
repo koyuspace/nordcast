@@ -586,7 +586,6 @@ $(document).ready(function() {
                     $("#text__data__eptitle").html("Titel der Episode");
                     $("#text__data__eplength").html("Länge der Episode");
                     $("#text__automatic").html("Weil du keinen Podcast ausgewählt oder abgespielt hast haben wir automatisch eine Option für dich gewählt.");
-                    $("#text__openapp").html("In der App öffnen");
                     $("#text__thankyou").html("Danke!");
                     $("#text__report__success").html("Dein Fehlerbericht wurde erfolgreich an unser Team versandt. Wir werden auf dich über <span id=\"instance\">koyu.space</span> zurückkommen sobald wir uns um den Bericht gekümmert haben.");
                     $("#btn__return").html("Zur App zurückkehren");
@@ -1081,7 +1080,8 @@ $(document).ready(function() {
                 $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
                 $("#text__sourcecode").html("Quelltext");
                 $("#showall").html("Alle anzeigen");
-                showall_warning = "Warnung: Jede Podcast-Episode zu laden könnte möglicherweise dein Gerät zum Stillstand bringen. Möchtest du wirklich fortfahren?"
+                showall_warning = "Warnung: Jede Podcast-Episode zu laden könnte möglicherweise dein Gerät zum Stillstand bringen. Möchtest du wirklich fortfahren?";
+                $("#text__openapp").html("In der App öffnen");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
