@@ -12,7 +12,6 @@ import uuid
 import requests
 import subprocess
 import urllib.parse
-import urllib.request
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -31,47 +30,8 @@ def getpodcast():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
-    try:
-        if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
-            response.set_header("Cache-Control", "public, max-age=2629746")
-        else:
-            response.set_header("Cache-Control", "public, max-age=600")
-    except:
-        response.set_header("Cache-Control", "public, max-age=600")
+    response.set_header("Cache-Control", "public, max-age=600")
     return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
-
-@get("/api/v1/getimage")
-def getimage():
-    q = request.query["q"] # pylint: disable=unsubscriptable-object
-    response.headers['Access-Control-Allow-Origin'] = '*' # pylint: disable=used-before-assignment
-    req2 = urllib.request.Request(
-        q,
-        data=None,
-        headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-        }
-    )
-    with urllib.request.urlopen(req2) as rep:
-        info = rep.info()
-        if info.get_content_maintype() == "image":
-            response.content_type = info.get_content_type()
-    try:
-        if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
-            response.set_header("Cache-Control", "public, max-age=2629746")
-        else:
-            response.set_header("Cache-Control", "public, max-age=600")
-    except:
-        response.set_header("Cache-Control", "public, max-age=600")
-    try:
-        if info.get_content_maintype() == "image":
-            image = requests.get(q).content
-            return image
-        else:
-            response.content_type = "text/json"
-            return "{\"proxy\": \"error\"}"
-    except:
-        response.content_type = "text/json"
-        return "{\"proxy\": \"error\"}"
 
 @get("/api/v1/getbanner/<val>")
 def getbanner(val):
