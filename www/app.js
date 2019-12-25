@@ -872,7 +872,7 @@ $(document).ready(function() {
                                             if (callback.feed.summary !== undefined) {
                                                 summary = callback.feed.summary.replaceAll("\n", "<br>");
                                             }
-                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
+                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
                                                 localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
                                                 if (Number(color.split(",")[0]) > 140) {
@@ -916,7 +916,7 @@ $(document).ready(function() {
                                             summary = callback.feed.summary.replaceAll("\n", "<br>");
                                         }
                                         var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0, -3));
-                                        $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+image+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
+                                        $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+image+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                         var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0, -3));
                                         if (Number(color.split(",")[0]) > 140) {
                                             if (summary !== "") {
