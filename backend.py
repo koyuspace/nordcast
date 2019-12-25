@@ -33,7 +33,7 @@ def getpodcast():
     response.content_type = "application/json"
     try:
         if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
-            response.set_header("Cache-Control", "public, max-age=31536000")
+            response.set_header("Cache-Control", "public, max-age=2629746")
         else:
             response.set_header("Cache-Control", "public, max-age=600")
     except:
@@ -57,7 +57,7 @@ def getimage():
             response.content_type = info.get_content_type()
     try:
         if not request.query["downloaded_at"] == None: # pylint: disable=unsubscriptable-object
-            response.set_header("Cache-Control", "public, max-age=31536000")
+            response.set_header("Cache-Control", "public, max-age=2629746")
         else:
             response.set_header("Cache-Control", "public, max-age=600")
     except:
