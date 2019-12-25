@@ -1101,9 +1101,6 @@ $(document).ready(function() {
     $("#snclose").click(function() {
         $("#snclose").hide();
         restoreview();
-        if ($("#player__controls").is(":visible")) {
-            $("#view__cast").attr("style", "margin-bottom: 135px !important; padding-top: 60px;");
-        }
     });
 
     $("#cdark__mode").click(function() {
@@ -1196,6 +1193,7 @@ $(document).ready(function() {
                 $("#showall").html("Alle anzeigen");
                 showall_warning = "Warnung: Jede Podcast-Episode zu laden könnte möglicherweise dein Gerät zum Stillstand bringen. Möchtest du wirklich fortfahren?";
                 $("#text__openapp").html("In der App öffnen");
+                $("#text__shownotes").html("Shownotes");
                 window.setTimeout(function() {
                     $("#text__results").html("Suchergebnisse für");
                     $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
