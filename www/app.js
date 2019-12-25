@@ -112,24 +112,26 @@ $(document).ready(function() {
             }
             reloaded = false;
         }).error(function() {
-            if (localStorage.getItem("uuid") === "dummy") {
-                location.href = "index.html#mode=offline";
+            if (device.platform !== "browser") {
+                if (localStorage.getItem("uuid") === "dummy") {
+                    location.href = "index.html#mode=offline";
+                }
+                localStorage.setItem("offline", "true");
+                $(".fa__nav2").hide();
+                $(".addfeed").hide();
+                $(".problemreporting").hide();
+                $(".fav").hide();
+                $(".tootshare").hide();
+                $(".koyushare").hide();
+                $(".pod__favs").hide();
+                $(".share").hide();
+                $("#nav").attr("style", "border-bottom: 3px solid red;");
+                if (!reloaded) {
+                    loadview();
+                    reloaded = true;
+                }
             }
-            localStorage.setItem("offline", "true");
-            $(".fa__nav2").hide();
-            $(".addfeed").hide();
-            $(".problemreporting").hide();
-            $(".fav").hide();
-            $(".tootshare").hide();
-            $(".koyushare").hide();
-            $(".pod__favs").hide();
-            $(".share").hide();
-            $("#nav").attr("style", "border-bottom: 3px solid red;");
-            if (!reloaded) {
-                loadview();
-                reloaded = true;
-            }
-        })
+        });
     }, 1500);
     var timeout = 1200;
     $("#logo__intro").attr("src", "loading2.svg");
@@ -471,6 +473,11 @@ $(document).ready(function() {
                                     $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
                                 }
                             }, 1500);
+                            if (localStorage.getItem("uuid") === "dummy") {
+                                $(".dlbutton").hide();
+                            }
+                        });
+                        window.setTimeout(function() {
                             $.get(backend+"/api/v1/gethiddendownloads?"+Date.now(), function(data) {
                                 data.split("\n").forEach(function(vl) {
                                     if (Base64.decode(findGetParameter("cast")).includes(vl) && vl !== "") {
@@ -478,10 +485,7 @@ $(document).ready(function() {
                                     }
                                 })
                             });
-                            if (localStorage.getItem("uuid") === "dummy") {
-                                $(".dlbutton").hide();
-                            }
-                        });
+                        }, 1500);
                         $("#button__follow").click(function() {
                             var feed = Base64.decode(findGetParameter("cast")).split("\n")[0].split("?")[0];
                             $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {

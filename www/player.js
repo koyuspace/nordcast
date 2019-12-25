@@ -159,7 +159,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         localStorage.setItem("podcover", podcover);
         localStorage.setItem("feedtitle", feedtitle);
         localStorage.setItem("file", file);
-        $("body").attr("style", "margin-bottom: 150px !important;");
+        $("body").attr("style", "margin-bottom: 170px !important;");
         $("#bplay").attr("onclick", "playcast('"+file+"', '"+secret+"', '"+title+"', '"+author+"', '"+podcover+"', '"+feed+"', '"+feedtitle+"')");
         $("#link__cast").attr("data-cast", Base64.encode(feed));
         $("#player__controls").show();

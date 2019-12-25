@@ -69,6 +69,12 @@ select {
     left: -16px;
 }
 
+@media(max-width:400px) {
+    #logo__nav {
+        left: -40px;
+    }
+}
+
 #player__controls {
     background: #fff;
     position: fixed;
@@ -112,7 +118,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #section__featured {
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
 }
@@ -551,6 +557,36 @@ h1 .emoji {
     font-weight: bold;
     padding: 20px;
     margin-left: -20px;
+}
+
+.item p {
+    overflow-wrap: break-word;
+}
+
+@media(min-width: 900px) {
+    .item {
+        display: inline-table;
+        width: 400px;
+        min-height: 200px;
+        height: 420px;
+        vertical-align: top;
+        margin: 5px;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+    .item p {
+        height: 200px;
+        overflow-y: auto;
+    }
+    i[class*="ion-md-"],
+    i[class*="ion-logo-"],
+    i[class*="ion-ios-"],
+    #logo__nav,
+    .card__big,
+    .card__smaller,
+    .card__small {
+        cursor: pointer;
+    }
 }
 
 /* Hack for ionicicons v2 (no animation code) */
