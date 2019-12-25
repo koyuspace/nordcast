@@ -379,6 +379,11 @@ $(document).ready(function() {
                             entries = callback.entries;
                             showallwasclicked = false;
                         }
+                        if (localStorage.getItem("offline") === "true") {
+                            showallwasclicked = false;
+                            entries = callback.entries;
+                            $("#showall").hide();
+                        }
                         entries.forEach(function(item) {
                             var secret = "";
                             try {
@@ -464,7 +469,6 @@ $(document).ready(function() {
                             window.setTimeout(function() {
                                 if ($("#podtable tbody").html() === "") {
                                     $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
-                                    $("#showall").hide();
                                 }
                             }, 1500);
                             $.get(backend+"/api/v1/gethiddendownloads?"+Date.now(), function(data) {
