@@ -326,6 +326,9 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             if (localStorage.getItem("uuid") === "dummy") {
                 player.currentTime = Number(localStorage.getItem("time-"+secret));
             }
+            if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "true") {
+                player.currentTime = Number(localStorage.getItem("time-"+secret));
+            }
             var podtitle = Base64.decode(feedtitle) + " - " + Base64.decode(title);
             $("#podtitle").html(twemoji.parse(podtitle));
             if (podtitle.length > 50) {
@@ -499,6 +502,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                     $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime+"/"+localStorage.getItem("instance"), function(data) { });
                 }, 1000);
             } else {
+                window.setInterval(function() {
+                    localStorage.setItem("time-"+secret, player.currentTime);
+                }, 1000);
+            }
+            if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "true") {
                 window.setInterval(function() {
                     localStorage.setItem("time-"+secret, player.currentTime);
                 }, 1000);
