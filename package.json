@@ -20,13 +20,15 @@
       "cordova-plugin-customurlscheme": {
         "URL_SCHEME": "nordcast"
       },
-      "cordova-music-controls": {}
+      "cordova-music-controls": {},
+      "cordova-plugin-advanced-http": {}
     }
   },
   "dependencies": {
     "cordova-android": "^7.1.4",
     "cordova-file-cache": "^1.2.2",
     "cordova-music-controls": "git+https://github.com/ghenry22/cordova-music-controls-plugin.git",
+    "cordova-plugin-advanced-http": "2.3.1",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-darkmode": "1.0.0",
     "cordova-plugin-device": "^1.1.7",

@@ -233,24 +233,82 @@ $(document).ready(function() {
                     $("#button__unfollow").hide();
                 });
                 window.setTimeout(function() {
-                    $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                    var feedurl = backend+"/api/v1/getpodcast?q="+feed;
+                    if (localStorage.getItem("offline") === "true") {
+                        feedurl = localStorage.getItem("feed-"+Base64.encode(feed).slice(0,40));
+                    }
+                    $.getJSON(feedurl, function(callback) {
                         if (debug) {
                             console.log(callback);
                         }
+                        if (localStorage.getItem("offfline") === "false") {
+                            var fileTransfer = new FileTransfer();
+                            window.setTimeout(function() {
+                                fileTransfer.download(
+                                    backend+"/api/v1/getpodcast?q="+feed,
+                                    'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0,40)+'.json',
+                                    function(entry) {
+                                        if (debug) {
+                                            console.log("Download: "+entry.toURL());
+                                            localStorage.setItem("feed-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                        }
+                                    },
+                                    function(error) {
+                                        if (debug) {
+                                            console.log("download error source " + error.source);
+                                            console.log("download error target " + error.target);
+                                            console.log("download error code " + error.code);
+                                        }
+                                    },
+                                    false
+                                );
+                                fileTransfer.download(
+                                    callback.feed.image.href,
+                                    'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0,40)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
+                                    function(entry) {
+                                        if (debug) {
+                                            console.log("Download: "+entry.toURL());
+                                            localStorage.setItem("image-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                        }
+                                    },
+                                    function(error) {
+                                        if (debug) {
+                                            console.log("download error source " + error.source);
+                                            console.log("download error target " + error.target);
+                                            console.log("download error code " + error.code);
+                                        }
+                                    },
+                                    false
+                                );
+                            });
+                        }
                         try {
-                            $("#img__cast").attr("src", callback.feed.image.href);
+                            if (localStorage.getItem("offline") === "false") {
+                                $("#img__cast").attr("src", callback.feed.image.href);
+                            } else {
+                                $("#img__cast").attr("src", localStorage.getItem("image-"+Base64.encode(feed).slice(0,40)));
+                            }
                         } catch (e) {
                             $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
                             $("#view__cast").show();
                         }
                         window.setTimeout(function() {
-                            $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                            if (localStorage.getItem("offline") === "false") {
+                                $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                    if (localStorage.getItem("darkmode") === "true") {
+                                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
+                                    } else {
+                                        $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
+                                    }
+                                });
+                            } else {
+                                var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0,40));
                                 if (localStorage.getItem("darkmode") === "true") {
                                     $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
                                 } else {
                                     $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
                                 }
-                            });
+                            }
                             $("#view__cast").show();
                         },200);
                         try {
@@ -390,17 +448,22 @@ $(document).ready(function() {
                                     }, 1500);
                                 }
                                 try {
+                                    var image = callback.feed.image.href;
+                                    if (localStorage.getItem("offline") === "true") {
+                                        var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0,40));
+                                    }
                                     if (!localStorage.getItem("downloaded").includes(secret)) {
-                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                     } else {
-                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-done dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-done dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                     }
                                 } catch (e) {
-                                    $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+callback.feed.image.href+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                    $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                 }
                             }
                             if ($("#podtable tbody").html() === "") {
                                 $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
+                                $("#showall").hide();
                             }
                             $.get(backend+"/api/v1/gethiddendownloads", function(data) {
                                 data.split("\n").forEach(function(vl) {
@@ -754,6 +817,45 @@ $(document).ready(function() {
                                 }, 20);
                                 podlist.split(",").forEach(function(feed) {
                                     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                                        var fileTransfer = new FileTransfer();
+                                        window.setTimeout(function() {
+                                            fileTransfer.download(
+                                                backend+"/api/v1/getpodcast?q="+feed,
+                                                'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0,40)+'.json',
+                                                function(entry) {
+                                                    if (debug) {
+                                                        console.log("Download: "+entry.toURL());
+                                                        localStorage.setItem("feed-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                                    }
+                                                },
+                                                function(error) {
+                                                    if (debug) {
+                                                        console.log("download error source " + error.source);
+                                                        console.log("download error target " + error.target);
+                                                        console.log("download error code " + error.code);
+                                                    }
+                                                },
+                                                false
+                                            );
+                                            fileTransfer.download(
+                                                callback.feed.image.href,
+                                                'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0,40)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
+                                                function(entry) {
+                                                    if (debug) {
+                                                        console.log("Download: "+entry.toURL());
+                                                        localStorage.setItem("image-"+Base64.encode(feed).slice(0,40), entry.toURL());
+                                                    }
+                                                },
+                                                function(error) {
+                                                    if (debug) {
+                                                        console.log("download error source " + error.source);
+                                                        console.log("download error target " + error.target);
+                                                        console.log("download error code " + error.code);
+                                                    }
+                                                },
+                                                false
+                                            );
+                                        });
                                         try {
                                             var secret = Base64.encode(feed).replaceAll("=", "");
                                             secret = secret.slice(0,secret.length / 2)
@@ -763,6 +865,7 @@ $(document).ready(function() {
                                             }
                                             $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                             $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                                localStorage.setItem("color-"+Base64.encode(feed).slice(0,40), color);
                                                 if (Number(color.split(",")[0]) > 140) {
                                                     if (summary !== "") {
                                                         $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
@@ -785,25 +888,28 @@ $(document).ready(function() {
                             }
                         }
                     }).error(function() {
-                        $("#offline__message").show();
-                        $("#view__main").show();
-                        if (localStorage.getItem("podlist")) {
+                        $.get("views/mainview.html", function(data) {
+                            $("#view__main").html(data);
+                            $("#text__username").hide();
+                            $("#offline__message").show();
+                            $("#view__main").show();
                             podlist = localStorage.getItem("podlist");
-                        } else {
-                            podlist = data["podlist"];
-                        }
-                        $("#section__list").html($("#section__list").html()+"<p>");
-                        podlist.split(",").forEach(function(feed) {
-                            $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+                            $("#section__list").html($("#section__list").html()+"<p>");
+                            podlist.split(",").forEach(function(feed) {
                                 try {
-                                    var secret = Base64.encode(feed).replaceAll("=", "");
-                                    secret = secret.slice(0,secret.length / 2)
-                                    var summary = "";
-                                    if (callback.feed.summary !== undefined) {
-                                        summary = callback.feed.summary.replaceAll("\n", "<br>");
+                                    if (debug) {
+                                        console.log("Read file: "+localStorage.getItem("feed-"+Base64.encode(feed).slice(0,40)));
                                     }
-                                    $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
-                                    $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                    $.getJSON(localStorage.getItem("feed-"+Base64.encode(feed).slice(0,40)), function(callback) {
+                                        var secret = Base64.encode(feed).replaceAll("=", "");
+                                        secret = secret.slice(0,secret.length / 2)
+                                        var summary = "";
+                                        if (callback.feed.summary !== undefined) {
+                                            summary = callback.feed.summary.replaceAll("\n", "<br>");
+                                        }
+                                        var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0,40));
+                                        $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+image+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
+                                        var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0,40));
                                         if (Number(color.split(",")[0]) > 140) {
                                             if (summary !== "") {
                                                 $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
@@ -822,8 +928,8 @@ $(document).ready(function() {
                                     });
                                 } catch (e) {}
                             });
+                            $("#section__list").html($("#section__list").html()+"</p>");
                         });
-                        $("#section__list").html($("#section__list").html()+"</p>");
                     });
                     window.setTimeout(function() {
                         $.get(backend+"/api/v1/getoriginals/"+localStorage.getItem("lang"), function(data) {
