@@ -241,7 +241,7 @@ $(document).ready(function() {
                         if (debug) {
                             console.log(callback);
                         }
-                        if (localStorage.getItem("offfline") === "false") {
+                        if (localStorage.getItem("offline") === "false") {
                             var fileTransfer = new FileTransfer();
                             window.setTimeout(function() {
                                 fileTransfer.download(
