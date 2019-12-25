@@ -545,14 +545,6 @@ window.setInterval(function() {
 
 $(document).on("keydown", function (e) {
     var player = document.getElementById("player");
-    if (e.which === 32) {
-        if (player.paused) {
-            player.play();
-        } else {
-            player.pause();
-        }
-        return false;
-    }
     if (e.which === 37) {
         player.currentTime = player.currentTime - 10;
         return false;

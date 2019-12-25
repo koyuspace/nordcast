@@ -461,13 +461,15 @@ $(document).ready(function() {
                                     $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                 }
                             }
-                            if ($("#podtable tbody").html() === "") {
-                                $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
-                                $("#showall").hide();
-                            }
-                            $.get(backend+"/api/v1/gethiddendownloads", function(data) {
+                            window.setTimeout(function() {
+                                if ($("#podtable tbody").html() === "") {
+                                    $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
+                                    $("#showall").hide();
+                                }
+                            }, 1500);
+                            $.get(backend+"/api/v1/gethiddendownloads?"+Date.now(), function(data) {
                                 data.split("\n").forEach(function(vl) {
-                                    if (feed.includes(vl) && vl !== "") {
+                                    if (Base64.decode(findGetParameter("cast")).includes(vl) && vl !== "") {
                                         $(".dlbutton").hide();
                                     }
                                 })
