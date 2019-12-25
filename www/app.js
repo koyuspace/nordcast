@@ -233,7 +233,7 @@ $(document).ready(function() {
                     $("#button__unfollow").hide();
                 });
                 window.setTimeout(function() {
-                    localStorage.setItem("downloaded_at-"+Base64.encode(feed).slice(0,40), Date.now());
+                    localStorage.setItem("downloaded_at-"+Base64.encode(feed).slice(0,40), Date.getMinutes());
                     $.get(backend+"/api/v1/getpodcast?q="+feed+"&downloaded_at="+localStorage.getItem("downloaded_at"), function(callback) {
                         if (debug) {
                             console.log(callback);
@@ -756,7 +756,7 @@ $(document).ready(function() {
                                     }, timeout);
                                 }, 20);
                                 podlist.split(",").forEach(function(feed) {
-                                    localStorage.setItem("downloaded_at-"+Base64.encode(feed).slice(0,40), Date.now());
+                                    localStorage.setItem("downloaded_at-"+Base64.encode(feed).slice(0,40), Date.getMinutes());
                                     $.get(backend+"/api/v1/getpodcast?q="+feed+"&downloaded_at="+localStorage.getItem("downloaded_at"), function(callback) {
                                         try {
                                             var secret = Base64.encode(feed).replaceAll("=", "");
