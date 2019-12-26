@@ -25,13 +25,15 @@
         "ANDROID_HOST": " ",
         "ANDROID_PATHPREFIX": "/"
       },
-      "cordova-music-controls": {}
+      "cordova-music-controls": {},
+      "cordova-plugin-background-mode": {}
     }
   },
   "dependencies": {
     "cordova-android": "^7.1.4",
     "cordova-file-cache": "^1.2.2",
     "cordova-music-controls": "git+https://github.com/ghenry22/cordova-music-controls-plugin.git",
+    "cordova-plugin-background-mode": "0.7.3",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-darkmode": "1.0.0",
     "cordova-plugin-device": "^1.1.7",
