@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from bottle import get, post, request, response, route, run, redirect
+from bottle import get, post, request, response, route, run, redirect, BaseRequest
 from mastodon import Mastodon
 from colorthief import ColorThief
 import feedparser
@@ -15,6 +15,8 @@ import urllib.parse
 from PIL import Image
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+BaseRequest.MEMFILE_MAX = 999999999
 
 if os.environ.get('DEBUG') == "true":
     debug = True
