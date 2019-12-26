@@ -75,14 +75,21 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
                   case 'music-controls-toggle-play-pause' :
                       bplay();
                       break;
-                  case 'music-controls-seek-to':
+                  case 'music-controls-seek-to' :
                       const seekToInSeconds = JSON.parse(action).position;
                       MusicControls.updateElapsed({
                           elapsed: seekToInSeconds,
                           isPlaying: true
                       });
                       player.currentTime = seekToInSeconds;
-                      // Do something
+                      break;
+                  case 'music-controls-skip-forward':
+                      var player = document.getElementById("player");
+                      player.currentTime = player.currentTime + 10;
+                      break;
+                  case 'music-controls-skip-backward' :
+                      var player = document.getElementById("player");
+                      player.currentTime = player.currentTime - 10;
                       break;
           
                   // Headset events (Android only)
@@ -90,7 +97,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
                   case 'music-controls-media-button' :
                       playcast(file, secret, title, author, podcover, feed, feedtitle);
                       break;
-                  case 'music-controls-headset-unplugged':
+                  case 'music-controls-headset-unplugged' :
                       if (playing) {
                         playcast(file, secret, title, author, podcover, feed, feedtitle);
                       }
