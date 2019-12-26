@@ -12,6 +12,7 @@ import uuid
 import requests
 import subprocess
 import urllib.parse
+from PIL import Image
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -504,5 +505,32 @@ def setreversed(adminkey):
         return json.dumps({"login": "ok", "action": "success"})
     else:
         return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/banner/<adminkey>")
+def uploadbanner(adminkey):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    banner = request.files.get("banner") # pylint: disable=no-member
+    name, ext = os.path.splitext(banner.filename) # pylint: disable=unused-variable
+    if ext not in ('.jpg'):
+        return "{\"action\": \"error\"}"
+    else:
+        if adminkey == ADMINKEY:
+            try:
+                banner.save("banners/")
+                im = Image.open("banners/"+filename+"."+ext)
+                width, height = im.size
+                if width == 299 and height == 118:
+                    return json.dumps({"login": "ok", "action": "success"})
+                else:
+                    try:
+                        os.remove("banners/"+filename+"."+ext)
+                    except:
+                        pass
+                    return "{\"action\": \"error\"}"
+            except:
+                return "{\"action\": \"error\"}"
+        else:
+            return "{\"action\": \"error\"}"
 
 run(server="tornado",port=9000,host="0.0.0.0")
