@@ -518,19 +518,19 @@ def uploadbanner(adminkey):
         if adminkey == ADMINKEY:
             try:
                 banner.save("banners/", overwrite=True)
-                im = Image.open("banners/"+name)
+                im = Image.open("banners/"+name+ext)
                 width, height = im.size
                 if width == 299 and height == 118:
                     return json.dumps({"login": "ok", "action": "success"})
                 else:
                     try:
-                        os.remove("banners/"+name)
+                        os.remove("banners/"+name+ext)
                     except:
                         pass
                     return "{\"action\": \"error\"}"
             except:
                 try:
-                    os.remove("banners/"+name)
+                   os.remove("banners/"+name+ext)
                 except:
                     pass
                 return "{\"action\": \"error\"}"
