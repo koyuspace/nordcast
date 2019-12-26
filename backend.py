@@ -20,6 +20,11 @@ if os.environ.get('DEBUG') == "true":
 else:
     debug = False
 
+if not os.environ.get('ADMINKEY') == None:
+    ADMINKEY = os.environ.get('ADMINKEY')
+else:
+    ADMINKEY = "x"
+
 @get("/")
 def index():
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -421,5 +426,83 @@ def delfav(username, uuid, secret, instance):
             return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
         else:
             return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/featured/<adminkey>/<lang>")
+def setfeatured(adminkey, lang):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/"+lang+"/featured", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/originals/<adminkey>/<lang>")
+def setoriginals(adminkey, lang):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/"+lang+"/originals", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/hiddenauthors/<adminkey>")
+def sethiddenauthors(adminkey):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/hiddenauthors", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/hiddendownloads/<adminkey>")
+def sethiddendownloads(adminkey):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/hiddendownloads", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/hiddensubtitles/<adminkey>")
+def sethiddensubtitles(adminkey):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/hiddensubtitles", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@post("/api/v1/admin/reversed/<adminkey>")
+def setreversed(adminkey):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/reversed", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
 
 run(server="tornado",port=9000,host="0.0.0.0")
