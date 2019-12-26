@@ -518,7 +518,7 @@ def uploadbanner(adminkey):
         if adminkey == ADMINKEY:
             try:
                 banner.save("banners/")
-                im = Image.open("banners/"+filename+"."+ext)
+                im = Image.open("banners/"+filename+ext)
                 width, height = im.size
                 if width == 299 and height == 118:
                     return json.dumps({"login": "ok", "action": "success"})
