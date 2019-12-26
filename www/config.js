@@ -25,8 +25,6 @@ function onDeviceReady() {
     if (device.platform === "Android" || device.platform === "iOS") {
         screen.orientation.lock('portrait');
         StatusBar.backgroundColorByHexString("#fff");
-        cordova.plugins.backgroundMode.setDefaults({ silent: true });
-        cordova.plugins.backgroundMode.enable();
     } else {
         window.setInterval(function() {
             $(".dlbutton").hide();

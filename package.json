@@ -26,14 +26,13 @@
         "ANDROID_PATHPREFIX": "/"
       },
       "cordova-music-controls": {},
-      "cordova-plugin-background-mode": {}
+      "nl.x-services.plugins.backgroundaudio": {}
     }
   },
   "dependencies": {
     "cordova-android": "^7.1.4",
     "cordova-file-cache": "^1.2.2",
     "cordova-music-controls": "git+https://github.com/ghenry22/cordova-music-controls-plugin.git",
-    "cordova-plugin-background-mode": "0.7.3",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-darkmode": "1.0.0",
     "cordova-plugin-device": "^1.1.7",
@@ -47,6 +46,7 @@
     "cordova-plugin-x-socialsharing": "5.6.3",
     "cordova-promise-fs": "^1.2.5",
     "es6-promise-plugin": "4.2.2",
+    "nl.x-services.plugins.backgroundaudio": "1.0.1",
     "phonegap": "^9.0.0"
   },
   "devDependencies": {}

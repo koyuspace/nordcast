@@ -118,6 +118,10 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarBackgroundColor" value="#ffffff" />
     <preference name="StatusBarStyle" value="default" />
+    <feature name="BackgroundAudio">
+        <param name="ios-package" value="BackgroundAudio" />
+        <param name="onload" value="true" />
+    </feature>
     <plugin name="cordova-plugin-file" spec="~6.0.2" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.7.1" />
     <plugin name="cordova-plugin-darkmode" spec="~1.0.0" />
@@ -136,4 +140,6 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
+    <plugin name="cordova-music-controls" spec="~2.2.1" />
+    <plugin name="nl.x-services.plugins.backgroundaudio" spec="~1.0.1" />
 </widget>
