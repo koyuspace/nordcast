@@ -499,7 +499,10 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             });
             if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
                 window.setInterval(function() {
-                    $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime+"/"+localStorage.getItem("instance"), function(data) { });
+                    if (player.currentTime !== 0 && !player.paused) {
+                        $.get(backend+"/api/v1/setpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+player.currentTime+"/"+localStorage.getItem("instance"), function(data) { });
+                        localStorage.setItem("time-"+secret, player.currentTime);
+                    }
                 }, 1000);
             } else {
                 window.setInterval(function() {
