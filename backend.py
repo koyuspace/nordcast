@@ -234,27 +234,6 @@ def gefeatured(lang):
         l.append([i.split("#")[0], i.split("#")[1]])
     return json.dumps(l)
 
-@get("/api/v1/getoriginals")
-def getoriginals_legacy():
-    f = open("data/en/originals", "r")
-    x = f.read()
-    f.close()
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.content_type = "application/json"
-    return json.dumps({"podlist": x})
-
-@get("/api/v1/getfeatured")
-def gefeatured_legacy():
-    f = open("data/en/featured", "r")
-    x = f.readlines()
-    f.close()
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.content_type = "application/json"
-    l = []
-    for i in x:
-        l.append([i.split("#")[0], i.split("#")[1]])
-    return json.dumps(l)
-
 @get("/api/v1/getprimarycolor")
 def getprimarycolor():
     response.headers['Access-Control-Allow-Origin'] = '*'
