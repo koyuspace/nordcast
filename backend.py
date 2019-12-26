@@ -517,6 +517,8 @@ def uploadbanner(adminkey):
     else:
         if adminkey == ADMINKEY:
             try:
+                if os.path.exists("banners/"+filename+ext):
+                    os.remove("banners/"+filename+"."+ext)
                 banner.save("banners/")
                 im = Image.open("banners/"+filename+ext)
                 width, height = im.size
