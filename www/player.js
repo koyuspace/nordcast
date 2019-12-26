@@ -506,12 +506,16 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                 }, 1000);
             } else {
                 window.setInterval(function() {
-                    localStorage.setItem("time-"+secret, player.currentTime);
+                    if (player.currentTime !== 0 && !player.paused) {
+                        localStorage.setItem("time-"+secret, player.currentTime);
+                    }
                 }, 1000);
             }
             if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "true") {
                 window.setInterval(function() {
-                    localStorage.setItem("time-"+secret, player.currentTime);
+                    if (player.currentTime !== 0 && !player.paused) {
+                        localStorage.setItem("time-"+secret, player.currentTime);
+                    }
                 }, 1000);
             }
             window.setInterval(function() {

@@ -782,13 +782,15 @@ $(document).ready(function() {
                         if (data["login"] === "error") {
                             $("#section__list").hide();
                             $("#text__list").hide();
-                            $("#view__main").show();
+                            window.setTimeout(function() {
+                                $("#view__main").show();
+                            }, 3000)
                         } else {
                             if (data["podlist"] === "None" ) {
                                 $("#section__list").html("<br /><br /><p style=\"text-align:center;width:60%;margin:0 auto;\" id=\"error__nocasts\">There are no podcasts in your list.</p><br /><br />")
                                 window.setTimeout(function() {
                                     $("#view__main").show();
-                                }, 622*3);
+                                }, 3000);
                                 localStorage.setItem("podlist", data["podlist"]);
                             } else {
                                 if (debug) {
@@ -808,7 +810,7 @@ $(document).ready(function() {
                                         localStorage.setItem("lastloaded", Date.now());
                                         timeout = podlist.split(",").length * 622;
                                     } else {
-                                        timeout = 1500;
+                                        timeout = 3000;
                                     }
                                 } else {
                                     localStorage.setItem("lastloaded", Date.now());
@@ -975,7 +977,7 @@ $(document).ready(function() {
                             $("#section__featured").hide();
                             $("#text__featured").hide();
                         });
-                    }, 500);
+                    }, 1500);
 
                     $.get(backend+"/api/v1/getname/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                         if (data["login"] === "ok") {
