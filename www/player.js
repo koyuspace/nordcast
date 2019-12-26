@@ -18,7 +18,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
         MusicControls.create({
             track       : Base64.decode(title),
             artist      : artist,
-            album       : feedtitle,
+            album       : Base64.decode(feedtitle),
             cover       : podcover,
             isPlaying   : playing,							// optional, default : true
             dismissable : false,							// optional, default : false
