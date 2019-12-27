@@ -584,8 +584,9 @@ h1 .emoji {
     #logo__nav,
     .card__big,
     .card__smaller,
-    .card__small {
-        cursor: pointer;
+    .card__small,
+    a {
+        cursor: pointer !important;
     }
 }
 
