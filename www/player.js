@@ -4,6 +4,40 @@ var plmax = false;
 var duration = 0;
 var elapsed = 0;
 
+window.setTimeout(function() {
+    if (localStorage.getItem("played") !== "true" && localStorage.getItem("offline") === "false") {
+        $("#player__controls").hide();
+    } else {
+        $("#player__controls").show();
+    }
+    if (findGetParameter("view") === "settings") {
+        $("#view__cast").hide();
+    } else {
+        $("#view__cast").show();
+    }
+}, 1500);
+
+window.setInterval(function() {
+    if ($("#player__controls").is(":visible")) {
+        if (findGetParameter("view") === "yourlist") {
+            $("#view__main").attr("style", "padding-bottom: 0 !important;");
+        }
+        $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()+"px");
+    } else {
+        if (!loading) {
+            if (findGetParameter("view") === "main") {
+                $("#view__main").attr("style", "padding-bottom: 0 !important;");
+            }
+            if (findGetParameter("view") === "yourlist") {
+                $("#view__yourlist").attr("style", "padding-bottom: 40px !important;");
+            } else {
+                $("#view__yourlist").hide();
+                $("#view__"+findGetParameter("view")).css("padding-bottom", "78px");
+            }
+        }
+    }
+});
+
 function addControls(file, secret, title, author, podcover, feed, feedtitle) {
     // Taken from the docs on https://github.com/ghenry22/cordova-music-controls-plugin
 
@@ -68,7 +102,18 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
                       playcast(file, secret, title, author, podcover, feed, feedtitle);
                       break;
                   case 'music-controls-destroy':
-                      plclose();
+                      if (playing) {
+                        playcast(file, secret, title, author, podcover, feed, feedtitle);
+                      }
+                      MusicControls.destroy(function() {
+                        if (debug) {
+                            console.log("Media controls destroyed")
+                        }
+                      }, function() {
+                          if (debug) {
+                              console.log("Error destroying media controls")
+                          }
+                      });
                       break;
           
                   // External controls (iOS only)
@@ -117,19 +162,12 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
 }
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
-    if (!playing && $("#player__controls").attr("style") === "display: none;" && !plmax) {
-        $("#player__controls").css("height", "0%");
-    }
+    localStorage.setItem("played", "true");
+    $("#player__controls").show();
+    localStorage.setItem("lastplayed-"+feed, Date.now());
     var player = document.getElementById("player");
-    $("#range-control").rangeslider({
-        polyfill: false,
-        onSlideEnd: function(position, value){
-            var player = document.getElementById("player");
-            player.currentTime = player.duration * value / 100;
-        }
-    });
     
-    $(player).bind('timeupdate', function(){
+     $(player).bind('timeupdate', function(){
         var player = document.getElementById("player");
         var percent = player.currentTime/ player.duration * 100;
         $("#range-control").val(percent).change();
@@ -166,7 +204,6 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         localStorage.setItem("podcover", podcover);
         localStorage.setItem("feedtitle", feedtitle);
         localStorage.setItem("file", file);
-        $("body").attr("style", "margin-bottom: 170px !important;");
         $("#bplay").attr("onclick", "playcast('"+file+"', '"+secret+"', '"+title+"', '"+author+"', '"+podcover+"', '"+feed+"', '"+feedtitle+"')");
         $("#link__cast").attr("data-cast", Base64.encode(feed));
         $("#player__controls").show();
@@ -540,16 +577,6 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
-    if (!plmax) {
-        window.setTimeout(function() {
-            anime({
-                targets: "#player__controls",
-                height: 166,
-                duration: 500,
-                autoplay: true
-            });
-        }, 500);
-    }
 }
 
 window.setInterval(function() {
@@ -624,6 +651,69 @@ function onDeviceReady() {
         }
     }, 100);
     platform = device.platform;
+
+    window.setTimeout(function() {
+        if (localStorage.getItem("file") !== null) {
+            player.src = localStorage.getItem("file");
+        }
+    }, 500);
+
+    window.setTimeout(function() {
+        if (localStorage.getItem("played") !== "true" && localStorage.getItem("offline") === "false") {
+            $("#player__controls").hide();
+        } else {
+            $("#player__controls").show();
+        }
+        if (device.platform === "browser" && localStorage.getItem("played") !== null) {
+            $("#player__controls").show();
+        }
+        var player = document.getElementById("player");
+        if (player.paused) {
+            if (localStorage.getItem("uuid") === "dummy") {
+                player.currentTime = Number(localStorage.getItem("time-"+localStorage.getItem("secret")));
+            }
+            if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "true") {
+                player.currentTime = Number(localStorage.getItem("time-"+localStorage.getItem("secret")));
+            }
+            if (findGetParameter("time") !== null) {
+                player.currentTime = Number(findGetParameter("time"));
+            } else {
+                player.currentTime = Number(localStorage.getItem("time-"+localStorage.getItem("secret")));
+            }
+        }
+        var podtitle = Base64.decode(localStorage.getItem("feedtitle")) + " - " + Base64.decode(localStorage.getItem("title"));
+        $("#podtitle").html(twemoji.parse(podtitle));
+        if (podtitle.length > 50) {
+            $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");
+        }
+        $("#img__cast2").attr("src", localStorage.getItem("podcover"));
+        $("#bplay").attr("onclick", "playcast('"+localStorage.getItem("file")+"', '"+localStorage.getItem("secret")+"', '"+localStorage.getItem("title")+"', '"+localStorage.getItem("author")+"', '"+localStorage.getItem("podcover")+"', '"+localStorage.getItem("feed")+"', '"+localStorage.getItem("feedtitle")+"')");
+        window.setTimeout(function() {
+            $("#range-control").rangeslider({
+                polyfill: false
+            });
+            var player = document.getElementById("player");
+            var percent = player.currentTime / player.duration * 100;
+            $("#range-control").val(percent).change();
+        }, 1500);
+        var downloaded = false;
+        try {
+            if (localStorage.getItem("downloaded").includes(localStorage.getItem("secret"))) {
+                downloaded = true;
+                try {
+                    if (!localStorage.getItem("downloaded").includes(localStorage.getItem("secret"))) {
+                        downloaded = false;
+                    }
+                } catch (e) {
+                    downloaded = true;
+                }
+            }
+        } catch(e) {}
+        if (downloaded) {
+            player.src = localStorage.getItem("download-"+localStorage.getItem("secret"));
+        }
+        $("#link__cast").attr("data-cast", Base64.encode(localStorage.getItem("feed")));
+    }, 1500);
 }
 
 function ffw() {
@@ -649,7 +739,7 @@ function plclose() {
         $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
         $("#bplay").attr("class", "playbutton ion-md-play");
     }
-    anime({
+/*     anime({
         targets: "#player__controls",
         height: 0,
         duration: 500,
@@ -670,7 +760,7 @@ function plclose() {
             }
         });
     }
-    $("#player").attr("src", "");
+    $("#player").attr("src", ""); */
 }
 
 function plout() {

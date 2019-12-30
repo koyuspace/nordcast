@@ -32,16 +32,14 @@
         <div id="nav">
 			<img src="logo.png" height="96" alt="Logo" id="logo__nav" />
             <a href="#" onclick="window.open('https://'+localStorage.getItem('instance')+'/settings/profile', '_system'); return false;"><img height="96" alt="Profile picture" class="card__small1" id="profile__picture" /></a>
-            <i class="ion-md-settings fa__nav"></i>
-            <i class="fa__nav2 ion-md-search fa__nav2"></i>
             <i class="addfeed ion-logo-rss"></i>
             <a id="link__report"><i class="ion-md-megaphone problemreporting"></i></a>
             <div id="wrapper__search">
                 <input type="text" id="qq" placeholder="Search term" />
             </div>
         </div><br />
-        <audio id="player" src="" loop width="1" height="1"></audio>
-        <audio id="player2" src="" loop muted width="1" height="1"></audio>
+        <audio id="player" src="" loop width="1" height="1" preload></audio>
+        <audio id="player2" src="" loop muted width="1" height="1" preload></audio>
         <p><i id="snclose" class="ion-md-close"></i></p>
         <div id="view__main">
             
@@ -61,7 +59,25 @@
             <a id="link__cast"><img id="img__cast2" class="card__small"></a>
             <div id="plcontrols">
                 <div class="timers"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>
-                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i class="ion-md-share share" style="position: absolute;font-size: 18pt;margin-left: 31px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
+                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i class="ion-md-share share" style="position: absolute;font-size: 18pt;margin-left: -0px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i></div>
+            </div>
+        </div>
+        <div id="menubuttons">
+            <div onclick="location.href='app.html#view=main'" class="menubutton">
+                <p><i class="icon ion-md-home"></i></p>
+                <small class="text__home">Home</small>
+            </div>
+            <div onclick="location.href='app.html#view=yourlist'" class="menubutton">
+                <p><i class="icon ion-md-list-box"></i></p>
+                <small class="text__list">Your list</small>
+            </div>
+            <div onclick="$('#view__'+findGetParameter('view')).html('');$('#wrapper__search').show();" class="menubutton">
+                <p><i class="icon ion-md-search"></i></p>
+                <small class="text__search">Search</small>
+            </div>
+            <div onclick="location.href='app.html#view=settings'" class="menubutton">
+                <p><i class="icon ion-md-settings"></i></p>
+                <small class="text__settings">Settings</small>
             </div>
         </div>
         <div id="view__settings">
@@ -73,7 +89,7 @@
             <p><span id="text__darkmode">Enable dark mode</span> <img src="darth.png" id="starwars" class="emoji"> <input id="cdark__mode" type="checkbox"></p>
             <br />
             <h2 id="text__about">About</h2>
-            <p>Nordcast <span id="version">1.7.8</span></p>
+            <p>Nordcast <span id="version">1.7.9</span></p>
             <p><a href="#" onclick="window.open('https://nordcast.app', '_system'); return false;" id="text__website">Website</a> | <a href="#" onclick="window.open('https://git.koyu.space/koyu/nordcast', '_system'); return false;" id="text__sourcecode">Source code</a></p>
             <p>&copy; koyu.space 2019</p>
         </div>

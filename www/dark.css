@@ -15,6 +15,7 @@ a i {
     background: #111;
 }
 
-#player__controls {
+#player__controls,
+#menubuttons {
     background: #191919;
 }
