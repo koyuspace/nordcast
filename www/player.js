@@ -36,6 +36,15 @@ window.setInterval(function() {
             }
         }
     }
+    try {
+        if (localStorage.getItem("played") === "true") {
+            $("#player__controls").show();
+        } else {
+            $("#player__controls").hide();
+        }
+    } catch(e) {
+        $("#player__controls").hide();
+    }
 });
 
 function addControls(file, secret, title, author, podcover, feed, feedtitle) {
@@ -162,8 +171,10 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
 }
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
+    if (!playing && $("#player__controls").attr("style") === "display: none;" && !plmax) {
+        $("#player__controls").css("height", "0%");
+    }
     localStorage.setItem("played", "true");
-    $("#player__controls").show();
     localStorage.setItem("lastplayed-"+feed, Date.now());
     var player = document.getElementById("player");
     
@@ -577,6 +588,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
+    plout();
 }
 
 window.setInterval(function() {
@@ -739,7 +751,7 @@ function plclose() {
         $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
         $("#bplay").attr("class", "playbutton ion-md-play");
     }
-/*     anime({
+     anime({
         targets: "#player__controls",
         height: 0,
         duration: 500,
@@ -747,7 +759,8 @@ function plclose() {
     });
     window.setTimeout(function() {
         $("#player__controls").hide();
-    }, 510);
+        localStorage.setItem("played", "false");
+    }, 500);
     $("body").removeAttr("style");
     if (device.platform !== "browser") {
         MusicControls.destroy(function() {
@@ -760,7 +773,7 @@ function plclose() {
             }
         });
     }
-    $("#player").attr("src", ""); */
+    $("#player").attr("src", "");
 }
 
 function plout() {
