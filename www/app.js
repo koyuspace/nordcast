@@ -83,6 +83,11 @@ function drr2() {
             if (findGetParameter("view") === "main") {
                 $("#view__yourlist").hide();
             }
+            if (findGetParameter("view") !== "settings" && localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
+                $(".fa__nav2").show();
+                $(".addfeed").show();
+                $(".problemreporting").show();
+            }
         },0);
         $(window).on('popstate',function(event) {
             $("#wrapper__search").hide();
@@ -108,9 +113,6 @@ function drr2() {
         }
         var reloaded = false;
         window.setInterval(function() {
-            if (device.platform === "browser") {
-                localStorage.setItem("offline", "false");
-            }
             if (device.platform !== "browser") {
                 $.get(backend+"?"+Date.now(), function(data) {
                     localStorage.setItem("offline", "false");
@@ -130,22 +132,22 @@ function drr2() {
                     }
                     reloaded = false;
                 }).error(function() {
-                    if (localStorage.getItem("uuid") === "dummy") {
-                        location.href = "index.html#mode=offline";
-                    }
-                    localStorage.setItem("offline", "true");
-                    $(".fa__nav2").hide();
-                    $(".addfeed").hide();
-                    $(".problemreporting").hide();
-                    $(".fav").hide();
-                    $(".tootshare").hide();
-                    $(".koyushare").hide();
-                    $(".pod__favs").hide();
-                    $("#nav").attr("style", "border-bottom: 3px solid red;");
-                    if (!reloaded) {
-                        loadview();
-                        reloaded = true;
-                    }
+                        if (localStorage.getItem("uuid") === "dummy") {
+                            location.href = "index.html#mode=offline";
+                        }
+                        localStorage.setItem("offline", "true");
+                        $(".fa__nav2").hide();
+                        $(".addfeed").hide();
+                        $(".problemreporting").hide();
+                        $(".fav").hide();
+                        $(".tootshare").hide();
+                        $(".koyushare").hide();
+                        $(".pod__favs").hide();
+                        $("#nav").attr("style", "border-bottom: 3px solid red;");
+                        if (!reloaded) {
+                            loadview();
+                            reloaded = true;
+                        }
                 });
             }
         }, 1500);
@@ -774,6 +776,9 @@ function drr2() {
                     if (findGetParameter("view") === "main") {
                         $("#section__list").hide();
                         $("#text__list").hide();
+                        if (localStorage.getItem("offline") === "true") {
+                            location.href = "app.html#view=yourlist";
+                        }
                     } else {
                         $("#section__featured").hide();
                         $("#section__originals").hide();
@@ -1018,15 +1023,59 @@ function drr2() {
                                 $("#section__originals").hide();
                                 $("#text__originals").hide();
                             });
-        
+                            if (findGetParameter("view") === "main") {
+                                if (localStorage.getItem("offline") === "false") {
+                                    $(".bigscreen").removeAttr("style");
+                                } else {
+                                    $("#view__main").css("margin-top", "60px");
+                                }
+                            } else {
+                                $(".bigscreen").hide();
+                            }
                             $.get(backend+"/api/v1/getfeatured/"+localStorage.getItem("lang"), function(data) {
+                                var counter = 0;
                                 data.forEach(function(item) {
-                                    $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" id=\"featured-"+Base64.encode(item[1]).replaceAll("=", "")+"\"/></a></div>");
-                                    window.setTimeout(function() {
-                                        $.get(backend+"/api/v1/getprimarycolor?url="+backend+"/api/v1/getbanner/"+item[0], function(color) {
-                                            $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("style", "box-shadow: 0px 0px 13px 2px rgba("+color+",0.75);");
+                                    if (counter !== 0) {
+                                        $("#section__featured").html($("#section__featured").html()+"<div><a class=\"cardlink\" data-cast=\""+Base64.encode(item[1])+"\"><img src=\""+backend+"/api/v1/getbanner/"+item[0]+"\" class=\"card__big\" id=\"featured-"+Base64.encode(item[1]).replaceAll("=", "")+"\"/></a></div>");
+                                        window.setTimeout(function() {
+                                            $.get(backend+"/api/v1/getprimarycolor?url="+backend+"/api/v1/getbanner/"+item[0], function(color) {
+                                                $("#featured-"+Base64.encode(item[1]).replaceAll("=", "")).attr("style", "box-shadow: 0px 0px 13px 2px rgba("+color+",0.75);");
+                                            });
+                                        },200);
+                                    }
+                                    if (counter === 0 && findGetParameter("view") === "main") {
+                                        $(".bigscreen").attr("onclick", "location.href='app.html#view=cast&cast="+Base64.encode(item[1])+"';")
+                                        $.get(backend+"/api/v1/getpodcast?q="+item[1], function(callback) {
+                                            if (localStorage.getItem("darkmode") === "false") {
+                                                $(".bigscreen").attr("style", "background: linear-gradient(180deg,transparent,#fff),url("+callback.feed.image.href+") center center;");
+                                                $(".bigscreen").css("background-size", "cover");
+                                            } else {
+                                                $(".bigscreen").attr("style", "background: linear-gradient(180deg,transparent,#191919),url("+callback.feed.image.href+") center center;");
+                                                $(".bigscreen").css("background-size", "cover");
+                                            }
+                                            $("#img__bigscreen").attr("src", callback.feed.image.href);
+                                            var title = callback.feed.title.split("-")[0].split("–")[0].split("(")[0];
+                                            if (title.includes("!")) {
+                                                title = title.split("!")[0]+"!";
+                                            }
+                                            if (title.includes(".")) {
+                                                title = title.split("!")[0]+".";
+                                            }
+                                            if (title.includes(",")) {
+                                                title = title.split(",")[0]+",";
+                                            }
+                                            if (title.includes("?")) {
+                                                title = title.split("?")[0]+"?";
+                                            }
+                                            $("#title__bigscreen").html(title);
+                                            var summary = callback.feed.summary.split(".")[0];
+                                            if (summary.length < 72) {
+                                                summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
+                                            }
+                                            $("#text__bigscreen").html("<small>"+summary+".</small>")
                                         });
-                                    },200);
+                                    }
+                                    counter++;
                                 });
                                 if (data === "") {
                                     $("#section__originals").hide();

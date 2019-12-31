@@ -36,10 +36,6 @@ select {
     padding: 40px 20px 20px;
 }
 
-#shownotes {
-    padding-top: 40px;
-}
-
 #logo__intro {
     position: absolute;
     top: 50%;
@@ -66,7 +62,7 @@ select {
 
 #logo__nav {
     position: relative;
-    left: -16px;
+    left: -8px;
 }
 
 @media(max-width:400px) {
@@ -664,6 +660,23 @@ h1 .emoji {
     margin-left: 10px;
     margin-bottom: 10px;
     background: #fff;
+}
+
+.bigscreen {
+    background: linear-gradient(180deg,transparent,#fff),#333 center center;
+    height: 100vw;
+    margin: -20px;
+    margin-bottom: -39px;
+    margin-top: 39px;
+    overflow: hidden;
+}
+
+#view__yourlist > h3 {
+    margin-top: 60px;
+}
+
+#title__bigscreen {
+    width: 200%;
 }
 
 /* Hack for ionicicons v2 (no animation code) */
