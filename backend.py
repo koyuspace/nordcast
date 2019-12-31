@@ -551,7 +551,7 @@ def lastplayed(username, uuid, instance, feed, time):
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     if uuid in suid:
-        r.set("nordcast/lastplayed/" + username + "$$" + instance + "/" + secret + "/" + feed, time)
+        r.set("nordcast/lastplayed/" + username + "$$" + instance + "/" + feed, time)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
 
 @get("/api/v1/getlastplayed/<username>/<uuid>/<instance>/<feed>")
@@ -559,7 +559,7 @@ def getlastplayed(username, uuid, instance, feed):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    lastplayed = str(r.get("nordcast/lastplayed/" + username + "$$" + instance + "/" + secret + "/" + feed)).replace("b'", "").replace("'", "")
+    lastplayed = str(r.get("nordcast/lastplayed/" + username + "$$" + instance + "/" + feed)).replace("b'", "").replace("'", "")
     if uuid in suid:
         return json.dumps({"login": "ok", "uuid": uuid, "lastplayed": lastplayed})
 
