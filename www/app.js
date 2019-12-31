@@ -550,8 +550,8 @@ function drr2() {
                                                         if (data["podlist"].includes(feed)) {
                                                             $("#button__follow").hide();
                                                             $("#button__unfollow").show();
-                                                            localStorage.setItem("lastplayed-"+Base64.decode(findGetParameter("cast")), Date.now());
-                                                            $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+                                                            localStorage.setItem("lastplayed-"+Base64.decode(findGetParameter("cast")), 0);
+                                                            $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+0, function(data) {});
                                                         } else {
                                                             $("#button__unfollow").hide();
                                                             $("#button__follow").show();
