@@ -545,7 +545,7 @@ function drr2() {
                                                             $("#button__follow").hide();
                                                             $("#button__unfollow").show();
                                                             localStorage.setItem("lastplayed-"+Base64.decode(findGetParameter("cast")), Date.now());
-                                                            $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+                                                            $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
                                                         } else {
                                                             $("#button__unfollow").hide();
                                                             $("#button__follow").show();
@@ -948,12 +948,12 @@ function drr2() {
                                                 }
                                                 var addons = "";
                                                 try {
-                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
+                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
                                                         if (data["lastplayed"] < Number(new Date(callback.feed.updated).getTime()) && summary !== "") {
                                                             addons = "<div class=\"new\">NEW EPISODES</div>";
                                                         }
                                                     });
-                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
+                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
                                                         if (data["lastplayed"] !== "None") {
                                                             addons = "";
                                                         }
@@ -964,10 +964,10 @@ function drr2() {
                                                         $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
                                                     }
                                                 } catch (e) {
-                                                    $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+                                                    $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
                                                 }
                                                 $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
-                                                $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
+                                                $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
                                                     if (data["lastplayed"] < Number(new Date(callback.feed.updated).getTime()) && summary !== "") {
                                                         if (Number(localStorage.getItem("lastplayed-"+feed)) < Number(new Date(callback.feed.updated).getTime()) && summary !== "") {
                                                             $("#itemcard-"+secret).css("padding-bottom: 10px;");
@@ -1100,7 +1100,7 @@ function drr2() {
                                     if (counter === 0 && findGetParameter("view") === "main") {
                                         $(".bigscreen").attr("onclick", "location.href='app.html#view=cast&cast="+Base64.encode(item[1])+"';")
                                         $.get(backend+"/api/v1/getpodcast?q="+item[1], function(callback) {
-                                            if (localStorage.getItem("darkmode") === "false") {
+                                            if (localStorage.getItem("darkmode") === "false" || localStorage.getItem("darkmode")=== null) {
                                                 $(".bigscreen").attr("style", "background: linear-gradient(180deg,transparent,#fff),url("+callback.feed.image.href+") center center;");
                                                 $(".bigscreen").css("background-size", "cover");
                                             } else {

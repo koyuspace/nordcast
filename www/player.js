@@ -176,7 +176,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     }
     localStorage.setItem("played", "true");
     localStorage.setItem("lastplayed-"+feed, Date.now());
-    $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("secret")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+    $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
     var player = document.getElementById("player");
     
      $(player).bind('timeupdate', function(){

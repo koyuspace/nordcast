@@ -545,8 +545,8 @@ def uploadbanner(adminkey):
         else:
             return "{\"action\": \"error\"}"
 
-@get("/api/v1/lastplayed/<username>/<uuid>/<secret>/<instance>/<feed>/<time>")
-def lastplayed(username, uuid, secret, instance, feed, time):
+@get("/api/v1/lastplayed/<username>/<uuid>/<instance>/<feed>/<time>")
+def lastplayed(username, uuid, instance, feed, time):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
@@ -554,8 +554,8 @@ def lastplayed(username, uuid, secret, instance, feed, time):
         r.set("nordcast/lastplayed/" + username + "$$" + instance + "/" + secret + "/" + feed, time)
         return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
 
-@get("/api/v1/getlastplayed/<username>/<uuid>/<secret>/<instance>/<feed>")
-def getlastplayed(username, uuid, secret, instance, feed):
+@get("/api/v1/getlastplayed/<username>/<uuid>/<instance>/<feed>")
+def getlastplayed(username, uuid, instance, feed):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
