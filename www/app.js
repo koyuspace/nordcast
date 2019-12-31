@@ -82,6 +82,8 @@ function drr2() {
             }
             if (findGetParameter("view") === "main") {
                 $("#view__yourlist").hide();
+            } else {
+                $(".bigscreen").hide();
             }
             if (findGetParameter("view") !== "settings" && localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
                 $(".fa__nav2").show();
