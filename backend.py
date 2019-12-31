@@ -33,6 +33,12 @@ def index():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return redirect("https://nordcast.app", code=302)
 
+@get("/getstatus")
+def status():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "text/plain"
+    return "ok"
+
 @get("/api/v1/getpodcast")
 def getpodcast():
     q = request.query["q"] # pylint: disable=unsubscriptable-object
@@ -538,5 +544,23 @@ def uploadbanner(adminkey):
                 return "{\"action\": \"error\"}"
         else:
             return "{\"action\": \"error\"}"
+
+@get("/api/v1/lastplayed/<username>/<uuid>/<secret>/<instance>/<feed>/<time>")
+def lastplayed(username, uuid, secret, instance, feed, time):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    if uuid in suid:
+        r.set("nordcast/lastplayed/" + username + "$$" + instance + "/" + secret + "/" + feed, time)
+        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+
+@get("/api/v1/getlastplayed/<username>/<uuid>/<secret>/<instance>/<feed>")
+def getlastplayed(username, uuid, secret, instance, feed):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
+    lastplayed = str(r.get("nordcast/lastplayed/" + username + "$$" + instance + "/" + secret + "/" + feed)).replace("b'", "").replace("'", "")
+    if uuid in suid:
+        return json.dumps({"login": "ok", "uuid": uuid, "lastplayed": lastplayed})
 
 run(server="tornado",port=9000,host="0.0.0.0")

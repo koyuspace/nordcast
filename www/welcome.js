@@ -22,7 +22,7 @@ String.prototype.replaceAll = function(search, replacement) {
 
 $(document).ready(function() {
     window.setInterval(function() {
-        $.get(backend+"?"+Date.now(), function(data) {
+        $.get(backend+"/getstatus?"+Date.now(), function(data) {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "app.html#view=main";
             }
@@ -66,7 +66,7 @@ $(document).ready(function() {
                         location.href = "app.html#view=main";
                     }
                 }).fail(function() {
-                    if (localStorage.getItem("uuid") && findGetParameter("mode") !== "offline") {
+                    if (localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") !== "offline") {
                         location.href = "app.html#view=main";
                     }
                 });
@@ -81,9 +81,7 @@ $(document).ready(function() {
                             location.href = "app.html#view=main";
                         }
                     }
-                } catch(e) {
-                    location.href = "app.html#view=main";
-                }
+                } catch(e) { }
             }
         } catch (e) {}
     }, 200);

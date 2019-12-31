@@ -2,7 +2,8 @@ var debug = true;
 var donator = true;
 var language = "en";
 
-var backend = "https://api.nordcast.app";
+//var backend = "https://api.nordcast.app";
+var backend = "http://localhost:9000";
 
 function findGetParameter(parameterName) {
     var result = null,
