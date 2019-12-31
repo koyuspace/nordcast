@@ -111,6 +111,12 @@ function drr2() {
                 $(".addfeed").show();
                 $(".problemreporting").show();
             }
+            if (localStorage.getItem("offline") === null) {
+                localStorage.setItem("offline", "false");
+            }
+            if (localStorage.getItem("darkmode") === null) {
+                localStorage.setItem("darkmode", "false");
+            }
         },0);
         $(window).on('popstate',function(event) {
             $("#wrapper__search").hide();
@@ -964,7 +970,9 @@ function drr2() {
                                                         $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
                                                     }
                                                 } catch (e) {
-                                                    $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+                                                    try {
+                                                        $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+                                                    } catch(e) {}
                                                 }
                                                 $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
                                                 $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
