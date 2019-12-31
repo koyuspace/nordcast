@@ -1,3 +1,5 @@
+document.addEventListener("deviceready", onDeviceReady, false);
+
 $(document).ready(function() {
     if (localStorage.getItem("darkmode") === "true") {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
@@ -27,3 +29,15 @@ $(document).ready(function() {
         }
     },500);
 });
+
+//Cordova-specific code
+function onDeviceReady() {
+    if (cordova.platformId == 'android') {
+        StatusBar.backgroundColorByHexString("#fff");
+        StatusBar.styleDefault();
+        if (localStorage.getItem("darkmode") === "true") {
+            StatusBar.backgroundColorByHexString("#191919");
+            StatusBar.styleLightContent();
+        }
+    }
+}
