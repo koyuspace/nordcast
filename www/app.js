@@ -66,6 +66,17 @@ function removejscssfile(filename, filetype){
 
 function drr2() {
     $(document).ready(function() {
+        if (device.platform === "android") {
+            $.get("https://updates.koyu.space/nordcast/latest", function(data) {
+                if ($("#version").html() !== data.split("\n")[0]) {
+                    if (localStorage.getItem("lang") !== "de") {
+                        alert("New version " + data.split("\n")[0] + " available. Please update as soon as possible.");
+                    } else {
+                        alert("Neue Version " + data.split("\n")[0] + " verfügbar. Bitte so schnell wie möglich aktualisieren.");
+                    }
+                }
+            });
+        }
         window.setInterval(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 $(".dlbutton").hide();
