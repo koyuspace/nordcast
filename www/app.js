@@ -821,7 +821,7 @@ function drr2() {
                             $("#text__custom").html(data.split("\n")[0]);
                             var custom = data.split("\n");
                             custom.shift();
-                            $("#text__custom").html(custom);
+                            $("#section__custom").html(custom);
                         });
                     } else {
                         $("#section__featured").hide();
