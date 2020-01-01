@@ -576,8 +576,8 @@ def setcustom(adminkey, lang):
     else:
         return "{\"action\": \"error\"}"
 
-@get("/api/v1/getcustom/<lang>")
-def getcustom(lang):
+@get("/api/v1/getcustomsection/<lang>")
+def getcustomsection(lang):
     f = open("data/"+lang+"/custom", "r")
     x = f.read()
     f.close()
