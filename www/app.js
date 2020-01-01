@@ -66,17 +66,19 @@ function removejscssfile(filename, filetype){
 
 function drr2() {
     $(document).ready(function() {
-        if (device.platform === "android") {
-            $.get("https://updates.koyu.space/nordcast/latest", function(data) {
-                if ($("#version").html() !== data.split("\n")[0]) {
-                    if (localStorage.getItem("lang") !== "de") {
-                        alert("New version " + data.split("\n")[0] + " available. Please update as soon as possible.");
-                    } else {
-                        alert("Neue Version " + data.split("\n")[0] + " verfügbar. Bitte so schnell wie möglich aktualisieren.");
+        window.setTimeout(function() {
+            if (device.platform === "android" || device.platform === "browser") {
+                $.get("https://updates.koyu.space/nordcast/latest", function(data) {
+                    if ($("#version").html() !== data.split("\n")[0]) {
+                        if (localStorage.getItem("lang") !== "de") {
+                            alert("New version " + data.split("\n")[0] + " available. Please update as soon as possible.");
+                        } else {
+                            alert("Neue Version " + data.split("\n")[0] + " verfügbar. Bitte so schnell wie möglich aktualisieren.");
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        }, 3000);
         window.setInterval(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 $(".dlbutton").hide();
@@ -103,8 +105,10 @@ function drr2() {
             }
             if (findGetParameter("view") === "main") {
                 $("#view__yourlist").hide();
+                $("#section__custom").show();
             } else {
                 $(".bigscreen").hide();
+                $("#section__custom").hide();
             }
             if (findGetParameter("view") !== "settings" && localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
                 $(".fa__nav2").show();
@@ -813,6 +817,12 @@ function drr2() {
                         if (localStorage.getItem("offline") === "true") {
                             location.href = "app.html#view=yourlist";
                         }
+                        $.get(backend+"/api/v1/getcustomsection/"+localStorage.getItem("lang"), function(data) {
+                            $("#text__custom").html(data.split("\n")[0]);
+                            var custom = data.split("\n");
+                            custom.shift();
+                            $("#text__custom").html(custom);
+                        });
                     } else {
                         $("#section__featured").hide();
                         $("#section__originals").hide();

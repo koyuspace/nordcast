@@ -563,4 +563,25 @@ def getlastplayed(username, uuid, instance, feed):
     if uuid in suid:
         return json.dumps({"login": "ok", "uuid": uuid, "lastplayed": lastplayed})
 
+@post("/api/v1/admin/custom/<adminkey>/<lang>")
+def setcustom(adminkey, lang):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/"+lang+"/custom", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@get("/api/v1/getcustom/<lang>")
+def getcustom(lang):
+    f = open("data/"+lang+"/custom", "r")
+    x = f.read()
+    f.close()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return x
+
 run(server="tornado",port=9000,host="0.0.0.0")

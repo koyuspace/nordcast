@@ -1,0 +1,193 @@
+<script src="https://web.nordcast.app/jquery.js"></script>
+<script>
+    $(document).ready(function() {
+        $.get("https://api.nordcast.app/api/v1/getfeatured/de", function(data) {
+            data.forEach(function(el) {
+            $("textarea#getfeatured_de").val($("textarea#getfeatured_de").val()+el[0]+"#"+el[1]);
+            });
+        });
+        $.get("https://api.nordcast.app/api/v1/getfeatured/ca", function(data) {
+            data.forEach(function(el) {
+                $("textarea#getfeatured_en").val($("textarea#getfeatured_en").val()+el[0]+"#"+el[1]);
+            });
+        });
+        $.get("https://api.nordcast.app/api/v1/gethiddendownloads", function(data) {
+            $("textarea#gethiddendownloads").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/gethiddendownloads", function(data) {
+            $("textarea#gethiddendownloads").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/gethiddenauthors", function(data) {
+            $("textarea#gethiddenauthors").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/gethiddensubtitles", function(data) {
+            $("textarea#gethiddensubtitles").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/getoriginals/de", function(data) {
+            $("textarea#getoriginals_de").val(data["podlist"]);
+        });
+        $.get("https://api.nordcast.app/api/v1/getoriginals/ca", function(data) {
+            $("textarea#getoriginals_en").val(data["podlist"]);
+        });
+        $.get("https://api.nordcast.app/api/v1/getcustom/de", function(data) {
+            $("textarea#getcustom_de").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/getcustom/ca", function(data) {
+            $("textarea#getcustom_en").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/getreversed", function(data) {
+            $("textarea#getreversed").val(data);
+        });
+
+        $("#submit_featured").click(function() {
+            $("#submit_featured").attr("disabled", "");
+            $("#submit_featured").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/featured/"+$("#admin_id").val()+"/de", {content: $("#getfeatured_de").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_featured").removeAttr("disabled");
+                    $("#submit_featured").html("Submit");
+                }
+            });
+            $("#submit_featured").attr("disabled", "");
+            $("#submit_featured").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/featured/"+$("#admin_id").val()+"/ca", {content: $("#getfeatured_en").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_featured").removeAttr("disabled");
+                    $("#submit_featured").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_originals").click(function() {
+            $("#submit_originals").attr("disabled", "");
+            $("#submit_originals").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/originals/"+$("#admin_id").val()+"/de", {content: $("#getoriginals_de").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_originals").removeAttr("disabled");
+                    $("#submit_originals").html("Submit");
+                }
+            });
+            $("#submit_originals").attr("disabled", "");
+            $("#submit_originals").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/originals/"+$("#admin_id").val()+"/ca", {content: $("#getoriginals_en").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_originals").removeAttr("disabled");
+                    $("#submit_originals").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_custom").click(function() {
+            $("#submit_custom").attr("disabled", "");
+            $("#submit_custom").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/originals/"+$("#admin_id").val()+"/de", {content: $("#getcustom_de").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_custom").removeAttr("disabled");
+                    $("#submit_custom").html("Submit");
+                }
+            });
+            $("#submit_custom").attr("disabled", "");
+            $("#submit_custom").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/originals/"+$("#admin_id").val()+"/ca", {content: $("#getcustom_en").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_custom").removeAttr("disabled");
+                    $("#submit_custom").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_hiddendownloads").click(function() {
+            $("#submit_hiddendownloads").attr("disabled", "");
+            $("#submit_hiddendownloads").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/hiddendownloads/"+$("#admin_id").val(), {content: $("#gethiddendownloads").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_hiddendownloads").removeAttr("disabled");
+                    $("#submit_hiddendownloads").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_hiddenauthors").click(function() {
+            $("#submit_hiddenauthors").attr("disabled", "");
+            $("#submit_hiddenauthors").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/hiddenauthors/"+$("#admin_id").val(), {content: $("#gethiddenauthors").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_hiddenauthors").removeAttr("disabled");
+                    $("#submit_hiddenauthors").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_hiddensubtitles").click(function() {
+            $("#submit_hiddensubtitles").attr("disabled", "");
+            $("#submit_hiddensubtitles").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/hiddensubtitles/"+$("#admin_id").val(), {content: $("#gethiddensubtitles").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_hiddensubtitles").removeAttr("disabled");
+                    $("#submit_hiddensubtitles").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_reversed").click(function() {
+            $("#submit_reversed").attr("disabled", "");
+            $("#submit_reversed").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/reversed/"+$("#admin_id").val(), {content: $("#getreversed").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_reversed").removeAttr("disabled");
+                    $("#submit_reversed").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_banner").click(function() {
+            $("#submit_banner").attr("disabled", "");
+            $("#submit_banner").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $("#error").attr("style", "display:none;color:red;");
+            try {
+                var fd = new FormData();
+                var file = $("#banner")[0].files[0];
+                fd.append('banner', file);
+                $.ajax({ 
+                    url: "https://api.nordcast.app/api/v1/admin/banner/"+$("#admin_id").val(), 
+                    type: 'post', 
+                    data: fd, 
+                    contentType: false, 
+                    processData: false, 
+                    success: function(data){ 
+                        if (data["action"] === "success") {
+                            $("#submit_banner").removeAttr("disabled");
+                            $("#submit_banner").html("Submit");
+                            $("#banner").val("");
+                        } else {
+                            $("#submit_banner").removeAttr("disabled");
+                            $("#submit_banner").html("Submit");
+                            $("#banner").val("");
+                            $("#error").attr("style", "color:red;");
+                        }
+                    },
+                }).error(function() {
+                    $("#submit_banner").removeAttr("disabled");
+                    $("#submit_banner").html("Submit");
+                    $("#banner").val("");
+                    $("#error").attr("style", "color:red;");
+                });
+            } catch (e) {
+                $("#submit_banner").removeAttr("disabled");
+                $("#submit_banner").html("Submit");
+                $("#banner").val("");
+                $("#error").attr("style", "color:red;");
+            }
+        });
+
+        var userLang = navigator.language || navigator.userLanguage;
+        if (userLang.includes("de")) {
+            $(".text-intro").html("Die Podcast-App von koyu.space");
+            $("#privacypolicy").html("Datenschutz");
+            $("#sourcecode").html("Quellcode");
+            $(".gplay").attr("src", "https://play.google.com/intl/en_us/badges/images/generic/de_badge_web_generic.png");
+            $(".appstore").attr("src", "https://www.apple.com/de/itunes/link/images/link_badge_appstore_large.png");
+            $("#post-15 > div > div > small").html("(Bald verfügbar)");
+        }
+    });
+</script>
