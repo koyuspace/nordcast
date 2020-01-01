@@ -80,7 +80,7 @@
         $("#submit_custom").click(function() {
             $("#submit_custom").attr("disabled", "");
             $("#submit_custom").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
-            $.post("https://api.nordcast.app/api/v1/admin/originals/"+$("#admin_id").val()+"/de", {content: $("#getcustom_de").val()}, function(data) {
+            $.post("https://api.nordcast.app/api/v1/admin/custom/"+$("#admin_id").val()+"/de", {content: $("#getcustom_de").val()}, function(data) {
                 if (data["action"] === "success") {
                     $("#submit_custom").removeAttr("disabled");
                     $("#submit_custom").html("Submit");
@@ -88,7 +88,7 @@
             });
             $("#submit_custom").attr("disabled", "");
             $("#submit_custom").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
-            $.post("https://api.nordcast.app/api/v1/admin/originals/"+$("#admin_id").val()+"/ca", {content: $("#getcustom_en").val()}, function(data) {
+            $.post("https://api.nordcast.app/api/v1/admin/custom/"+$("#admin_id").val()+"/ca", {content: $("#getcustom_en").val()}, function(data) {
                 if (data["action"] === "success") {
                     $("#submit_custom").removeAttr("disabled");
                     $("#submit_custom").html("Submit");
