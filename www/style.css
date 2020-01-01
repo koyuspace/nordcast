@@ -671,6 +671,21 @@ h1 .emoji {
     overflow: hidden;
 }
 
+@media(min-width:800px) {
+    .bigscreen {
+        height: 350px;
+        background-position: center -350px !important;
+    }
+    #img__bigscreen,
+    #title__bigscreen {
+        padding-top: 40px !important;
+        margin-top: calc(-100vw + 290px) !important;
+    }
+    #title__bigscreen {
+        padding-top: 30px !important;
+    }
+}
+
 #view__yourlist > h3 {
     margin-top: 60px;
 }

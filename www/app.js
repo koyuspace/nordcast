@@ -550,8 +550,8 @@ function drr2() {
                                                         if (data["podlist"].includes(feed)) {
                                                             $("#button__follow").hide();
                                                             $("#button__unfollow").show();
-                                                            localStorage.setItem("lastplayed-"+Base64.decode(findGetParameter("cast")), 0);
-                                                            $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+0, function(data) {});
+                                                            localStorage.setItem("lastplayed-"+Base64.decode(findGetParameter("cast")), Date.now());
+                                                            $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
                                                         } else {
                                                             $("#button__unfollow").hide();
                                                             $("#button__follow").show();
@@ -975,12 +975,23 @@ function drr2() {
                                                     } catch(e) {}
                                                 }
                                                 $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
+                                                var reverse = false;
+                                                $.get(backend+"/api/v1/getreversed", function(data) {
+                                                    data.split("\n").forEach(function(vl) {
+                                                        if (vl.includes(feed)) {
+                                                            reverse = true;
+                                                        }
+                                                    });
+                                                });
+                                                var ep = 0;
+                                                if (reverse) {
+                                                    ep = callback.entries.length - 1;
+                                                }
                                                 $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
-                                                    if (data["lastplayed"] < Number(new Date(callback.feed.updated).getTime()) && summary !== "") {
-                                                        if (Number(localStorage.getItem("lastplayed-"+feed)) < Number(new Date(callback.feed.updated).getTime()) && summary !== "") {
+                                                    if (data["lastplayed"] < Number(new Date(callback.entries[ep].published).getTime()) && summary !== "" && findGetParameter("view") === "main") {
+                                                        if (Number(localStorage.getItem("lastplayed-"+feed)) < Number(new Date(callback.entries[ep].published).getTime()) && summary !== "") {
                                                             $("#itemcard-"+secret).css("padding-bottom: 10px;");
                                                             $("#section__newforyou").html($("#section__newforyou").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
-
                                                         }
                                                     }
                                                 });
