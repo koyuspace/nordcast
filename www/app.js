@@ -817,18 +817,22 @@ function drr2() {
                         if (localStorage.getItem("offline") === "true") {
                             location.href = "app.html#view=yourlist";
                         }
-                        $.get(backend+"/api/v1/getcustomsection/"+localStorage.getItem("lang"), function(data) {
-                            $("#text__custom").html(data.split("\n")[0]);
-                            var custom = data.split("\n");
-                            custom.shift();
-                            $("#section__custom").html(custom);
-                        });
                     } else {
                         $("#section__featured").hide();
                         $("#section__originals").hide();
                         $("#text__featured").hide();
                         $("#text__originals").hide();
                         $("#text__username").hide();
+                    }
+                }, 1500);
+                window.setTimeout(function() {
+                    if (findGetParameter("view") === "main") {
+                        $.get(backend+"/api/v1/getcustomsection/"+localStorage.getItem("lang"), function(data) {
+                            $("#text__custom").html(data.split("\n")[0]);
+                            var custom = data.split("\n");
+                            custom.shift();
+                            $("#section__custom").html(custom);
+                        });
                     }
                 }, 1500);
                 $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
