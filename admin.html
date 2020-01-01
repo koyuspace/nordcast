@@ -29,10 +29,10 @@
         $.get("https://api.nordcast.app/api/v1/getoriginals/ca", function(data) {
             $("textarea#getoriginals_en").val(data["podlist"]);
         });
-        $.get("https://api.nordcast.app/api/v1/getcustom/de", function(data) {
+        $.get("https://api.nordcast.app/api/v1/getcustomsection/de", function(data) {
             $("textarea#getcustom_de").val(data);
         });
-        $.get("https://api.nordcast.app/api/v1/getcustom/ca", function(data) {
+        $.get("https://api.nordcast.app/api/v1/getcustomsection/ca", function(data) {
             $("textarea#getcustom_en").val(data);
         });
         $.get("https://api.nordcast.app/api/v1/getreversed", function(data) {
