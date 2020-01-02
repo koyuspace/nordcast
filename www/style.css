@@ -720,6 +720,10 @@ h1 .emoji {
     width: 80vw;
 }
 
+#text__shownotes {
+    padding-top: 60px;
+}
+
 /* Hack for ionicicons v2 (no animation code) */
 .ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
 
