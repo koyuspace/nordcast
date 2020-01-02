@@ -584,4 +584,29 @@ def getcustomsection(lang):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return x
 
+@post("/api/v1/register/<locale>/<instance>")
+def register(locale, instance):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    username = request.forms.get("username") # pylint: disable=no-member
+    email = request.forms.get("email") # pylint: disable=no-member
+    password = request.forms.get("password") # pylint: disable=no-member
+    agreement = True
+    if debug:
+        appname = "Nordcast (debug)"
+    else:
+        appname = "Nordcast"
+    if not os.path.exists('clientcred.'+instance+'.secret'):
+        Mastodon.create_app(
+            appname,
+            api_base_url = 'https://'+instance,
+            to_file = 'clientcred.'+instance+'.secret'
+        )
+    mastodon = Mastodon(
+        client_id = 'clientcred.'+instance+'.secret',
+        api_base_url = 'https://'+instance
+    )
+    mastodon.create_account(username, password, email, agreement, locale=locale)
+    return "{\"action\": \"success\"}"
+
 run(server="tornado",port=9000,host="0.0.0.0")
