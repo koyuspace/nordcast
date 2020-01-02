@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Nordcast</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src *  'unsafe-inline'; script-src *  'unsafe-inline'; media-src *">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="jquery-ui.css">
+        <script src="jquery.js"></script>
+        <script src="jquery-ui.js"></script>
+        <link href="ionicons.css" rel="stylesheet">
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <script src="config.js"></script>
+        <script src="cordova.js"></script>
+        <script src="base64.js"></script>
+        <script src="register.js"></script>
+        <link rel="me" href="https://koyu.space/@nordcast">
+        <link rel="shortcut icon" href="logo.png">
+    </head>
+    <body>
+        <div id="nav">
+			<a href="index.html"><img src="logo.png" height="96" alt="Logo" id="logo__nav" style="left:0;" /></a>
+        </div><br />
+        <div id="view__register">
+            <h1>Sign up on <span class="text-domain">koyu.space</span></h1><br>
+            <div style="text-align: center;">
+                <p><input type="email" id="email" placeholder="E-Mail"></p>
+                <p><input type="text" id="username" placeholder="Username"></p>
+                <p><input type="password" id="password" placeholder="Password"></p>
+                <p><input type="checkbox" id="checkbox"> <span id="text__terms"></span></p>
+                <p><button id="submit__register" class="btn btn-primary">Sign up</button></p>
+                <p><div id="error__register" style="color:red;font-weight: bold;">An error occured while trying to register. Please try again later.</div></p>
+            </div>
+        </div>
+        <div id="view__okay">
+            <h1 id="register__success">Your registration was successful</h1><br>
+            <p id="register__success__text">You will receive an e-mail in the next few minutes that will tell you how to activate your account. Once your e-mail is confirmed you can sign in with your credentials. If you haven't received an e-mail check your spam folder or message the server owner of <span class="text-domain">koyu.space</span>.</p>
+            <p><button class="btn btn-primary" id="register__return" onclick="location.href='index.html';">Return to app</button>
+        </div>
+    </body>
+</html>

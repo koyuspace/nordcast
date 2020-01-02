@@ -253,6 +253,12 @@ h1, h2, h3, h4, h5, h6 {
 
 #view__welcome input,
 #view__welcome input:focus,
+#view__register input[type="text"],
+#view__register input[type="email"],
+#view__register input[type="text"]:focus,
+#view__register input[type="email"]:focus,
+#view__register input[type="password"],
+#view__register input[type="password"]:focus,
 #view__addfeed input,
 #view__addfeed input:focus,
 #view__report input[type="text"],
@@ -406,7 +412,9 @@ h1 .emoji {
     padding-bottom: 60px;
 }
 
-#view__signup {
+#view__signup,
+#view__register,
+#view__okay {
     padding: 90px 20px 0px;
 }
 
@@ -631,6 +639,8 @@ h1 .emoji {
 #serverlist {
     display: block;
     margin: 0 auto;
+    margin-left: -20px;
+    width: 100vw;
 }
 
 #signup__intro {
@@ -640,7 +650,8 @@ h1 .emoji {
     margin-bottom: 30px;
 }
 
-#view__signup h1 {
+#view__signup h1,
+#view__register h1 {
     text-align: center;
     margin-top: 20px;
 }
@@ -722,6 +733,28 @@ h1 .emoji {
 
 #text__shownotes {
     padding-top: 60px;
+}
+
+#submit__register {
+    width: 78%;
+}
+
+#register__success,
+#register__success__text {
+    text-align: center;
+}
+
+#register__success {
+    font-size: 2rem;
+}
+
+#register__return {
+    display: block;
+    margin: 0 auto;
+}
+
+#register__success__text {
+    font-size: 11pt;
 }
 
 /* Hack for ionicicons v2 (no animation code) */
