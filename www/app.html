@@ -28,9 +28,9 @@
         <link rel="shortcut icon" href="logo.png">
     </head>
     <body>
-        <img src="logo.png" height="128" alt="Logo" id="logo__intro" />
+        <img src="logo.png" height="90" alt="Logo" id="logo__intro" />
         <div id="nav">
-			<img src="logo.png" height="96" alt="Logo" id="logo__nav" />
+			<img src="logo.png" height="90" alt="Logo" id="logo__nav" />
             <a href="#" onclick="window.open('https://'+localStorage.getItem('instance')+'/settings/profile', '_system'); return false;"><img height="96" alt="Profile picture" class="card__small1" id="profile__picture" /></a>
             <i class="addfeed ion-logo-rss"></i>
             <a id="link__report"><i class="ion-md-megaphone problemreporting"></i></a>
@@ -58,8 +58,8 @@
             <input id="range-control" type="range" min="0" max="100" step="1" value="0">
             <a id="link__cast"><img id="img__cast2" class="card__small"></a>
             <div id="plcontrols">
+                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i class="ion-md-share plshare share" style="position: absolute;font-size: 18pt;margin-left: 31px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
                 <div class="timers"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>
-                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i class="ion-md-share share" style="position: absolute;font-size: 18pt;margin-left: 31px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
             </div>
         </div>
         <div id="menubuttons">
@@ -89,7 +89,7 @@
             <p><span id="text__darkmode">Enable dark mode</span> <img src="darth.png" id="starwars" class="emoji"> <input id="cdark__mode" type="checkbox"></p>
             <br />
             <h2 id="text__about">About</h2>
-            <p>Nordcast <span id="version">1.8.6</span></p>
+            <p>Nordcast <span id="version">1.8.7</span></p>
             <p><a href="#" onclick="window.open('https://nordcast.app', '_system'); return false;" id="text__website">Website</a> | <a href="#" onclick="window.open('https://git.koyu.space/koyu/nordcast', '_system'); return false;" id="text__sourcecode">Source code</a></p>
             <p>&copy; koyu.space 2020</p>
         </div>

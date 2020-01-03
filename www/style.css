@@ -7,6 +7,7 @@
 body {
     background: #fff !important;
     color: #333;
+    font-size: 11pt;
     font-family: 'open_sansregular' !important;
     padding: 0;
     margin: 0;
@@ -55,7 +56,6 @@ select {
     height: 90px;
     position: fixed;
     width: 100%;
-    padding-bottom: 10px;
     z-index: 1;
     border-bottom: 3px solid rgb(39, 176, 226);
 }
@@ -83,7 +83,7 @@ select {
 }
 
 #player__controls {
-    padding-bottom: 80px;
+    padding-bottom: 60px;
 }
 
 #menubuttons {
@@ -94,7 +94,7 @@ select {
 }
 
 .menubutton .icon {
-    font-size: 24pt;
+    font-size: 18px;
     line-height: 0;
 }
 
@@ -341,6 +341,7 @@ th, td {
 
 #text__cast {
     margin-top: 6px !important;
+    font-size: 2rem;
 }
 
 .emoji {
@@ -357,19 +358,20 @@ h1 .emoji {
 #rev,
 #ffw,
 #restart,
-#snbutton,
+.snbutton,
 #snclose,
 #plclose,
 .playbutton,
-.downloaded {
-    font-size: 24px;
-    height: 24px;
-    width: 24px;
+.downloaded,
+.dlbutton {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
 }
 
 .dlbutton {
-    font-size: 24px;
-    display: block;
+    padding-right: 5px;
+    margin-left: -5px;
 }
 
 #player__controls i {
@@ -382,9 +384,10 @@ h1 .emoji {
 }
 
 #img__cast2 {
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     margin-left: 25px;
     margin-top: 10px;
+    margin-right: 10px;
     float: left;
 }
 
@@ -436,7 +439,9 @@ h1 .emoji {
 
 #podtitle {
     padding-top: 5px;
-    padding-bottom: 5px;
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    margin-left: 40px;
 }
 
 #timer, #timeleft {
@@ -492,16 +497,20 @@ h1 .emoji {
 }
 
 #img__cast2 {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
 }
 
 .problemreporting,
-.share {
+.share,
+#playbtn-copy {
     font-size: 24px;
     display: inline;
-    margin-left: 10px;
     vertical-align: middle;
+}
+
+.share {
+    margin-left: 10px;
 }
 
 .fav {
@@ -576,8 +585,11 @@ h1 .emoji {
 }
 
 .plchangesize {
-    padding: 20px;
     font-size: 20pt;
+    margin-left: 10px;
+    margin-top: -5px;
+    padding-bottom: 10px;
+    position: absolute;
 }
 
 .timers {
@@ -678,7 +690,7 @@ h1 .emoji {
     height: 100vw;
     margin: -20px;
     margin-bottom: -39px;
-    margin-top: 39px;
+    margin-top: 29px;
     overflow: hidden;
 }
 
@@ -714,7 +726,7 @@ h1 .emoji {
     width: 100vw;
     margin-left: -20px;
     border: 0;
-    padding-bottom: 40px;
+    padding-bottom: 10px;
     margin-bottom: 0;
 }
 
@@ -755,6 +767,26 @@ h1 .emoji {
 
 #register__success__text {
     font-size: 11pt;
+}
+
+#section__newforyou p {
+    width: 90vw !important;
+}
+
+.item b {
+    margin-top: -10px !important;
+}
+
+#section__list .item p {
+    margin-top: -16px !important;
+}
+
+.plshare {
+    font-size: 18px !important;
+}
+
+.menubutton p {
+    line-height: 0;
 }
 
 /* Hack for ionicicons v2 (no animation code) */

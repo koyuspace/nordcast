@@ -513,14 +513,18 @@ function drr2() {
                                         var image = callback.feed.image.href;
                                         if (localStorage.getItem("offline") === "true") {
                                             var image = localStorage.getItem("image-"+Base64.encode(feed).slice(0, -3));
+                                            $("#playbtn-copy").hide();
                                         }
                                         if (!localStorage.getItem("downloaded").includes(secret)) {
-                                            $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                            $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline snbutton\" id=\"snbutton-"+secret+"\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                         } else {
-                                            $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-done dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                            $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline snbutton\" id=\"snbutton-"+secret+"\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-done dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
                                         }
                                     } catch (e) {
-                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline\" id=\"snbutton\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                        $("#podtable tbody").append("<tr id=\"item-"+secret+"\"><td><i onclick=\"playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')\" id=\"cast-"+secret+"\" class=\"playbutton ion-md-play\"></i></td><td>"+twemoji.parse(itemtitle)+"</td><td><a onclick=\"shownotes('"+Base64.encode(shownotes)+"')\"><i class=\"ion-md-information-circle-outline snbutton\" id=\"snbutton-"+secret+"\"></i></a></td><td id=\"dlbtn-"+secret+"\"><i class=\"ion-md-cloud-download dlbutton\" onclick=\"download('"+podurl+"', '"+secret+"')\"></td></tr>");
+                                    }
+                                    if (shownotes === "") {
+                                        $("#snbutton-"+secret).hide();
                                     }
                                 }
                                 window.setTimeout(function() {
@@ -645,6 +649,13 @@ function drr2() {
                             $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+Base64.encode(findGetParameter('cast')).slice(0, -3)+"/"+localStorage.getItem("instance"), function(data) {
                                 $(".pod__favs").html(data["favs"]);
                             });
+                            $.get(backend+"/api/v1/isfav/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+Base64.encode(findGetParameter('cast')).slice(0, -3)+"/"+localStorage.getItem("instance"), function(data) {
+                                if (data["isfav"] === true) {
+                                    $(".fav").attr("class", "ion-md-heart fav");
+                                } else {
+                                    $(".fav").attr("class", "ion-md-heart-empty fav");
+                                }
+                            });
                         }
                     }, 700);
                     window.setTimeout(function() {
@@ -662,6 +673,193 @@ function drr2() {
                                     arr.reverse();
                                         $(this).append(arr);
                                     });
+                                });
+                                var feedurl = backend+"/api/v1/getpodcast?q="+feed;
+                                if (localStorage.getItem("offline") === "true") {
+                                    feedurl = localStorage.getItem("feed-"+Base64.encode(feed).slice(0, -3));
+                                }
+                                $.getJSON(feedurl, function(callback) {
+                                    var item = callback.entries[callback.entries.length - 1];
+                                    var secret = "";
+                                    try {
+                                        secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
+                                    } catch (e) {}
+                                    if (secret === "") {
+                                        secret = Base64.encode(item.link).replace("==", "");
+                                    }
+                                    var podurl = "";
+                                    item.links.forEach(function(el) {
+                                        if (el.type.includes("audio")) {
+                                            podurl = el.href;
+                                        }
+                                        if (el.type.includes("video")) {
+                                            podurl = el.href;
+                                        } 
+                                    });
+                                    var author = "";
+                                    if (callback.feed.author !== undefined) {
+                                        if (author.includes("and") && localStorage.getItem("lang") === "de") {
+                                            author = author.replaceAll("and", "und");
+                                        }
+                                        if (author.includes("backed by") && localStorage.getItem("lang") === "de") {
+                                            author = author.replaceAll("backed by", "unterstützt von");
+                                        }
+                                        if (author.includes("Tobias Ain"))  {
+                                            author = "Nordcast";
+                                        }
+                                    }
+                                    try {
+                                        var feedtitle = callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0];
+                                    } catch(e) {
+                                        var feedtitle = callback.feed.title;
+                                    }
+                                    try {
+                                        feedtitle = feedtitle.split(" (")[0];
+                                    } catch (e) {}
+                                    var shownotes = "";
+                                    try {
+                                        item.content.forEach(function(el) {
+                                            if (el.type === "text/html") {
+                                                shownotes = el.value;
+                                            }
+                                        });
+                                    } catch (e) {}
+                                    if (shownotes === "") {
+                                        shownotes = item.summary;
+                                    }
+                                    if (shownotes === "") {
+                                        shownotes = item.summary;
+                                    }
+                                    var itemtitle = item.title;
+                                    var hide = false;
+                                    if (itemtitle.includes("New status by ")) {
+                                        itemtitle = item.summary.replaceAll("<p>", "").replaceAll("</p>", "");
+                                        shownotes = item.summary_detail;
+                                        try {
+                                            if (!item.links[1].type.includes("audio/")) {
+                                                hide = true;
+                                            }
+                                        } catch (e) {
+                                            hide = true;
+                                        }
+                                    }
+                                    try {
+                                        if (localStorage.getItem("offline") === "true" && !localStorage.getItem("downloaded").includes(secret)) {
+                                            hide = true;
+                                        }
+                                    } catch (e) {
+                                        if (localStorage.getItem("offline") === "true") {
+                                            hide = true;
+                                        }
+                                    }
+                                    if (itemtitle === "") {
+                                        itemtitle = item.title;
+                                    }
+                                    try {
+                                        var image = callback.feed.image.href;
+                                    } catch (e) {}
+                                    $("#playbtn-copy").attr("onclick", "playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')");
+                                    $("#playbtn-copy").html("<span style=\"display:none;\">"+secret+"</span>");
+                                }); 
+                            } else {
+                                var feedurl = backend+"/api/v1/getpodcast?q="+feed;
+                                if (localStorage.getItem("offline") === "true") {
+                                    feedurl = localStorage.getItem("feed-"+Base64.encode(feed).slice(0, -3));
+                                }
+                                $.getJSON(feedurl, function(callback) {
+                                    var item = callback.entries[0];
+                                    var secret = "";
+                                    try {
+                                        secret = item.id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
+                                    } catch (e) {}
+                                    if (secret === "") {
+                                        secret = Base64.encode(item.link).replace("==", "");
+                                    }
+                                    var podurl = "";
+                                    item.links.forEach(function(el) {
+                                        if (el.type.includes("audio")) {
+                                            podurl = el.href;
+                                        }
+                                        if (el.type.includes("video")) {
+                                            podurl = el.href;
+                                        } 
+                                    });
+                                    var author = "";
+                                    if (callback.feed.author !== undefined) {
+                                        if (author.includes("and") && localStorage.getItem("lang") === "de") {
+                                            author = author.replaceAll("and", "und");
+                                        }
+                                        if (author.includes("backed by") && localStorage.getItem("lang") === "de") {
+                                            author = author.replaceAll("backed by", "unterstützt von");
+                                        }
+                                        if (author.includes("Tobias Ain"))  {
+                                            author = "Nordcast";
+                                        }
+                                    }
+                                    try {
+                                        var feedtitle = callback.feed.title.split(" | ")[0].split(" - ")[0].split(" – ")[0];
+                                    } catch(e) {
+                                        var feedtitle = callback.feed.title;
+                                    }
+                                    try {
+                                        feedtitle = feedtitle.split(" (")[0];
+                                    } catch (e) {}
+                                    var author = "";
+                                    if (callback.feed.author !== undefined) {
+                                        if (author.includes("and") && localStorage.getItem("lang") === "de") {
+                                            author = author.replaceAll("and", "und");
+                                        }
+                                        if (author.includes("backed by") && localStorage.getItem("lang") === "de") {
+                                            author = author.replaceAll("backed by", "unterstützt von");
+                                        }
+                                        if (author.includes("Tobias Ain"))  {
+                                            author = "Nordcast";
+                                        }
+                                    }
+                                    var shownotes = "";
+                                    try {
+                                        item.content.forEach(function(el) {
+                                            if (el.type === "text/html") {
+                                                shownotes = el.value;
+                                            }
+                                        });
+                                    } catch (e) {}
+                                    if (shownotes === "") {
+                                        shownotes = item.summary;
+                                    }
+                                    if (shownotes === "") {
+                                        shownotes = item.summary;
+                                    }
+                                    var itemtitle = item.title;
+                                    var hide = false;
+                                    if (itemtitle.includes("New status by ")) {
+                                        itemtitle = item.summary.replaceAll("<p>", "").replaceAll("</p>", "");
+                                        shownotes = item.summary_detail;
+                                        try {
+                                            if (!item.links[1].type.includes("audio/")) {
+                                                hide = true;
+                                            }
+                                        } catch (e) {
+                                            hide = true;
+                                        }
+                                    }
+                                    try {
+                                        if (localStorage.getItem("offline") === "true" && !localStorage.getItem("downloaded").includes(secret)) {
+                                            hide = true;
+                                        }
+                                    } catch (e) {
+                                        if (localStorage.getItem("offline") === "true") {
+                                            hide = true;
+                                        }
+                                    }
+                                    if (itemtitle === "") {
+                                        itemtitle = item.title;
+                                    }
+                                    try {
+                                        var image = callback.feed.image.href;
+                                    } catch (e) {}
+                                    $("#playbtn-copy").attr("onclick", "playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')");
+                                    $("#playbtn-copy").html("<span style=\"display:none;\">"+secret+"</span>");
                                 });
                             }
                         });
@@ -963,32 +1161,12 @@ function drr2() {
                                                     summary = callback.feed.summary.replaceAll("\n", "<br>");
                                                 }
                                                 summary = summary.split("<br>")[0];
-                                                if (summary.length > 60) {
-                                                    summary = summary.slice(0,59) + "...";
+                                                if (summary.length > 50) {
+                                                    summary = summary.slice(0,49) + "...";
                                                 }
-                                                var addons = "";
-                                                try {
-                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
-                                                        if (data["lastplayed"] < Number(new Date(callback.feed.updated).getTime()) && summary !== "") {
-                                                            addons = "<div class=\"new\">NEW EPISODES</div>";
-                                                        }
-                                                    });
-                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
-                                                        if (data["lastplayed"] !== "None") {
-                                                            addons = "";
-                                                        }
-                                                    });
-                                                } catch (e) {}
-                                                try {
-                                                    if (localStorage.getItem("lastplayed-"+feed) === null) {
-                                                        $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
-                                                    }
-                                                } catch (e) {
-                                                    try {
-                                                        $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
-                                                    } catch(e) {}
+                                                if (summary.length > 72 && findGetParameter("view") === "main") {
+                                                    summary = summary.slice(0,71) + "...";
                                                 }
-                                                $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
                                                 var reverse = false;
                                                 $.get(backend+"/api/v1/getreversed", function(data) {
                                                     data.split("\n").forEach(function(vl) {
@@ -1001,36 +1179,108 @@ function drr2() {
                                                 if (reverse) {
                                                     ep = callback.entries.length - 1;
                                                 }
-                                                $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
-                                                    if (data["lastplayed"] < Number(new Date(callback.entries[ep].published).getTime()) && summary !== "" && findGetParameter("view") === "main") {
-                                                        if (Number(localStorage.getItem("lastplayed-"+feed)) < Number(new Date(callback.entries[ep].published).getTime()) && summary !== "") {
-                                                            $("#itemcard-"+secret).css("padding-bottom: 10px;");
-                                                            $("#section__newforyou").html($("#section__newforyou").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
+                                                if (findGetParameter("view") === "main" && callback.entries.length > 0) {
+                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
+                                                        if (data["lastplayed"] <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "" && findGetParameter("view") === "main") {
+                                                            if (Number(localStorage.getItem("lastplayed-"+feed)) <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "") {
+                                                                $("#section__newforyou").html($("#section__newforyou").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
+                                                            }
                                                         }
+                                                    });
+                                                }
+                                                if (findGetParameter("view") === "yourlist" && callback.entries.length > 0) {
+                                                    var reverse = false;
+                                                    $.get(backend+"/api/v1/getreversed", function(data) {
+                                                        data.split("\n").forEach(function(vl) {
+                                                            if (vl.includes(feed)) {
+                                                                reverse = true;
+                                                            }
+                                                        });
+                                                    });
+                                                    var ep = 0;
+                                                    if (reverse) {
+                                                        ep = callback.entries.length - 1;
                                                     }
-                                                });
-                                                $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
-                                                    localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
-                                                    if (Number(color.split(",")[0]) > 140) {
-                                                        if (summary !== "") {
-                                                            $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
-                                                        } else {
-                                                            $("#itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:1.5em;");
-                                                            $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;")
-                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
-                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                    $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
+                                                        var addons = "";
+                                                        if (data["lastplayed"] <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "" && findGetParameter("view") === "yourlist") {
+                                                            if (Number(localStorage.getItem("lastplayed-"+feed)) <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "") {
+                                                                addons = "<div class=\"new\">NEW EPISODES</div>";
+                                                            } else {
+                                                                addons = "";
+                                                            }
                                                         }
-                                                    } else {
-                                                        if (summary !== "") {
-                                                            $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
+                                                        if (addons === "") {
+                                                            window.setTimeout(function() {
+                                                                $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
+                                                            }, 1500);
                                                         } else {
-                                                            $("#itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:1.5em;");
-                                                            $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;")
-                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
-                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                                         }
-                                                    }
-                                                });
+                                                    });
+                                                }
+                                                window.setInterval(function() {
+                                                    try {
+                                                        if (findGetParameter("view") === "main" || findGetParameter("view") === "yourlist") {
+                                                            $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                                                localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
+                                                                var customstyles = "";
+                                                                try {
+                                                                    if ($("#itemcard-"+secret).html().includes("class=\"new\"")) {
+                                                                        customstyles = "padding-bottom: 30px;";
+                                                                    }
+                                                                } catch (e) {}
+                                                                if (Number(color.split(",")[0]) > 140) {
+                                                                    if (summary !== "") {
+                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#333; background:rgb("+color+");");
+                                                                    } else {
+                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#333; background:rgb("+color+");font-size:1.5em;");
+                                                                        $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                        try {
+                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                        } catch (e) {}
+                                                                    }
+                                                                } else {
+                                                                    if (summary !== "") {
+                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#fff; background:rgb("+color+");");
+                                                                    } else {
+                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#fff; background:rgb("+color+");font-size:1.5em;");
+                                                                        $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                        try {
+                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                        } catch (e) {}
+                                                                    }
+                                                                }
+                                                                // Same for the newforyou section
+                                                                if (Number(color.split(",")[0]) > 140) {
+                                                                    if (summary !== "") {
+                                                                        $(".itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
+                                                                    } else {
+                                                                        $(".itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:1.5em;");
+                                                                        $(".itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                        try {
+                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                        } catch (e) {}
+                                                                    }
+                                                                } else {
+                                                                    if (summary !== "") {
+                                                                        $(".itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
+                                                                    } else {
+                                                                        $(".itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:1.5em;");
+                                                                        $(".itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                        try {
+                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                        } catch (e) {}
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    } catch (e) {}
+                                                }, 1500);
                                             } catch (e) {}
                                         });
                                     });
@@ -1418,10 +1668,9 @@ function fav(cast) {
             if (data["isfav"] === true) {
                 $.get(backend+"/api/v1/delfav/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function() {
                     isfaving = false;
-                    $(".fav").attr("class", "ion-md-heart fav");
                     $.get(backend+"/api/v1/getfavs/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+cast+"/"+localStorage.getItem("instance"), function(data) {
                         $(".pod__favs").html(data["favs"]);
-                        $(".fav").attr("class", "ion-md-heart fav");
+                        $(".fav").attr("class", "ion-md-heart-empty fav");
                     });
                 });
             } else {

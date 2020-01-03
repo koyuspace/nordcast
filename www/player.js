@@ -22,20 +22,30 @@ window.setInterval(function() {
         if (findGetParameter("view") === "yourlist") {
             $("#view__main").attr("style", "padding-bottom: 0 !important;");
         }
-        $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()+"px");
+        if (findGetParameter("view") !== "main") {
+            $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()-20+"px");
+        } else {
+            $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()+"px");
+        }
     } else {
         if (!loading) {
             if (findGetParameter("view") === "main") {
-                $("#view__main").attr("style", "padding-bottom: 0 !important;");
+                $("#view__"+findGetParameter("view")).css("padding-bottom", $("#menubuttons").height()+"px");
             }
             if (findGetParameter("view") === "yourlist") {
                 $("#view__yourlist").attr("style", "padding-bottom: 40px !important;");
+                $("#view__main").attr("style", "padding-bottom: 0;");
             } else {
-                $("#view__yourlist").hide();
-                $("#view__"+findGetParameter("view")).css("padding-bottom", "78px");
+                if (findGetParameter("view") !== "main") {
+                    $("#view__yourlist").hide();
+                    $("#view__"+findGetParameter("view")).css("padding-bottom", $("#menubuttons").height()+20+"px");
+                }
             }
         }
     }
+}, 2500);
+
+window.setInterval(function() {
     try {
         if (localStorage.getItem("played") === "true") {
             $("#player__controls").show();
@@ -175,11 +185,33 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         $("#player__controls").css("height", "0%");
     }
     localStorage.setItem("played", "true");
-    localStorage.setItem("lastplayed-"+feed, Date.now());
-    $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+    $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
+        var reverse = false;
+        $.get(backend+"/api/v1/getreversed", function(data) {
+            data.split("\n").forEach(function(vl) {
+                if (vl.includes(feed)) {
+                    reverse = true;
+                }
+            });
+        });
+        var ep = 0;
+        if (reverse) {
+            ep = callback.entries.length - 1;
+        }
+        localStorage.setItem("lastplayed-"+feed, Date.now());
+        $.get(backend+"/api/v1/lastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3)+"/"+Date.now(), function(data) {});
+    });
     var player = document.getElementById("player");
     
-     $(player).bind('timeupdate', function(){
+    $("#range-control").rangeslider({
+        polyfill: false,
+        onSlideEnd: function(position, value){
+            var player = document.getElementById("player");
+            player.currentTime = player.duration * value / 100;
+        }
+    });
+
+    $(player).bind('timeupdate', function(){
         var player = document.getElementById("player");
         var percent = player.currentTime/ player.duration * 100;
         $("#range-control").val(percent).change();
@@ -596,10 +628,16 @@ window.setInterval(function() {
     var player = document.getElementById("player");
     if (!player.paused) {
         $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
+        if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
+            $("#playbtn-copy").attr("class", "playbutton ion-md-pause");
+        }
         $("#bplay").attr("class", "playbutton ion-md-pause");
         playing = true;
     } else {
         $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
+        if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
+            $("#playbtn-copy").attr("class", "playbutton ion-md-play");
+        }
         $("#bplay").attr("class", "playbutton ion-md-play");
         playing = false;
     }
@@ -780,14 +818,14 @@ function plclose() {
 function plout() {
     anime({
         targets: "#player__controls",
-        height: 166,
+        height: 105,
         duration: 500,
         autoplay: true
     });
     anime({
         targets: "#img__cast2",
-        width: 64,
-        height: 64,
+        width: 48,
+        height: 48,
         duration: 500,
         autoplay: true
     });
@@ -800,7 +838,7 @@ function plout() {
 function plin() {
     anime({
         targets: "#player__controls",
-        height: $(window).height() - 103,
+        height: $(window).height() - 139,
         duration: 500,
         autoplay: true
     });
