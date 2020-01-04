@@ -626,21 +626,23 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
 
 window.setInterval(function() {
     var player = document.getElementById("player");
-    if (!player.paused) {
-        $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
-        if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
-            $("#playbtn-copy").attr("class", "playbutton ion-md-pause");
+    try {
+        if (!player.paused) {
+            $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-pause");
+            if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
+                $("#playbtn-copy").attr("class", "playbutton ion-md-pause");
+            }
+            $("#bplay").attr("class", "playbutton ion-md-pause");
+            playing = true;
+        } else {
+            $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
+            if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
+                $("#playbtn-copy").attr("class", "playbutton ion-md-play");
+            }
+            $("#bplay").attr("class", "playbutton ion-md-play");
+            playing = false;
         }
-        $("#bplay").attr("class", "playbutton ion-md-pause");
-        playing = true;
-    } else {
-        $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
-        if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
-            $("#playbtn-copy").attr("class", "playbutton ion-md-play");
-        }
-        $("#bplay").attr("class", "playbutton ion-md-play");
-        playing = false;
-    }
+    } catch (e) {}
 });
 
 $(document).on("keydown", function (e) {
