@@ -58,7 +58,7 @@
             <input id="range-control" type="range" min="0" max="100" step="1" value="0">
             <a id="link__cast"><img id="img__cast2" class="card__small"></a>
             <div id="plcontrols">
-                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i> <i class="ion-md-share plshare share" style="position: absolute;font-size: 18pt;margin-left: 31px;" onclick="share(Base64.encode(localStorage.getItem('feed')))"></i> <i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
+                <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i><i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
                 <div class="timers"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                 <p><i class="icon ion-md-list-box"></i></p>
                 <small class="text__list">Your list</small>
             </div>
-            <div onclick="$('#view__'+findGetParameter('view')).html('');$('#wrapper__search').show();" class="menubutton">
+            <div onclick="$('#view__'+findGetParameter('view')).html('');$('#wrapper__search').show();$('#view__'+findGetParameter('view')).show();" class="menubutton">
                 <p><i class="icon ion-md-search"></i></p>
                 <small class="text__search">Search</small>
             </div>

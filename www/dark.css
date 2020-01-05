@@ -1,4 +1,4 @@
-body, #nav, #wrapper__search {
+body, #wrapper__search {
     background: #191919 !important;
     color: #fff;
 }
@@ -16,6 +16,7 @@ a i {
 }
 
 #player__controls,
-#menubuttons {
-    background: #191919;
+#menubuttons,
+#nav {
+    background: rgba(25,25,25,.9);
 }

@@ -52,7 +52,7 @@ select {
 }
 
 #nav {
-    background: #fff;
+    background: rgba(255,255,255,.9);
     height: 90px;
     position: fixed;
     width: 100%;
@@ -73,7 +73,7 @@ select {
 
 #player__controls,
 #menubuttons {
-    background: #fff;
+    background: rgba(255,255,255,.9);
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -83,7 +83,8 @@ select {
 }
 
 #player__controls {
-    padding-bottom: 60px;
+    bottom: 60px;
+    height: 50px;
 }
 
 #menubuttons {
@@ -586,7 +587,7 @@ h1 .emoji {
 
 .plchangesize {
     font-size: 20pt;
-    margin-left: 10px;
+    margin-left: -80px;
     margin-top: -5px;
     padding-bottom: 10px;
     position: absolute;
@@ -599,7 +600,7 @@ h1 .emoji {
 
 .player-controls {
     text-align: center;
-    margin-left: 20px;
+    margin-left: 40px;
 }
 
 #plcontrols {

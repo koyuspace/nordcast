@@ -126,7 +126,9 @@ function drr2() {
             $("#wrapper__search").hide();
             loadview();
             $("#view__report").hide();
-            plout();
+            if (plmax) {
+                plout();
+            }
             if (findGetParameter("view") !== "settings") {
                 if (localStorage.getItem("offline") === "true") {
                     $(".fa__nav").show();

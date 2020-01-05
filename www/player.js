@@ -3,6 +3,7 @@ var platform = "";
 var plmax = false;
 var duration = 0;
 var elapsed = 0;
+var player = document.getElementById("player");
 
 window.setTimeout(function() {
     if (localStorage.getItem("played") !== "true" && localStorage.getItem("offline") === "false") {
@@ -15,6 +16,7 @@ window.setTimeout(function() {
     } else {
         $("#view__cast").show();
     }
+    $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
 }, 1500);
 
 window.setInterval(function() {
@@ -54,6 +56,23 @@ window.setInterval(function() {
         }
     } catch(e) {
         $("#player__controls").hide();
+    }
+    if (!plmax) {
+        $(".timers").hide();
+        $(".rangeslider").hide();
+        $("#podtitle").hide();
+        $("#plcontrols").attr("style", "margin-top:15px;");
+        $(".player-controls").attr("style", "margin-left:-80px;margin-top:-3px;width:70vw;");
+        $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:12px;margin-left:60px;");
+        $("#restart").hide();
+        $("#rev").hide();
+    } else {
+        $(".player-controls").removeAttr("style");
+        $(".timers").show();
+        $(".rangeslider").show();
+        $("#podtitle").show();
+        $("#restart").show();
+        $("#rev").show();
     }
 });
 
@@ -183,6 +202,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     if (!playing && $("#player__controls").attr("style") === "display: none;" && !plmax) {
         $("#player__controls").css("height", "0%");
+        $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
     }
     localStorage.setItem("played", "true");
     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
@@ -621,7 +641,9 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
-    plout();
+    if (localStorage.getItem("played") !== "true") {
+        plout();
+    }
 }
 
 window.setInterval(function() {
@@ -706,9 +728,11 @@ function onDeviceReady() {
     platform = device.platform;
 
     window.setTimeout(function() {
-        if (localStorage.getItem("file") !== null) {
-            player.src = localStorage.getItem("file");
-        }
+        try {
+            if (localStorage.getItem("file") !== null) {
+                player.src = localStorage.getItem("file");
+            }
+        } catch (e) {}
     }, 500);
 
     window.setTimeout(function() {
@@ -743,7 +767,11 @@ function onDeviceReady() {
         $("#bplay").attr("onclick", "playcast('"+localStorage.getItem("file")+"', '"+localStorage.getItem("secret")+"', '"+localStorage.getItem("title")+"', '"+localStorage.getItem("author")+"', '"+localStorage.getItem("podcover")+"', '"+localStorage.getItem("feed")+"', '"+localStorage.getItem("feedtitle")+"')");
         window.setTimeout(function() {
             $("#range-control").rangeslider({
-                polyfill: false
+                polyfill: false,
+                onSlideEnd: function(position, value){
+                    var player = document.getElementById("player");
+                    player.currentTime = player.duration * value / 100;
+                }
             });
             var player = document.getElementById("player");
             var percent = player.currentTime / player.duration * 100;
@@ -785,6 +813,7 @@ function rev() {
 }
 
 function plclose() {
+    plmax = false;
     if (playing) {
         player.pause();
         playing = false;
@@ -820,27 +849,28 @@ function plclose() {
 function plout() {
     anime({
         targets: "#player__controls",
-        height: 105,
+        height: 45,
         duration: 500,
         autoplay: true
     });
     anime({
         targets: "#img__cast2",
-        width: 48,
-        height: 48,
+        width: 24,
+        height: 24,
         duration: 500,
         autoplay: true
     });
     plmax = false;
     $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
+    $(".plchangesize").attr("style", "margin-left:20px;margin-top:4px;");
     $("#plcontrols").attr("css", "margin-left: 60px;");
-    $("#img__cast2").attr("style", "");
+    $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:12px;margin-left:60px;");
 }
 
 function plin() {
     anime({
         targets: "#player__controls",
-        height: $(window).height() - 139,
+        height: $(window).height() - 157,
         duration: 500,
         autoplay: true
     });
@@ -853,6 +883,7 @@ function plin() {
     });
     $("#img__cast2").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px;");
     $(".plchangesize").attr("class", "ion-ios-arrow-down plchangesize");
+    $(".plchangesize").attr("style", "margin-left:20px;margin-top:-8px;");
     plmax = true;
 }
 
