@@ -61,11 +61,13 @@ window.setInterval(function() {
         $(".timers").hide();
         $(".rangeslider").hide();
         $("#podtitle").hide();
-        $("#plcontrols").attr("style", "margin-top:15px;");
-        $(".player-controls").attr("style", "margin-left:-80px;margin-top:-3px;width:70vw;");
+        $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
+        $(".plchangesize").attr("style", "margin-left: 10px;margin-top: 4px;");
+        $("#plcontrols").attr("css", "margin-left: 60px;");
         $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:12px;margin-left:60px;");
         $("#restart").hide();
         $("#rev").hide();
+        $(".player-controls").attr("style", "margin-right: 35vw;");
     } else {
         $(".player-controls").removeAttr("style");
         $(".timers").show();
@@ -200,7 +202,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
 }
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
-    if (!playing && $("#player__controls").attr("style") === "display: none;" && !plmax) {
+    if (!playing && !$("#player__controls").is(":visible") && !plmax) {
         $("#player__controls").css("height", "0%");
         $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
     }
@@ -641,7 +643,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
-    if (localStorage.getItem("played") !== "true") {
+    if (localStorage.getItem("played") !== "true" || findGetParameter("view") === "cast") {
         plout();
     }
 }
@@ -814,6 +816,7 @@ function rev() {
 
 function plclose() {
     plmax = false;
+    var player = document.getElementById("player");
     if (playing) {
         player.pause();
         playing = false;
@@ -870,7 +873,7 @@ function plout() {
 function plin() {
     anime({
         targets: "#player__controls",
-        height: $(window).height() - 157,
+        height: $(window).height() - 156,
         duration: 500,
         autoplay: true
     });
@@ -883,7 +886,7 @@ function plin() {
     });
     $("#img__cast2").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px;");
     $(".plchangesize").attr("class", "ion-ios-arrow-down plchangesize");
-    $(".plchangesize").attr("style", "margin-left:20px;margin-top:-8px;");
+    $(".plchangesize").attr("style", "margin-left: 10px;margin-top: 4px;");
     plmax = true;
 }
 

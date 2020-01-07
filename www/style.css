@@ -83,7 +83,7 @@ select {
 }
 
 #player__controls {
-    bottom: 60px;
+    bottom: 59px;
     height: 50px;
 }
 
@@ -301,7 +301,8 @@ ion-icon {
 #podcard {
     margin: 0;
     padding: 10px;
-    padding-top: 60px;
+    padding-top: 40px;
+    margin-top: 30px;
     margin-left: -20px;
     width: calc(100% + 20px);
 }
@@ -587,8 +588,8 @@ h1 .emoji {
 
 .plchangesize {
     font-size: 20pt;
-    margin-left: -80px;
-    margin-top: -5px;
+    margin-left: 20px;
+    margin-top: 4px;
     padding-bottom: 10px;
     position: absolute;
 }
