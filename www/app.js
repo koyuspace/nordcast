@@ -533,7 +533,7 @@ function drr2() {
                                     if ($("#podtable tbody").html() === "") {
                                         $("#podtable tbody").html("<div id=\"error__noepisodes\">No episodes available. Maybe the podcaster hasn't uploaded any or you haven't downloaded some to listen offline.</div>");
                                     }
-                                }, 1500);
+                                }, 3000);
                                 if (localStorage.getItem("uuid") === "dummy") {
                                     $(".dlbutton").hide();
                                 }
@@ -1183,9 +1183,19 @@ function drr2() {
                                                 }
                                                 if (findGetParameter("view") === "main" && callback.entries.length > 0) {
                                                     $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
-                                                        if (data["lastplayed"] <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "" && findGetParameter("view") === "main") {
-                                                            if (Number(localStorage.getItem("lastplayed-"+feed)) <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "") {
-                                                                $("#section__newforyou").html($("#section__newforyou").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item itemcard-"+secret+"\"><div class=\"item-head\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
+                                                        if (data["lastplayed"] <= Number(new Date(callback.entries[ep].published).getTime()) && findGetParameter("view") === "main") {
+                                                            if (Number(localStorage.getItem("lastplayed-"+feed)) <= Number(new Date(callback.entries[ep].published).getTime())) {
+                                                                var epsecret = "";
+                                                                try {
+                                                                    epsecret = callback.entries[ep].id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
+                                                                } catch (e) {}
+                                                                if (epsecret === "") {
+                                                                    epsecret = Base64.encode(callback.entries[ep].link).replace("==", "");
+                                                                }
+                                                                $("#section__newforyou").html($("#section__newforyou").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\" data-ep=\""+epsecret+"\"><div class=\"item itemcard-"+secret+"\"><div class=\"item-head\" id=\"item-head-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><p>"+summary+"</p></div></a>");
+                                                                if (summary === "") {
+                                                                    $("#item-head-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                }
                                                             }
                                                         }
                                                     });
@@ -1205,19 +1215,26 @@ function drr2() {
                                                     }
                                                     $.get(backend+"/api/v1/getlastplayed/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance")+"/"+Base64.encode(feed).slice(0, -3), function(data) {
                                                         var addons = "";
-                                                        if (data["lastplayed"] <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "" && findGetParameter("view") === "yourlist") {
-                                                            if (Number(localStorage.getItem("lastplayed-"+feed)) <= Number(new Date(callback.entries[ep].published).getTime()) && summary !== "") {
+                                                        if (data["lastplayed"] <= Number(new Date(callback.entries[ep].published).getTime()) && findGetParameter("view") === "yourlist") {
+                                                            if (Number(localStorage.getItem("lastplayed-"+feed)) <= Number(new Date(callback.entries[ep].published).getTime())) {
                                                                 addons = "<div class=\"new\">NEW EPISODES</div>";
                                                             } else {
                                                                 addons = "";
                                                             }
                                                         }
+                                                        var epsecret = "";
+                                                        try {
+                                                            epsecret = callback.entries[ep].id.replaceAll("/", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace(".", "-").replace("http:", "").replace("https:", "").replace("--", "").replace("+", "-").replaceAll(":", "-").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"-").replace("?", "").replace("@", "");
+                                                        } catch (e) {}
+                                                        if (epsecret === "") {
+                                                            epsecret = Base64.encode(callback.entries[ep].link).replace("==", "");
+                                                        }
                                                         if (addons === "") {
                                                             window.setTimeout(function() {
-                                                                $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
+                                                                $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\" data-ep=\""+epsecret+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                                             }, 1500);
                                                         } else {
-                                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
+                                                            $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\" data-ep=\""+epsecret+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                                         }
                                                     });
                                                 }
@@ -1577,6 +1594,16 @@ function drr2() {
                     counter = counter + 1;
                 }, 20);
                 location.href = "app.html#view=cast&cast="+$(this).attr("data-cast");
+            }
+            if ($(this).attr("data-cast") && !loading && $(this).attr("data-ep")) {
+                var counter = 0;
+                window.setInterval(function() {
+                    if (counter < 10) {
+                        $("#view__main").hide();
+                    }
+                    counter = counter + 1;
+                }, 20);
+                location.href = "app.html#view=cast&cast="+$(this).attr("data-cast")+"&episode="+$(this).attr("data-ep");
             }
             e.preventDefault();
         });

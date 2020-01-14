@@ -62,9 +62,9 @@ window.setInterval(function() {
         $(".rangeslider").hide();
         $("#podtitle").hide();
         $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
-        $(".plchangesize").attr("style", "margin-left: 10px;margin-top: 4px;");
+        $(".plchangesize").attr("style", "margin-left: 20px;margin-top: 3px;");
         $("#plcontrols").attr("css", "margin-left: 60px;");
-        $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:12px;margin-left:60px;");
+        $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:9px;margin-left:60px;");
         $("#restart").hide();
         $("#rev").hide();
         $(".player-controls").attr("style", "margin-right: 35vw;");
