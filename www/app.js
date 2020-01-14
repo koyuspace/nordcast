@@ -67,7 +67,7 @@ function removejscssfile(filename, filetype){
 function drr2() {
     $(document).ready(function() {
         window.setTimeout(function() {
-            if (device.platform === "Android" || device.platform === "browser") {
+            if (device.platform === "Android") {
                 $.get("https://updates.koyu.space/nordcast/latest", function(data) {
                     if ($("#version").html() !== data.split("\n")[0]) {
                         if (localStorage.getItem("lang") !== "de") {
