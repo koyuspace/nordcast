@@ -236,7 +236,7 @@ function drr2() {
             if (findGetParameter("view") !== "cast") {
                 $("#view__cast").hide();
             }
-            if (findGetParameter("view") !== "main") {
+            if (findGetParameter("view") !== "main" && findGetParameter("view") !== "yourlist") {
                 $("#text__newforyou").hide();
                 $("#section__newforyou").hide();
                 $("#view__main").hide();
@@ -1071,6 +1071,7 @@ function drr2() {
             if (findGetParameter("view") === "notifications") {
                 $.get("views/notificationsview.html", function(data) {
                     $("#view__notifications").html(data);
+                    $(".notification-button").attr("class", "icon notification-button ion-md-mail");
                     if (fload) {
                         $("#view__notifications").attr("style", "padding: 0px 20px 40px;");
                     } else {
