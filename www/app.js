@@ -69,15 +69,6 @@ function drr2() {
     $(document).ready(function() {
         window.setTimeout(function() {
             if (device.platform === "Android") {
-                $.get("https://updates.koyu.space/nordcast/latest", function(data) {
-                    if ($("#version").html() !== data.split("\n")[0]) {
-                        if (localStorage.getItem("lang") !== "de") {
-                            alert("New version " + data.split("\n")[0] + " available. Please update as soon as possible.");
-                        } else {
-                            alert("Neue Version " + data.split("\n")[0] + " verfügbar. Bitte so schnell wie möglich aktualisieren.");
-                        }
-                    }
-                });
                 if (device.model === "Nokia 2") {
                     disableMediaControls = true;
                     MusicControls.destroy(function() {
@@ -90,6 +81,25 @@ function drr2() {
                         }
                     });
                 }
+                $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
+                    try {
+                        if (localStorage.getItem("notifications") !== data) {
+                            localStorage.setItem("notifications", data);
+                            $(".notification-button").attr("class", "icon notification-button ion-md-mail-unread");
+                        }
+                    } catch (e) {
+                        localStorage.setItem("notifications", data);
+                    }
+                });
+                $.get("https://updates.koyu.space/nordcast/latest", function(data) {
+                    if ($("#version").html() !== data.split("\n")[0]) {
+                        if (localStorage.getItem("lang") !== "de") {
+                            alert("New version " + data.split("\n")[0] + " available. Please update as soon as possible.");
+                        } else {
+                            alert("Neue Version " + data.split("\n")[0] + " verfügbar. Bitte so schnell wie möglich aktualisieren.");
+                        }
+                    }
+                });
             }
         }, 3000);
         window.setInterval(function() {
@@ -110,6 +120,7 @@ function drr2() {
                 $(".fa__nav2").hide();
                 $(".addfeed").hide();
                 $(".problemreporting").hide();
+                $(".menubutton-notifications").hide();
             }
             if (!detectmob()) {
                 $(".share").hide();
@@ -151,6 +162,11 @@ function drr2() {
             if (findGetParameter("view") !== "main") {
                 $("#text__newforyou").hide();
                 $("#section__newforyou").hide();
+            }
+            if (findGetParameter("view") !== "notifications") {
+                $("#text__newforyou").hide();
+                $("#section__newforyou").hide();
+                $("#view__notifications").hide();
             }
             window.setTimeout(function() {
                 if (localStorage.getItem("played") !== "true") {
@@ -220,6 +236,11 @@ function drr2() {
                 loading = false;
             }
         }, 200)
+        window.setInterval(function() {
+            if (findGetParameter("view") !== "cast") {
+                $("#view__cast").hide();
+            }
+        });
         $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
             if (localStorage.getItem("uuid") !== "dummy") {
                 if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
@@ -1035,6 +1056,20 @@ function drr2() {
                     location.href = "app.html#view=cast&cast="+Base64.encode($("#addfeed__rss").val());
                 });
             }
+            if (findGetParameter("view") === "notifications") {
+                $.get("views/notificationsview.html", function(data) {
+                    $("#view__notifications").html(data);
+                    if (firstload) {
+                        $("#view__notifications").attr("style", "padding: 0px 20px 40px;");
+                    }
+                    $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
+                        if (data.split("\n")[0] !== "") {
+                            $("#area__notifications").html(data);
+                        }
+                        $("#view__notifications").show();
+                    });
+                });
+            }
             if (findGetParameter("view") === "main" || findGetParameter("view") === "yourlist") {
                 window.setInterval(function() {
                     if (findGetParameter("view") === "main") {
@@ -1083,8 +1118,10 @@ function drr2() {
                     }
                     if (localStorage.getItem("offline") !== "true") {
                         $("#offline__message").hide();
+                        $("#view__yourlist>h3").attr("style", "margin-top: 0 !important;");
                     } else {
                         $("#offline__message").show();
+                        $("#view__yourlist>h3").removeAttr("style");
                     }
                     window.setTimeout(function() {
                         $.get(backend+"/api/v1/getlist/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
@@ -1658,9 +1695,12 @@ function drr2() {
             if (navigator.language.includes("de")) {
                 localStorage.setItem("lang", "de");
                 $("#text__featured").html("Angesagt");
-                $(".text__list").html("Deine Liste");
+                $(".text__notifications").html("Posteingang");
+                $("#area__notifications__empty").html("Keine neuen Nachrichten.");
                 $("#text__hello").html("Hallo");
                 $("#text__by").html("von");
+                $("#text__menulist").html("Liste");
+                $(".text__list").html("Deine Liste");
                 $("#logout").html("Abmelden");
                 $("#view__settings h1").html("Einstellungen");
                 $("#text__session").html("Sitzung");

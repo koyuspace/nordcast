@@ -584,6 +584,27 @@ def getcustomsection(lang):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return x
 
+@post("/api/v1/admin/notifications/<adminkey>/<lang>")
+def setnotifications(adminkey, lang):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.content_type = "application/json"
+    content = request.forms.get("content") # pylint: disable=no-member
+    if adminkey == ADMINKEY:
+        f = open("data/"+lang+"/notifications", "w")
+        f.write(content)
+        f.close()
+        return json.dumps({"login": "ok", "action": "success"})
+    else:
+        return "{\"action\": \"error\"}"
+
+@get("/api/v1/getnotifications/<lang>")
+def getnotifications(lang):
+    f = open("data/"+lang+"/notifications", "r")
+    x = f.read()
+    f.close()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return x
+
 @post("/api/v1/register/<locale>/<instance>")
 def register(locale, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'

@@ -29,7 +29,9 @@ window.setInterval(function() {
         if (findGetParameter("view") !== "main") {
             $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()-20+"px");
         } else {
-            $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()+"px");
+            if (findGetParameter("view") !== "notifications") {
+                $("#view__"+findGetParameter("view")).css("padding-bottom", $("#player__controls").height()+$("#menubuttons").height()+$(".plchangesize").height()+"px");
+            }
         }
     } else {
         if (!loading) {

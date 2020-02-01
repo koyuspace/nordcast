@@ -42,7 +42,7 @@
         <audio id="player2" src="" loop muted width="1" height="1" preload></audio>
         <p><i id="snclose" class="ion-md-close"></i></p>
         <div id="view__main">
-            
+
         </div>
         <div id="view__cast">
 
@@ -51,6 +51,9 @@
 
         </div>
         <div id="view__report">
+
+        </div>
+        <div id="view__notifications">
 
         </div>
         <div id="bottom__section">
@@ -70,11 +73,15 @@
                 </div>
                 <div onclick="location.href='app.html#view=yourlist'" class="menubutton">
                     <p><i class="icon ion-md-list-box"></i></p>
-                    <small class="text__list">Your list</small>
+                    <small id="text__menulist">Your list</small>
                 </div>
                 <div onclick="$('#view__'+findGetParameter('view')).html('');$('#wrapper__search').show();$('#view__'+findGetParameter('view')).show();" class="menubutton">
                     <p><i class="icon ion-md-search"></i></p>
                     <small class="text__search">Search</small>
+                </div>
+                <div onclick="location.href='app.html#view=notifications'" class="menubutton menubutton-notifications">
+                    <p><i class="icon ion-md-mail"></i></p>
+                    <small class="text__notifications">Inbox</small>
                 </div>
                 <div onclick="location.href='app.html#view=settings'" class="menubutton">
                     <p><i class="icon ion-md-settings"></i></p>

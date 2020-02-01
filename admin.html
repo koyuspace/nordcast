@@ -35,6 +35,12 @@
         $.get("https://api.nordcast.app/api/v1/getcustomsection/ca", function(data) {
             $("textarea#getcustom_en").val(data);
         });
+        $.get("https://api.nordcast.app/api/v1/getnotifications/de", function(data) {
+            $("textarea#getcustom_de").val(data);
+        });
+        $.get("https://api.nordcast.app/api/v1/getnotifications/ca", function(data) {
+            $("textarea#getcustom_en").val(data);
+        });
         $.get("https://api.nordcast.app/api/v1/getreversed", function(data) {
             $("textarea#getreversed").val(data);
         });
@@ -92,6 +98,25 @@
                 if (data["action"] === "success") {
                     $("#submit_custom").removeAttr("disabled");
                     $("#submit_custom").html("Submit");
+                }
+            });
+        });
+
+        $("#submit_notifications").click(function() {
+            $("#submit_notifications").attr("disabled", "");
+            $("#submit_notifications").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/notifications/"+$("#admin_id").val()+"/de", {content: $("#getnotifications_de").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_notifications").removeAttr("disabled");
+                    $("#submit_notifications").html("Submit");
+                }
+            });
+            $("#submit_notifications").attr("disabled", "");
+            $("#submit_notifications").html("<img src=\"https://koyu.keybase.pub/loading.svg\" style=\"height: 16px !important;\">");
+            $.post("https://api.nordcast.app/api/v1/admin/notifications/"+$("#admin_id").val()+"/ca", {content: $("#getnotifications_en").val()}, function(data) {
+                if (data["action"] === "success") {
+                    $("#submit_notifications").removeAttr("disabled");
+                    $("#submit_notifications").html("Submit");
                 }
             });
         });
