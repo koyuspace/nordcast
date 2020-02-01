@@ -42,7 +42,7 @@ window.setInterval(function() {
                 $("#view__yourlist").attr("style", "padding-bottom: 40px !important;");
                 $("#view__main").attr("style", "padding-bottom: 0;");
             } else {
-                if (findGetParameter("view") !== "main") {
+                if (findGetParameter("view") !== "main" && findGetParameter("view") !== "notifications") {
                     $("#view__yourlist").hide();
                     $("#view__"+findGetParameter("view")).css("padding-bottom", $("#menubuttons").height()+20+"px");
                 }

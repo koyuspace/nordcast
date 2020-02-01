@@ -30,7 +30,8 @@
     <body>
         <img src="logo.png" height="90" alt="Logo" id="logo__intro" />
         <div id="nav">
-			<img src="logo.png" height="90" alt="Logo" id="logo__nav" />
+            <img src="logo.png" height="90" alt="Logo" id="logo__nav" />
+            <i class="ion-ios-arrow-back backbutton"></i>
             <a href="#" onclick="window.open('https://'+localStorage.getItem('instance')+'/settings/profile', '_system'); return false;"><img height="96" alt="Profile picture" class="card__small1" id="profile__picture" /></a>
             <i class="addfeed ion-logo-rss"></i>
             <a id="link__report"><i class="ion-md-megaphone problemreporting"></i></a>
@@ -41,21 +42,11 @@
         <audio id="player" src="" loop width="1" height="1" preload></audio>
         <audio id="player2" src="" loop muted width="1" height="1" preload></audio>
         <p><i id="snclose" class="ion-md-close"></i></p>
-        <div id="view__main">
-
-        </div>
-        <div id="view__cast">
-
-        </div>
-        <div id="view__search">
-
-        </div>
-        <div id="view__report">
-
-        </div>
-        <div id="view__notifications">
-
-        </div>
+        <div id="view__main"></div>
+        <div id="view__cast"></div>
+        <div id="view__search"></div>
+        <div id="view__report"></div>
+        <div id="view__notifications"></div>
         <div id="bottom__section">
             <div id="player__controls">
                 <i class="ion-ios-arrow-up plchangesize" onclick="plchangesize()"></i><div id="podtitle"></div>

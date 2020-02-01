@@ -115,9 +115,8 @@ select {
 }
 
 #profile__picture {
-    float: left;
-    margin-left: 20px !important;
-    margin-top: -70px !important;
+    margin-left: 60px !important;
+    margin-top: -71px !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -187,6 +186,14 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: -65px;
     margin-right: 25px;
     float: right;
+}
+
+.backbutton {
+    font-size: 30px;
+    width: 30px;
+    margin-top: -65px;
+    padding-left: 25px;
+    float: left;
 }
 
 .problemreporting {
@@ -770,6 +777,26 @@ h1 .emoji {
     -ms-animation: spin 1s infinite linear;
     -o-animation: spin 1s infinite linear;
     animation: spin 1s infinite linear;
+}
+
+.badge1 {
+    position: relative;
+}
+
+.badge1:after {
+    content: " ";
+    position: absolute;
+    top: 2px;
+    right: -4px;
+    font-size: .7em;
+    background: red;
+    color: white;
+    width: 8px;
+    height: 8px;
+    text-align: center;
+    line-height: 18px;
+    border-radius: 50%;
+    box-shadow: 0 0 1px #333;
 }
 
 @keyframes "spin" {
