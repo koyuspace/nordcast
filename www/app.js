@@ -169,7 +169,6 @@ function drr2() {
             $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
                 try {
                     if (localStorage.getItem("notifications") !== data) {
-                        localStorage.setItem("notifications", data);
                         $(".notification-button").attr("class", "icon notification-button ion-md-mail-unread");
                     }
                 } catch (e) {
@@ -1066,6 +1065,7 @@ function drr2() {
                     $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
                         if (data.split("\n")[0] !== "") {
                             $("#area__notifications").html(data);
+                            localStorage.setItem("notifications", data);
                         }
                         $("#view__notifications").show();
                     });
