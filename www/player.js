@@ -4,6 +4,7 @@ var plmax = false;
 var duration = 0;
 var elapsed = 0;
 var player = document.getElementById("player");
+var didmax = false;
 
 window.setTimeout(function() {
     if (localStorage.getItem("played") !== "true" && localStorage.getItem("offline") === "false") {
@@ -62,7 +63,11 @@ window.setInterval(function() {
         $(".rangeslider").hide();
         $("#podtitle").hide();
         $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
-        $(".plchangesize").attr("style", "margin-left: 20px;margin-top: 3px;");
+        if (!didmax) {
+            $(".plchangesize").attr("style", "margin-left: -70px;margin-top: 3px;");
+        } else {
+            $(".plchangesize").attr("style", "margin-top: 3px;");
+        }
         $("#plcontrols").attr("css", "margin-left: 60px;");
         $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:9px;margin-left:60px;");
         $("#restart").hide();
@@ -816,6 +821,7 @@ function rev() {
 
 function plclose() {
     plmax = false;
+    didmax = false;
     var player = document.getElementById("player");
     if (playing) {
         player.pause();
@@ -894,6 +900,7 @@ function plchangesize() {
     if (!plmax) {
         plin();
     } else {
+        didmax = true;
         plout();
     }
 }

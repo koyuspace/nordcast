@@ -128,6 +128,7 @@ function drr2() {
             $("#view__report").hide();
             if (plmax) {
                 plout();
+                didmax = true;
             }
             if (findGetParameter("view") !== "settings") {
                 if (localStorage.getItem("offline") === "true") {
@@ -359,6 +360,12 @@ function drr2() {
                                         } else {
                                             $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
                                         }
+                                        if (Number(color.split(",")[0]) < 8 && localStorage.getItem("darkmode") === "false") {
+                                            $("#podcard").attr("style", "background-image: none;");
+                                        }
+                                        if (Number(color.split(",")[0]) > 248 && localStorage.getItem("darkmode") === "true") {
+                                            $("#podcard").attr("style", "background-image: none;");
+                                        }
                                     });
                                 } else {
                                     var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0, -3));
@@ -366,6 +373,12 @@ function drr2() {
                                         $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#191919);");
                                     } else {
                                         $("#podcard").attr("style", "background-image: linear-gradient(rgb("+color+"),#fff);");
+                                    }
+                                    if (Number(color.split(",")[0]) < 8 && localStorage.getItem("darkmode") === "false") {
+                                        $("#podcard").attr("style", "background-image: none;");
+                                    }
+                                    if (Number(color.split(",")[0]) > 248 && localStorage.getItem("darkmode") === "true") {
+                                        $("#podcard").attr("style", "background-image: none;");
                                     }
                                 }
                                 $("#view__cast").show();
@@ -1232,73 +1245,77 @@ function drr2() {
                                                         if (addons === "") {
                                                             window.setTimeout(function() {
                                                                 $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\" data-ep=\""+epsecret+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
-                                                            }, 1500);
+                                                            }, 3000);
                                                         } else {
                                                             $("#section__list").html($("#section__list").html()+"<a class=\"cardlink\" data-cast=\""+Base64.encode(callback.href)+"\" data-ep=\""+epsecret+"\"><div class=\"item\" id=\"itemcard-"+secret+"\">"+addons+"<div class=\"item-head\" id=\"itemhead-"+secret+"\"><img src=\""+callback.feed.image.href+"\" class=\"card__small\" id=\"item-card-"+secret+"\" /><br><b>"+callback.feed.title.split("-")[0].split("–")[0].split("(")[0]+"</b></div><br><p>"+summary+"</p></div></a>");
                                                         }
                                                     });
                                                 }
+                                                var counter = 0;
                                                 window.setInterval(function() {
-                                                    try {
-                                                        if (findGetParameter("view") === "main" || findGetParameter("view") === "yourlist") {
-                                                            $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
-                                                                localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
-                                                                var customstyles = "";
-                                                                try {
-                                                                    if ($("#itemcard-"+secret).html().includes("class=\"new\"")) {
-                                                                        customstyles = "padding-bottom: 30px;";
-                                                                    }
-                                                                } catch (e) {}
-                                                                if (Number(color.split(",")[0]) > 140) {
-                                                                    if (summary !== "") {
-                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#333; background:rgb("+color+");");
+                                                    counter++
+                                                    if (counter < 5) {
+                                                        try {
+                                                            if (findGetParameter("view") === "main" || findGetParameter("view") === "yourlist") {
+                                                                $.get(backend+"/api/v1/getprimarycolor?url="+callback.feed.image.href, function(color) {
+                                                                    localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
+                                                                    var customstyles = "";
+                                                                    try {
+                                                                        if ($("#itemcard-"+secret).html().includes("class=\"new\"")) {
+                                                                            customstyles = "padding-bottom: 30px;";
+                                                                        }
+                                                                    } catch (e) {}
+                                                                    if (Number(color.split(",")[0]) > 140) {
+                                                                        if (summary !== "") {
+                                                                            $("#itemcard-"+secret).attr("style", customstyles+"color:#333; background:rgb("+color+");");
+                                                                        } else {
+                                                                            $("#itemcard-"+secret).attr("style", customstyles+"color:#333; background:rgb("+color+");font-size:1.5em;");
+                                                                            $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                            try {
+                                                                                $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                                $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                            } catch (e) {}
+                                                                        }
                                                                     } else {
-                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#333; background:rgb("+color+");font-size:1.5em;");
-                                                                        $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;");
-                                                                        try {
-                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
-                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
-                                                                        } catch (e) {}
+                                                                        if (summary !== "") {
+                                                                            $("#itemcard-"+secret).attr("style", customstyles+"color:#fff; background:rgb("+color+");");
+                                                                        } else {
+                                                                            $("#itemcard-"+secret).attr("style", customstyles+"color:#fff; background:rgb("+color+");font-size:1.5em;");
+                                                                            $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                            try {
+                                                                                $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                                $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                            } catch (e) {}
+                                                                        }
                                                                     }
-                                                                } else {
-                                                                    if (summary !== "") {
-                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#fff; background:rgb("+color+");");
+                                                                    // Same for the newforyou section
+                                                                    if (Number(color.split(",")[0]) > 140) {
+                                                                        if (summary !== "") {
+                                                                            $(".itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
+                                                                        } else {
+                                                                            $(".itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:1.5em;");
+                                                                            $(".itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                            try {
+                                                                                $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                                $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                            } catch (e) {}
+                                                                        }
                                                                     } else {
-                                                                        $("#itemcard-"+secret).attr("style", customstyles+"color:#fff; background:rgb("+color+");font-size:1.5em;");
-                                                                        $("#itemhead-"+secret).attr("style", "display:flex;align-items:center;");
-                                                                        try {
-                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br>", ""));
-                                                                            $("#itemcard-"+secret).html($("#itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
-                                                                        } catch (e) {}
+                                                                        if (summary !== "") {
+                                                                            $(".itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
+                                                                        } else {
+                                                                            $(".itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:1.5em;");
+                                                                            $(".itemhead-"+secret).attr("style", "display:flex;align-items:center;");
+                                                                            try {
+                                                                                $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br>", ""));
+                                                                                $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
+                                                                            } catch (e) {}
+                                                                        }
                                                                     }
-                                                                }
-                                                                // Same for the newforyou section
-                                                                if (Number(color.split(",")[0]) > 140) {
-                                                                    if (summary !== "") {
-                                                                        $(".itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");");
-                                                                    } else {
-                                                                        $(".itemcard-"+secret).attr("style", "color:#333; background:rgb("+color+");font-size:1.5em;");
-                                                                        $(".itemhead-"+secret).attr("style", "display:flex;align-items:center;");
-                                                                        try {
-                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br>", ""));
-                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
-                                                                        } catch (e) {}
-                                                                    }
-                                                                } else {
-                                                                    if (summary !== "") {
-                                                                        $(".itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");");
-                                                                    } else {
-                                                                        $(".itemcard-"+secret).attr("style", "color:#fff; background:rgb("+color+");font-size:1.5em;");
-                                                                        $(".itemhead-"+secret).attr("style", "display:flex;align-items:center;");
-                                                                        try {
-                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br>", ""));
-                                                                            $(".itemcard-"+secret).html($(".itemcard-"+secret).html().replaceAll("<br><p></p>", ""));
-                                                                        } catch (e) {}
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    } catch (e) {}
+                                                                });
+                                                            }
+                                                        } catch (e) {}
+                                                    }
                                                 }, 1500);
                                             } catch (e) {}
                                         });
