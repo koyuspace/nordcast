@@ -45,7 +45,7 @@ def getpodcast():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     response.set_header("Cache-Control", "public, max-age=600")
-    return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>')
+    return json.dumps(feedparser.parse(q), default=lambda o: '<not serializable>').replace("<script>", "").replace("</script>", "").replace("<iframe>", "").replace("</iframe>", "")
 
 @get("/api/v1/getbanner/<val>")
 def getbanner(val):
