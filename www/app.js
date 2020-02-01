@@ -245,7 +245,7 @@ function drr2() {
         window.setInterval(function() {
             $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
                 try {
-                    if (localStorage.getItem("notifications") !== data) {
+                    if (localStorage.getItem("notifications") !== data && data.split("\n")[0] !== "") {
                         $(".notification-button").attr("class", "icon notification-button ion-md-mail badge1");
                     } else {
                         $(".notification-button").attr("class", "icon notification-button ion-md-mail");
