@@ -69,6 +69,7 @@ function drr2() {
     $(document).ready(function() {
         window.setTimeout(function() {
             if (device.platform === "Android") {
+                // Disable media controls for weak testing device
                 if (device.model === "Nokia 2") {
                     disableMediaControls = true;
                     MusicControls.destroy(function() {
@@ -81,16 +82,6 @@ function drr2() {
                         }
                     });
                 }
-                $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
-                    try {
-                        if (localStorage.getItem("notifications") !== data) {
-                            localStorage.setItem("notifications", data);
-                            $(".notification-button").attr("class", "icon notification-button ion-md-mail-unread");
-                        }
-                    } catch (e) {
-                        localStorage.setItem("notifications", data);
-                    }
-                });
                 $.get("https://updates.koyu.space/nordcast/latest", function(data) {
                     if ($("#version").html() !== data.split("\n")[0]) {
                         if (localStorage.getItem("lang") !== "de") {
@@ -175,6 +166,16 @@ function drr2() {
                     }
                 }
             }, 1500);
+            $.get(backend+"/api/v1/getnotifications/"+localStorage.getItem("lang"), function(data) {
+                try {
+                    if (localStorage.getItem("notifications") !== data) {
+                        localStorage.setItem("notifications", data);
+                        $(".notification-button").attr("class", "icon notification-button ion-md-mail-unread");
+                    }
+                } catch (e) {
+                    localStorage.setItem("notifications", data);
+                }
+            });
         });
         if (localStorage.getItem("darkmode") === "true") {
             loadjscssfile("dark.css", "css");
