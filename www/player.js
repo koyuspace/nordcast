@@ -5,6 +5,7 @@ var duration = 0;
 var elapsed = 0;
 var player = document.getElementById("player");
 var didmax = false;
+var checkheight = true;
 
 window.setTimeout(function() {
     if (localStorage.getItem("played") !== "true" && localStorage.getItem("offline") === "false") {
@@ -49,6 +50,12 @@ window.setInterval(function() {
 }, 2500);
 
 window.setInterval(function() {
+    if (!plmax && $("#player__controls").is(":visible") && checkheight) {
+        $("#player__controls").attr("style", "bottom: "+Number($("#player__controls").height() + 3.5)+"px;");
+    }
+});
+
+window.setInterval(function() {
     try {
         if (localStorage.getItem("played") === "true") {
             $("#player__controls").show();
@@ -84,132 +91,130 @@ window.setInterval(function() {
 });
 
 function addControls(file, secret, title, author, podcover, feed, feedtitle) {
-    // Taken from the docs on https://github.com/ghenry22/cordova-music-controls-plugin
+    if (!disableMediaControls) {
+        // Taken from the docs on https://github.com/ghenry22/cordova-music-controls-plugin
 
-    var player = document.getElementById("player");
-    try {
-        var artist = "";
-        if (Base64.decode(author) === "undefined") {
-            artist = Base64.decode(feedtitle);
-        } else {
-            artist = Base64.decode(author);
-        }
-        MusicControls.create({
-            track       : Base64.decode(title),
-            artist      : artist,
-            album       : Base64.decode(feedtitle),
-            cover       : podcover,
-            isPlaying   : playing,							// optional, default : true
-            dismissable : false,							// optional, default : false
+        var player = document.getElementById("player");
+        try {
+            var artist = "";
+            if (Base64.decode(author) === "undefined") {
+                artist = Base64.decode(feedtitle);
+            } else {
+                artist = Base64.decode(author);
+            }
+            MusicControls.create({
+                track       : Base64.decode(title),
+                artist      : artist,
+                album       : Base64.decode(feedtitle),
+                cover       : podcover,
+                isPlaying   : playing,							// optional, default : true
+                dismissable : false,							// optional, default : false
 
-            hasPrev   : false,		// show previous button, optional, default: true
-            hasNext   : false,		// show next button, optional, default: true
-            hasClose  : true,		// show close button, optional, default: false
-        
-            // iOS only, optional
+                hasPrev   : false,		// show previous button, optional, default: true
+                hasNext   : false,		// show next button, optional, default: true
+                hasClose  : true,		// show close button, optional, default: false
             
-            duration : duration, // optional, default: 0
-            elapsed : elapsed, // optional, default: 0
-            hasSkipForward : true, //optional, default: false. true value overrides hasNext.
-            hasSkipBackward : true, //optional, default: false. true value overrides hasPrev.
-            skipForwardInterval : 10, //optional. default: 0.
-            skipBackwardInterval : 10, //optional. default: 0.
-            hasScrubbing : true, //optional. default to false. Enable scrubbing from control center progress bar 
-        
-            // Android only, optional
-            // text displayed in the status bar when the notification (and the ticker) are updated
-            ticker	  : 'Now playing "'+feedtitle+'"',
-            //All icons default to their built-in android equivalents
-            //The supplied drawable name, e.g. 'media_play', is the name of a drawable found under android/res/drawable* folders
-            playIcon: 'media_play',
-            pauseIcon: 'media_pause',
-            prevIcon: 'media_prev',
-            nextIcon: 'media_next',
-            closeIcon: 'media_close',
-            notificationIcon: 'notification'
-        }, function() {
-            if (debug) {
-                console.log("Media controls initalized");
-            }
-        }, function() {
-            if (debug) {
-                console.log("Cannot initialize media controls");
-            }
-        });
-        function events(action) {
+                // iOS only, optional
+                
+                duration : duration, // optional, default: 0
+                elapsed : elapsed, // optional, default: 0
+                hasSkipForward : true, //optional, default: false. true value overrides hasNext.
+                hasSkipBackward : true, //optional, default: false. true value overrides hasPrev.
+                skipForwardInterval : 10, //optional. default: 0.
+                skipBackwardInterval : 10, //optional. default: 0.
+                hasScrubbing : true, //optional. default to false. Enable scrubbing from control center progress bar 
+            
+                // Android only, optional
+                // text displayed in the status bar when the notification (and the ticker) are updated
+                ticker	  : 'Now playing "'+feedtitle+'"',
+                //All icons default to their built-in android equivalents
+                //The supplied drawable name, e.g. 'media_play', is the name of a drawable found under android/res/drawable* folders
+                playIcon: 'media_play',
+                pauseIcon: 'media_pause',
+                prevIcon: 'media_prev',
+                nextIcon: 'media_next',
+                closeIcon: 'media_close',
+                notificationIcon: 'notification'
+            }, function() {
+                if (debug) {
+                    console.log("Media controls initalized");
+                }
+            }, function() {
+                if (debug) {
+                    console.log("Cannot initialize media controls");
+                }
+            });
+            function events(action) {
 
-            const message = JSON.parse(action).message;
-              switch(message) {
-                  case 'music-controls-pause':
-                      playcast(file, secret, title, author, podcover, feed, feedtitle);
-                      break;
-                  case 'music-controls-play':
-                      playcast(file, secret, title, author, podcover, feed, feedtitle);
-                      break;
-                  case 'music-controls-destroy':
-                      if (playing) {
+                const message = JSON.parse(action).message;
+                switch(message) {
+                    case 'music-controls-pause':
+                        var player = document.getElementById("player");
+                        player.pause();
+                        playing = false;
+                        break;
+                    case 'music-controls-play':
+                        var player = document.getElementById("player");
+                        player.play();
+                        playing = true;
+                        break;
+                    case 'music-controls-destroy':
+                        plclose();
+                        break;
+            
+                    // External controls (iOS only)
+                    case 'music-controls-toggle-play-pause' :
+                        bplay();
+                        break;
+                    case 'music-controls-seek-to' :
+                        const seekToInSeconds = JSON.parse(action).position;
+                        MusicControls.updateElapsed({
+                            elapsed: seekToInSeconds,
+                            isPlaying: true
+                        });
+                        player.currentTime = seekToInSeconds;
+                        break;
+                    case 'music-controls-skip-forward':
+                        var player = document.getElementById("player");
+                        player.currentTime = player.currentTime + 10;
+                        break;
+                    case 'music-controls-skip-backward' :
+                        var player = document.getElementById("player");
+                        player.currentTime = player.currentTime - 10;
+                        break;
+            
+                    // Headset events (Android only)
+                    // All media button events are listed below
+                    case 'music-controls-media-button' :
                         playcast(file, secret, title, author, podcover, feed, feedtitle);
-                      }
-                      MusicControls.destroy(function() {
-                        if (debug) {
-                            console.log("Media controls destroyed")
+                        break;
+                    case 'music-controls-headset-unplugged' :
+                        if (playing) {
+                            playcast(file, secret, title, author, podcover, feed, feedtitle);
                         }
-                      }, function() {
-                          if (debug) {
-                              console.log("Error destroying media controls")
-                          }
-                      });
-                      break;
-          
-                  // External controls (iOS only)
-                  case 'music-controls-toggle-play-pause' :
-                      bplay();
-                      break;
-                  case 'music-controls-seek-to' :
-                      const seekToInSeconds = JSON.parse(action).position;
-                      MusicControls.updateElapsed({
-                          elapsed: seekToInSeconds,
-                          isPlaying: true
-                      });
-                      player.currentTime = seekToInSeconds;
-                      break;
-                  case 'music-controls-skip-forward':
-                      var player = document.getElementById("player");
-                      player.currentTime = player.currentTime + 10;
-                      break;
-                  case 'music-controls-skip-backward' :
-                      var player = document.getElementById("player");
-                      player.currentTime = player.currentTime - 10;
-                      break;
-          
-                  // Headset events (Android only)
-                  // All media button events are listed below
-                  case 'music-controls-media-button' :
-                      playcast(file, secret, title, author, podcover, feed, feedtitle);
-                      break;
-                  case 'music-controls-headset-unplugged' :
-                      if (playing) {
-                        playcast(file, secret, title, author, podcover, feed, feedtitle);
-                      }
-                      break;
-                  default:
-                      break;
-              }
-          }
-          
-          // Register callback
-          MusicControls.subscribe(events);
-          
-          // Start listening for events
-          // The plugin will run the events function each time an event is fired
-          MusicControls.listen();
-    } catch(e) {}
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            // Register callback
+            MusicControls.subscribe(events);
+            
+            // Start listening for events
+            // The plugin will run the events function each time an event is fired
+            MusicControls.listen();
+        } catch(e) {}
+    }
 }
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     if (!playing && !$("#player__controls").is(":visible") && !plmax) {
         $("#player__controls").css("height", "0%");
         $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
+    }
+    if (plmax) {
+        didmax = true;
     }
     localStorage.setItem("played", "true");
     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
@@ -353,7 +358,6 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                                 console.log("Error destroying media controls")
                             }
                         });
-                        addControls(file, secret, title, author, podcover, feed, feedtitle);
                     }
                 }
             }
@@ -648,6 +652,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
+    checkheight = true;
     if (localStorage.getItem("played") !== "true" || findGetParameter("view") === "cast") {
         plout();
     }
@@ -705,13 +710,6 @@ function onDeviceReady() {
         var timeleft = "-"+String(player.duration - player.currentTime).toHHMMSS();
         if (!timeleft.includes("NaN")) {
             $("#timer").html(String(player.currentTime).toHHMMSS());
-            elapsed = player.currentTime;
-            if (device.platform !== "browser") {
-                MusicControls.updateElapsed({
-                    elapsed: elapsed, // seconds
-                    isPlaying: true
-                });
-            }
         }
     }, 1);
     
@@ -719,13 +717,11 @@ function onDeviceReady() {
         var player = document.getElementById("player");
         var timeleft = "-"+String(player.duration - player.currentTime).toHHMMSS();
         if (timeleft.includes("NaN")) {
-            navigator.globalization.getPreferredLanguage(function (language) {
-                if (language.value.includes("de")) {
-                    $("#timer").html("<span id=\"text__loading\">Lädt...</span>");
-                } else {
-                    $("#timer").html("<span id=\"text__loading\">Loading...</span>");
-                }
-            });
+            if (navigator.language.includes("de")) {
+                $("#timer").html("<span id=\"text__loading\">Lädt...</span>");
+            } else {
+                $("#timer").html("<span id=\"text__loading\">Loading...</span>");
+            }
             $("#timeleft").html("");
         } else {
             $("#timeleft").html(timeleft);
@@ -822,6 +818,7 @@ function rev() {
 function plclose() {
     plmax = false;
     didmax = false;
+    checkheight = false;
     var player = document.getElementById("player");
     if (playing) {
         player.pause();
@@ -856,6 +853,8 @@ function plclose() {
 }
 
 function plout() {
+    plmax = false;
+    checkheight = false;
     anime({
         targets: "#player__controls",
         height: 45,
@@ -869,7 +868,6 @@ function plout() {
         duration: 500,
         autoplay: true
     });
-    plmax = false;
     $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
     $(".plchangesize").attr("style", "margin-left:20px;margin-top:4px;");
     $("#plcontrols").attr("css", "margin-left: 60px;");
@@ -877,9 +875,10 @@ function plout() {
 }
 
 function plin() {
+    plmax = true;
     anime({
         targets: "#player__controls",
-        height: $(window).height() - 156,
+        height: $(window).height() - 150,
         duration: 500,
         autoplay: true
     });
@@ -893,7 +892,6 @@ function plin() {
     $("#img__cast2").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px;");
     $(".plchangesize").attr("class", "ion-ios-arrow-down plchangesize");
     $(".plchangesize").attr("style", "margin-left: 10px;margin-top: 4px;");
-    plmax = true;
 }
 
 function plchangesize() {

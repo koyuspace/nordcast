@@ -1,5 +1,4 @@
 @import url("fonts.css");
-
 * {
     box-sizing: unset !important;
 }
@@ -13,8 +12,7 @@ body {
     margin: 0;
 }
 
-#view__search,
-#view__report {
+#view__search, #view__report {
     padding: 90px 20px 0px;
 }
 
@@ -32,8 +30,7 @@ select {
     margin-top: 10px;
 }
 
-#view__cast,
-#view_settings {
+#view__cast, #view_settings {
     padding: 40px 20px 20px;
 }
 
@@ -52,7 +49,7 @@ select {
 }
 
 #nav {
-    background: rgba(255,255,255,.9);
+    background: rgba(255, 255, 255, .9);
     height: 90px;
     position: fixed;
     width: 100%;
@@ -71,9 +68,8 @@ select {
     }
 }
 
-#player__controls,
-#menubuttons {
-    background: rgba(255,255,255,.9);
+#player__controls, #menubuttons {
+    background: rgba(255, 255, 255, .9);
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -109,7 +105,7 @@ select {
     cursor: pointer;
 }
 
-#menubuttons > div:last-child {
+#menubuttons>div:last-child {
     border-right: 0 !important;
 }
 
@@ -158,7 +154,7 @@ h1, h2, h3, h4, h5, h6 {
 .card__smaller {
     border-radius: 6px;
     background: #fff;
-    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 3px -1px rgba(0, 0, 0, 0.75);
     border: 1px solid #ccc;
     margin: 5px;
     width: 100px;
@@ -169,7 +165,7 @@ h1, h2, h3, h4, h5, h6 {
 .card__small {
     border-radius: 6px;
     background: #fff;
-    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 3px -1px rgba(0, 0, 0, 0.75);
     border: 1px solid #f3f3f3;
     margin: 5px;
     width: 120px;
@@ -246,24 +242,11 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 60px;
 }
 
-#view__welcome p,
-#view__welcome h1 {
+#view__welcome p, #view__welcome h1 {
     margin-bottom: 30px;
-
 }
 
-#view__welcome input,
-#view__welcome input:focus,
-#view__register input[type="text"],
-#view__register input[type="email"],
-#view__register input[type="text"]:focus,
-#view__register input[type="email"]:focus,
-#view__register input[type="password"],
-#view__register input[type="password"]:focus,
-#view__addfeed input,
-#view__addfeed input:focus,
-#view__report input[type="text"],
-#view__report input[type="text"]:focus {
+#view__welcome input, #view__welcome input:focus, #view__register input[type="text"], #view__register input[type="email"], #view__register input[type="text"]:focus, #view__register input[type="email"]:focus, #view__register input[type="password"], #view__register input[type="password"]:focus, #view__addfeed input, #view__addfeed input:focus, #view__report input[type="text"], #view__report input[type="text"]:focus {
     width: 80%;
     outline: 0;
     background: #fff;
@@ -312,8 +295,7 @@ ion-icon {
     margin-right: -20px;
 }
 
-#text__description,
-#error__noepisodes {
+#text__description, #error__noepisodes {
     padding: 20px;
     margin-left: -20px;
 }
@@ -329,11 +311,11 @@ table {
     width: 100%;
     border: 0;
 }
-  
+
 th, td {
     text-align: left;
     padding: 8px;
-    text-align: center; 
+    text-align: center;
     vertical-align: middle;
 }
 
@@ -357,15 +339,7 @@ h1 .emoji {
     margin-right: 8px;
 }
 
-#rev,
-#ffw,
-#restart,
-.snbutton,
-#snclose,
-#plclose,
-.playbutton,
-.downloaded,
-.dlbutton {
+#rev, #ffw, #restart, .snbutton, #snclose, #plclose, .playbutton, .downloaded, .dlbutton {
     font-size: 18px;
     height: 18px;
     width: 18px;
@@ -417,9 +391,7 @@ h1 .emoji {
     padding-bottom: 60px;
 }
 
-#view__signup,
-#view__register,
-#view__okay {
+#view__signup, #view__register, #view__okay {
     padding: 90px 20px 0px;
 }
 
@@ -503,9 +475,7 @@ h1 .emoji {
     height: 48px;
 }
 
-.problemreporting,
-.share,
-#playbtn-copy {
+.problemreporting, .share, #playbtn-copy {
     font-size: 24px;
     display: inline;
     vertical-align: middle;
@@ -552,8 +522,7 @@ h1 .emoji {
     margin-top: 10px;
 }
 
-.koyushare img,
-.tootshare img {
+.koyushare img, .tootshare img {
     width: 24px;
     height: 24px;
     margin-top: -4px;
@@ -638,14 +607,7 @@ h1 .emoji {
         height: 200px;
         overflow-y: auto;
     }
-    i[class*="ion-md-"],
-    i[class*="ion-logo-"],
-    i[class*="ion-ios-"],
-    #logo__nav,
-    .card__big,
-    .card__smaller,
-    .card__small,
-    a {
+    i[class*="ion-md-"], i[class*="ion-logo-"], i[class*="ion-ios-"], #logo__nav, .card__big, .card__smaller, .card__small, a {
         cursor: pointer !important;
     }
 }
@@ -664,8 +626,7 @@ h1 .emoji {
     margin-bottom: 30px;
 }
 
-#view__signup h1,
-#view__register h1 {
+#view__signup h1, #view__register h1 {
     text-align: center;
     margin-top: 20px;
 }
@@ -688,7 +649,7 @@ h1 .emoji {
 }
 
 .bigscreen {
-    background: linear-gradient(180deg,transparent,#fff),#333 center center;
+    background: linear-gradient(180deg, transparent, #fff), #333 center center;
     height: 100vw;
     margin: -20px;
     margin-bottom: -39px;
@@ -701,8 +662,7 @@ h1 .emoji {
         height: 350px;
         background-position: center -350px !important;
     }
-    #img__bigscreen,
-    #title__bigscreen {
+    #img__bigscreen, #title__bigscreen {
         padding-top: 40px !important;
         margin-top: calc(-100vw + 290px) !important;
     }
@@ -711,7 +671,7 @@ h1 .emoji {
     }
 }
 
-#view__yourlist > h3 {
+#view__yourlist>h3 {
     margin-top: 60px;
 }
 
@@ -753,8 +713,7 @@ h1 .emoji {
     width: 78%;
 }
 
-#register__success,
-#register__success__text {
+#register__success, #register__success__text {
     text-align: center;
 }
 
@@ -791,17 +750,75 @@ h1 .emoji {
     line-height: 0;
 }
 
-/* Hack for ionicicons v2 (no animation code) */
-.ion-spin-animation { -webkit-animation: spin 1s infinite linear; -moz-animation: spin 1s infinite linear; -o-animation: spin 1s infinite linear; animation: spin 1s infinite linear; }
+#bottom__section {
+    background: rgba(255, 255, 255, .9);
+}
 
-@-moz-keyframes spin { 0% { -moz-transform: rotate(0deg); }
-    100% { -moz-transform: rotate(359deg); } }
-@-webkit-keyframes spin { 0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(359deg); } }
-@-o-keyframes spin { 0% { -o-transform: rotate(0deg); }
-    100% { -o-transform: rotate(359deg); } }
-@-ms-keyframes spin { 0% { -ms-transform: rotate(0deg); }
-    100% { -ms-transform: rotate(359deg); } }
-@keyframes spin { 0% { transform: rotate(0deg); }
-    100% { transform: rotate(359deg); } }
-.ion-load-a.ion-spin-animation { -webkit-animation-timing-function: steps(8, start); -moz-animation-timing-function: steps(8, start); animation-timing-function: steps(8, start); }
+.spin::before {
+    -webkit-animation: spin 1s infinite linear;
+    -moz-animation: spin 1s infinite linear;
+    -ms-animation: spin 1s infinite linear;
+    -o-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes "spin" {
+    from {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(359deg);
+        -moz-transform: rotate(359deg);
+        -o-transform: rotate(359deg);
+        -ms-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@-moz-keyframes spin {
+    from {
+        -moz-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@-webkit-keyframes "spin" {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@-ms-keyframes "spin" {
+    from {
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@-o-keyframes "spin" {
+    from {
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -o-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}

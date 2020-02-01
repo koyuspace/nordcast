@@ -17,6 +17,7 @@ a i {
 
 #player__controls,
 #menubuttons,
-#nav {
+#nav,
+#bottom__section {
     background: rgba(25,25,25,.9);
 }

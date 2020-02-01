@@ -38,22 +38,6 @@ $(document).ready(function() {
         $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
         $("#logo__intro").attr("src", "logo_dark.png");
     }
-    window.setTimeout(function() {
-        if (localStorage.getItem("darkmode") === "true") {
-            $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
-            $("#logo__intro").attr("src", "logo_dark.png");
-            if (device.platform === "Android" || device.platform === "iOS") {
-                StatusBar.backgroundColorByHexString("#191919");
-                StatusBar.styleLightContent();
-            }
-        }
-        if (localStorage.getItem("uuid") === null || localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") !== "offline") {
-            $("#view__welcome").attr("style", "");
-            $("#logo__intro").hide();
-        } else {
-            $("#logo__intro").show();
-        }
-    }, 500);
     $("#text__offline").hide();
     $("#welcome__error").hide();
     $("#view__welcome").hide();
@@ -158,6 +142,20 @@ function onDeviceReady() {
             StatusBar.backgroundColorByHexString("#191919");
             StatusBar.styleLightContent();
         }
+    }
+    if (localStorage.getItem("darkmode") === "true") {
+        $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
+        $("#logo__intro").attr("src", "logo_dark.png");
+        if (device.platform === "Android" || device.platform === "iOS") {
+            StatusBar.backgroundColorByHexString("#191919");
+            StatusBar.styleLightContent();
+        }
+    }
+    if (localStorage.getItem("uuid") === null || localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") !== "offline") {
+        $("#view__welcome").attr("style", "");
+        $("#logo__intro").hide();
+    } else {
+        $("#logo__intro").show();
     }
     navigator.globalization.getPreferredLanguage(function (language) {
         //German

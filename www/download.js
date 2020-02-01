@@ -50,7 +50,7 @@ function download(file, secret) {
     if (shoulddownload) {
         window.setInterval(function() {
             if (tick < 10) {
-                $("#dlbtn-"+secret+" i").attr("class", "ion-md-sync dlbutton ion-spin-animation");
+                $("#dlbtn-"+secret+" i").attr("class", "ion-md-sync dlbutton spin");
             }
             tick = tick+1;
         }, 1);

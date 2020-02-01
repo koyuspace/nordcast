@@ -34,7 +34,8 @@ var loading = false;
 var firstload = true;
 var isfaving = false;
 var showallwasclicked = false;
-var showall_warning = "Warning: Loading every episode on this podcast may freeze your device. Continue?"
+var showall_warning = "Warning: Loading every episode on this podcast may freeze your device. Continue?";
+var disableMediaControls = false;
 
 // Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
 function loadjscssfile(filename, filetype){
@@ -77,6 +78,18 @@ function drr2() {
                         }
                     }
                 });
+                if (device.model === "Nokia 2") {
+                    disableMediaControls = true;
+                    MusicControls.destroy(function() {
+                        if (debug) {
+                            console.log("Media controls destroyed")
+                        }
+                    }, function() {
+                        if (debug) {
+                            console.log("Error destroying media controls")
+                        }
+                    });
+                }
             }
         }, 3000);
         window.setInterval(function() {
@@ -1641,51 +1654,49 @@ function drr2() {
         $("#nav").show();
 
         window.setInterval(function() {
-            navigator.globalization.getPreferredLanguage(function (language) {
-                //German
-                if (language.value.includes("de")) {
-                    localStorage.setItem("lang", "de");
-                    $("#text__featured").html("Angesagt");
-                    $(".text__list").html("Deine Liste");
-                    $("#text__hello").html("Hallo");
-                    $("#text__by").html("von");
-                    $("#logout").html("Abmelden");
-                    $("#view__settings h1").html("Einstellungen");
-                    $("#text__session").html("Sitzung");
-                    $("#text__darkmode").html("Dunklen Modus aktivieren");
-                    $("#text__theme").html("Theme");
-                    $("#text__about").html("Über");
-                    $("#qq").attr("placeholder", "Suchbegriff");
-                    $("#button__follow").html("Folgen");
-                    $("#button__unfollow").html("Entfolgen");
-                    $("#text__loading").html("Lädt...");
-                    $("#text__addfeed").html("RSS-Feed hinzufügen");
-                    $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
-                    $("#addfeed__rss").attr("placeholder", "RSS-Feed");
-                    $(".msg-download").html("Herunterladen");
-                    $("#text__originals").html("In Eigenproduktion");
-                    $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
-                    $("#text__sourcecode").html("Quelltext");
-                    $("#showall").html("Alle anzeigen");
-                    showall_warning = "Warnung: Jede Podcast-Episode zu laden könnte möglicherweise dein Gerät zum Stillstand bringen. Möchtest du wirklich fortfahren?";
-                    $("#text__openapp").html("In der App öffnen");
-                    $("#text__shownotes").html("Shownotes");
-                    $("#text__newforyou").html("Neu für dich");
-                    $(".new").html("NEUE FOLGEN");
-                    $(".text__home").html("Startseite");
-                    $(".text__search").html("Suchen");
-                    $(".text__settings").html("Einstellungen");
-                    window.setTimeout(function() {
-                        $("#text__results").html("Suchergebnisse für");
-                        $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
-                        $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
-                        $("#error__noresults").html("Keine Suchergebnisse.");
-                        $("#error__noepisodes").html("Keine Episoden gefunden. Vielleicht hat der Podcaster keine Episoden bis jetzt hochgeladen oder du bist offline und hast keine heruntergeladen.");
-                    }, 600);
-                } else {
-                    localStorage.setItem("lang", "ca");
-                }
-            });
+            //German
+            if (navigator.language.includes("de")) {
+                localStorage.setItem("lang", "de");
+                $("#text__featured").html("Angesagt");
+                $(".text__list").html("Deine Liste");
+                $("#text__hello").html("Hallo");
+                $("#text__by").html("von");
+                $("#logout").html("Abmelden");
+                $("#view__settings h1").html("Einstellungen");
+                $("#text__session").html("Sitzung");
+                $("#text__darkmode").html("Dunklen Modus aktivieren");
+                $("#text__theme").html("Theme");
+                $("#text__about").html("Über");
+                $("#qq").attr("placeholder", "Suchbegriff");
+                $("#button__follow").html("Folgen");
+                $("#button__unfollow").html("Entfolgen");
+                $("#text__loading").html("Lädt...");
+                $("#text__addfeed").html("RSS-Feed hinzufügen");
+                $("#feed__summary").html("Von hier kannst du RSS-Feeds manuell in die App reinladen.");
+                $("#addfeed__rss").attr("placeholder", "RSS-Feed");
+                $(".msg-download").html("Herunterladen");
+                $("#text__originals").html("In Eigenproduktion");
+                $("#offline__message").html("Du bist offline. Unten findest du eine Liste von Podcasts denen du aktuell folgst. Möglicherweise hast du ein paar von denen bereits heruntergeladen.")
+                $("#text__sourcecode").html("Quelltext");
+                $("#showall").html("Alle anzeigen");
+                showall_warning = "Warnung: Jede Podcast-Episode zu laden könnte möglicherweise dein Gerät zum Stillstand bringen. Möchtest du wirklich fortfahren?";
+                $("#text__openapp").html("In der App öffnen");
+                $("#text__shownotes").html("Shownotes");
+                $("#text__newforyou").html("Neu für dich");
+                $(".new").html("NEUE FOLGEN");
+                $(".text__home").html("Startseite");
+                $(".text__search").html("Suchen");
+                $(".text__settings").html("Einstellungen");
+                window.setTimeout(function() {
+                    $("#text__results").html("Suchergebnisse für");
+                    $("#error__nocasts").html("Es befinden sich keine Podcasts in deiner Liste.");
+                    $("#error__nocast").html("Dieser Podcast ist nicht verfügbar");
+                    $("#error__noresults").html("Keine Suchergebnisse.");
+                    $("#error__noepisodes").html("Keine Episoden gefunden. Vielleicht hat der Podcaster keine Episoden bis jetzt hochgeladen oder du bist offline und hast keine heruntergeladen.");
+                }, 600);
+            } else {
+                localStorage.setItem("lang", "ca");
+            }
             try {
                 $("#instance").html(localStorage.getItem("instance"));
             } catch(e) {}
