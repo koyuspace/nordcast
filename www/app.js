@@ -118,14 +118,20 @@ function drr2() {
                 $("#view__yourlist").hide();
                 $("#section__custom").show();
                 $(".backbutton").attr("style", "visibility: hidden;");
-                if (localStorage.getItem("uuid") !== "dummy" || localStorage.getItem("offline") === "true") {
+                if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
                     $("#profile__picture").attr("style", "display: block; margin-left: 20px !important;");
                 }
             } else {
                 $(".bigscreen").hide();
                 $("#section__custom").hide();
-                $(".backbutton").attr("style", "");
-                if (localStorage.getItem("uuid") !== "dummy" || localStorage.getItem("offline") === "true") {
+                if (findGetParameter("offline") === "false") {
+                    $(".backbutton").attr("style", "");
+                }
+                if (findGetParameter("offline") === "true" && findGetParameter("view") !== "yourlist") {
+                    $(".backbutton").attr("style", "");
+                }
+                if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "false") {
+                    $(".backbutton").attr("style", "");
                     $("#profile__picture").attr("style", "");
                 }
             }
@@ -190,6 +196,9 @@ function drr2() {
                         }
                     }
                     $("#nav").attr("style", "border-bottom: 3px solid rgb(39, 176, 226);");
+                    if (localStorage.getItem("uuid") !== "dummy") {
+                        $(".menubutton-notifications").show();
+                    }
                     if (reloaded) {
                         loadview();
                     }
@@ -297,6 +306,37 @@ function drr2() {
                         window.setTimeout(function() {
                             location.href = "index.html";
                         }, 200);
+                    });
+                    $("#cdark__mode").click(function() {
+                        if (localStorage.getItem("darkmode") === "true") {
+                            localStorage.setItem("darkmode", "false");
+                            $("#cdark__mode").removeAttr("checked");
+                            $("#starwars").attr("src", "darth.png");
+                            StatusBar.backgroundColorByHexString("#fff");
+                            StatusBar.styleDefault();
+                            try {
+                                removejscssfile("dark.css", "css");
+                            } catch (e) {}
+                        } else {
+                            localStorage.setItem("darkmode", "true");
+                            $("#cdark__mode").attr("checked", "");
+                            $("#starwars").attr("src", "clonetrooper.png");
+                            StatusBar.backgroundColorByHexString("#191919");
+                            StatusBar.styleLightContent();
+                            loadjscssfile("dark.css", "css");
+                        }
+                        if (localStorage.getItem("darkmode") === "true") {
+                            $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
+                            $("#cdark__mode").attr("checked", "");
+                            StatusBar.backgroundColorByHexString("#191919");
+                            StatusBar.styleLightContent();
+                        }
+                        if (localStorage.getItem("darkmode") === "false") {
+                            $("#logo__nav").attr("src", "logo.png?v="+new Date().getMilliseconds());
+                            $("#cdark__mode").removeAttr("checked");
+                            StatusBar.backgroundColorByHexString("#fff");
+                            StatusBar.styleDefault();
+                        }
                     });
                     $("#view__settings").attr("style", "padding: 90px 20px 60px; display: block;");
                 });
@@ -1786,38 +1826,6 @@ function drr2() {
         $("#snclose").click(function() {
             $("#snclose").hide();
             restoreview();
-        });
-
-        $("#cdark__mode").click(function() {
-            if (localStorage.getItem("darkmode") === "true") {
-                localStorage.setItem("darkmode", "false");
-                $("#cdark__mode").removeAttr("checked");
-                $("#starwars").attr("src", "darth.png");
-                StatusBar.backgroundColorByHexString("#fff");
-                StatusBar.styleDefault();
-                try {
-                    removejscssfile("dark.css", "css");
-                } catch (e) {}
-            } else {
-                localStorage.setItem("darkmode", "true");
-                $("#cdark__mode").attr("checked", "");
-                $("#starwars").attr("src", "clonetrooper.png");
-                StatusBar.backgroundColorByHexString("#191919");
-                StatusBar.styleLightContent();
-                loadjscssfile("dark.css", "css");
-            }
-            if (localStorage.getItem("darkmode") === "true") {
-                $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
-                $("#cdark__mode").attr("checked", "");
-                StatusBar.backgroundColorByHexString("#191919");
-                StatusBar.styleLightContent();
-            }
-            if (localStorage.getItem("darkmode") === "false") {
-                $("#logo__nav").attr("src", "logo.png?v="+new Date().getMilliseconds());
-                $("#cdark__mode").removeAttr("checked");
-                StatusBar.backgroundColorByHexString("#fff");
-                StatusBar.styleDefault();
-            }
         });
 
         $(document).on("click", "a", function(e) {
