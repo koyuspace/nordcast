@@ -338,16 +338,16 @@ function drr2() {
                             StatusBar.styleDefault();
                         }
                     });
+                    if (localStorage.getItem("darkmode") === "true") {
+                        $("#cdark__mode").attr("checked", "");
+                        $("#starwars").attr("src", "clonetrooper.png");
+                    } else {
+                        $("#cdark__mode").removeAttr("checked");
+                        $("#starwars").attr("src", "darth.png");
+                    }
                     $("#view__settings").attr("style", "padding: 90px 20px 60px; display: block;");
                 });
                 $("#view__settings").show();
-                if (localStorage.getItem("darkmode") === "true") {
-                    $("#cdark__mode").attr("checked", "");
-                    $("#starwars").attr("src", "clonetrooper.png");
-                } else {
-                    $("#cdark__mode").removeAttr("checked");
-                    $("#starwars").attr("src", "darth.png");
-                }
             }
             if (findGetParameter("view") === "cast") {
                 $("#nav").show();
