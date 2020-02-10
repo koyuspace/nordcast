@@ -26,7 +26,7 @@ $(document).ready(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "app.html#view=main";
             }
-        }).error(function() {
+        }).fail(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "index.html#mode=offline";
             } else {
@@ -95,7 +95,7 @@ $(document).ready(function() {
                         $("#kslogin").html(oldHTML);
                         $("#welcome__error").show();
                     }
-                }).error(function() {
+                }).fail(function() {
                     $("#kslogin").removeAttr("disabled");
                     $("#kslogin").html(oldHTML);
                     $("#welcome__error").show();

@@ -576,7 +576,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
                         }
                     }
                 }
-            }).error(function() {
+            }).fail(function() {
                 if (localStorage.getItem("uuid") !== "dummy") {
                     if (findGetParameter("time") !== null) {
                         player.currentTime = Number(findGetParameter("time"));

@@ -32,7 +32,7 @@ $(document).ready(function() {
                     $("#submit__register").removeAttr("disabled");
                     $("#error__register").show();
                 }
-            }).error(function() {
+            }).fail(function() {
                 $("#submit__register").html($("#submit__register").html().replace("<img src=\"loading.svg\" height=\"16\" style=\"margin-top:-3px;\">", ""));
                 $("#submit__register").removeAttr("disabled");
                 $("#error__register").show();

@@ -203,7 +203,7 @@ function drr2() {
                         loadview();
                     }
                     reloaded = false;
-                }).error(function() {
+                }).fail(function() {
                         if (localStorage.getItem("uuid") === "dummy") {
                             location.href = "index.html#mode=offline";
                         }
@@ -390,7 +390,7 @@ function drr2() {
                                 $("#button__follow").show();
                             }
                         }
-                    }).error(function() {
+                    }).fail(function() {
                         $("#button__follow").hide();
                         $("#button__unfollow").hide();
                     });
@@ -700,7 +700,7 @@ function drr2() {
                                             $("#button__follow").show();
                                         }
                                     }
-                                }).error(function() {
+                                }).fail(function() {
                                     $("#button__follow").hide();
                                     $("#button__unfollow").hide();
                                 });
@@ -744,12 +744,12 @@ function drr2() {
                                             $("#button__follow").show();
                                         }
                                     }
-                                }).error(function() {
+                                }).fail(function() {
                                     $("#button__follow").hide();
                                     $("#button__unfollow").hide();
                                 });
                             });
-                        }).error(function() {
+                        }).fail(function() {
                             $("#view__cast").html("<br /><br /><h1 style=\"text-align:center;\" id=\"error__nocast\">This podcast is unavailable</h1>");
                             $("#view__cast").show();
                         });
@@ -1101,7 +1101,7 @@ function drr2() {
                                     alert("Failed to send report. Now returning to main app.");
                                     location.href = "app.html#view=main";
                                 }
-                            }).error(function() {
+                            }).fail(function() {
                                 alert("Failed to send report. Now returning to main app.");
                                 location.href = "app.html#view=main";
                             });
@@ -1173,7 +1173,7 @@ function drr2() {
                     } else {
                         $("#profile__picture").hide();
                     }
-                }).error(function() {
+                }).fail(function() {
                     $("#profile__picture").hide();
                 });
                 $.get("views/mainview.html", function(data) {
@@ -1442,7 +1442,7 @@ function drr2() {
                                         });
                                     }
                                 }
-                            }).error(function() {
+                            }).fail(function() {
                                 $.get("views/mainview.html", function(data) {
                                     $("#view__main").html(data);
                                     $("#text__username").hide();
@@ -1510,7 +1510,7 @@ function drr2() {
                                         $("#section__originals").hide();
                                         $("#text__originals").hide();
                                     }
-                                }).error(function() {
+                                }).fail(function() {
                                     $("#section__originals").hide();
                                     $("#text__originals").hide();
                                 });
@@ -1575,7 +1575,7 @@ function drr2() {
                                         $("#section__originals").hide();
                                         $("#text__originals").hide();
                                     }
-                                }).error(function() {
+                                }).fail(function() {
                                     $("#section__featured").hide();
                                     $("#text__featured").hide();
                                 });
@@ -1634,7 +1634,7 @@ function drr2() {
                                 $("#section__originals").hide();
                                 $("#text__originals").hide();
                             }
-                        }).error(function() {
+                        }).fail(function() {
                             $("#section__featured").hide();
                             $("#text__featured").hide();
                         });
@@ -1652,7 +1652,7 @@ function drr2() {
                                     $("#section__originals").hide();
                                     $("#text__originals").hide();
                                 }
-                            }).error(function() {
+                            }).fail(function() {
                                 $("#section__originals").hide();
                                 $("#text__originals").hide();
                             });
@@ -1717,7 +1717,7 @@ function drr2() {
                                     $("#section__originals").hide();
                                     $("#text__originals").hide();
                                 }
-                            }).error(function() {
+                            }).fail(function() {
                                 $("#section__featured").hide();
                                 $("#text__featured").hide();
                             });
@@ -1737,7 +1737,7 @@ function drr2() {
             } else {
                 $("#profile__picture").hide();
             }
-        }).error(function() {
+        }).fail(function() {
             $("#profile__picture").hide();
         });
 
