@@ -21,3 +21,8 @@ a i {
 #bottom__section {
     background: rgba(25,25,25,.9);
 }
+
+/* Darkmode for website */
+.site-inner {
+    background: #191919 !important;
+}

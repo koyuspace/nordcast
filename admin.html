@@ -1,6 +1,45 @@
 <script src="https://web.nordcast.app/jquery.js"></script>
 <script>
+    // Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
+    function loadjscssfile(filename, filetype){
+        if (filetype === "js") {
+            var fileref = document.createElement('script');
+            fileref.setAttribute("type","text/javascript");
+            fileref.setAttribute("src", filename);
+        } else if (filetype === "css") {
+            var fileref = document.createElement("link");
+            fileref.setAttribute("rel", "stylesheet");
+            fileref.setAttribute("type", "text/css");
+            fileref.setAttribute("href", filename);
+        }
+        if (typeof fileref!="undefined") {
+            document.getElementsByTagName("head")[0].appendChild(fileref);
+        }
+    }
+
+    function removejscssfile(filename, filetype){
+        var targetelement = (filetype=="js")? "script" : (filetype=="css")? "link" : "none";
+        var targetattr = (filetype=="js")? "src" : (filetype=="css")? "href" : "none";
+        var allsuspects = document.getElementsByTagName(targetelement);
+        for (var i=allsuspects.length; i>=0; i--) {
+            if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1) {
+                allsuspects[i].parentNode.removeChild(allsuspects[i]);
+            }
+        }
+    }
+
     $(document).ready(function() {
+        try {
+            if (localStorage.getItem("darkmode") === "true") {
+                loadjscssfile("https://web.nordcast.app/dark.css", "css");
+                $(".custom-logo").attr("src", "https://web.nordcast.app/logo_dark.png");
+            } else {
+                $(".custom-logo").attr("src", "https://web.nordcast.app/logo.png");
+            }
+        } catch (e) {
+            localStorage.setItem("darkmode", "false");
+        }
+
         $.get("https://api.nordcast.app/api/v1/getfeatured/de", function(data) {
             data.forEach(function(el) {
             $("textarea#getfeatured_de").val($("textarea#getfeatured_de").val()+el[0]+"#"+el[1]);
@@ -203,6 +242,28 @@
                 $("#banner").val("");
                 $("#error").attr("style", "color:red;");
             }
+
+            $("#cdark__mode").click(function() {
+                if (localStorage.getItem("darkmode") === "true") {
+                    localStorage.setItem("darkmode", "false");
+                    $("#cdark__mode").removeAttr("checked");
+                    try {
+                        removejscssfile("https://web.nordcast.app/dark.css", "css");
+                    } catch (e) {}
+                } else {
+                    localStorage.setItem("darkmode", "true");
+                    $("#cdark__mode").attr("checked", "");
+                    loadjscssfile("https://web.nordcast.app/dark.css", "css");
+                }
+                if (localStorage.getItem("darkmode") === "true") {
+                    $(".custom-logo").attr("src", "https://web.nordcast.app/logo_dark.png?v="+new Date().getMilliseconds());
+                    $("#cdark__mode").attr("checked", "");
+                }
+                if (localStorage.getItem("darkmode") === "false") {
+                    $(".custom-logo").attr("src", "https://web.nordcast.app/logo.png?v="+new Date().getMilliseconds());
+                    $("#cdark__mode").removeAttr("checked");
+                }
+            });
         });
 
         var userLang = navigator.language || navigator.userLanguage;
@@ -216,3 +277,55 @@
         }
     });
 </script>
+<style>
+    .button-switch {
+        font-size: 18px;
+        height: 1.875em;
+        margin-bottom: 0.625em;
+        position: relative;
+        width: 3.6em;
+        font-family: Tahoma, Geneva, sans-serif;
+    }
+    .button-switch .switch {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        height: 0;
+        font-size: 1em;
+        left: 0;
+        line-height: 0;
+        outline: none;
+        position: absolute;
+        top: 0;
+        width: 0;
+    }
+    .button-switch .switch:before, .button-switch .switch:after {
+        content: '';
+        font-size: 1em;
+        position: absolute;
+    }
+    .button-switch .switch:before {
+        border-radius: 1.25em;
+        background: #bdc3c7;
+        height: 1.875em;
+        left: -0.25em;
+        top: -0.1875em;
+        transition: background-color 0.25s ease-out 0.1s;
+        width: 3.6em;
+    }
+    .button-switch .switch:after {
+        box-shadow: 0 0.0625em 0.375em 0 #666;
+        border-radius: 50%;
+        background: #fefefe;
+        height: 1.5em;
+        transform: translate(0, 0);
+        transition: transform 0.25s ease-out 0.1s;
+        width: 1.5em;
+    }
+    .button-switch .switch:checked:after {
+        transform: translate(1.625em, 0);
+    }
+    .button-switch .switch.switch:checked:before {
+        background: #3498db;
+    }
+</style>
