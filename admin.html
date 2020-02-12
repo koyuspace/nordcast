@@ -1,3 +1,9 @@
+<div style="float: right; display: inline-flex; margin-right: 18px;">
+    <span style="margin-right: 16px;margin-top:3px;">Dark mode:</span>
+    <div class="button-switch">
+        <input type="checkbox" id="cdark__mode" class="switch" />
+    </div>
+</div>
 <script src="https://web.nordcast.app/jquery.js"></script>
 <script>
     // Thanks to https://stackoverflow.com/questions/9979415/dynamically-load-and-unload-stylesheets
@@ -31,14 +37,38 @@
     $(document).ready(function() {
         try {
             if (localStorage.getItem("darkmode") === "true") {
+                $("#cdark__mode").attr("checked", "");
                 loadjscssfile("https://web.nordcast.app/dark.css", "css");
                 $(".custom-logo").attr("src", "https://web.nordcast.app/logo_dark.png");
             } else {
+                $("#cdark__mode").removeAttr("checked");
                 $(".custom-logo").attr("src", "https://web.nordcast.app/logo.png");
             }
         } catch (e) {
             localStorage.setItem("darkmode", "false");
         }
+
+        $("#cdark__mode").click(function() {
+            if (localStorage.getItem("darkmode") === "true") {
+                localStorage.setItem("darkmode", "false");
+                $("#cdark__mode").removeAttr("checked", "");
+                try {
+                    removejscssfile("https://web.nordcast.app/dark.css", "css");
+                } catch (e) {}
+            } else {
+                localStorage.setItem("darkmode", "true");
+                $("#cdark__mode").removeAttr("checked");
+                loadjscssfile("https://web.nordcast.app/dark.css", "css");
+            }
+            if (localStorage.getItem("darkmode") === "true") {
+                $(".custom-logo").attr("src", "https://web.nordcast.app/logo_dark.png?v="+new Date().getMilliseconds());
+                $("#cdark__mode").removeAttr("checked");
+            }
+            if (localStorage.getItem("darkmode") === "false") {
+                $(".custom-logo").attr("src", "https://web.nordcast.app/logo.png?v="+new Date().getMilliseconds());
+                $("#cdark__mode").attr("checked", "");
+            }
+        });
 
         $.get("https://api.nordcast.app/api/v1/getfeatured/de", function(data) {
             data.forEach(function(el) {
@@ -242,28 +272,6 @@
                 $("#banner").val("");
                 $("#error").attr("style", "color:red;");
             }
-
-            $("#cdark__mode").click(function() {
-                if (localStorage.getItem("darkmode") === "true") {
-                    localStorage.setItem("darkmode", "false");
-                    $("#cdark__mode").removeAttr("checked");
-                    try {
-                        removejscssfile("https://web.nordcast.app/dark.css", "css");
-                    } catch (e) {}
-                } else {
-                    localStorage.setItem("darkmode", "true");
-                    $("#cdark__mode").attr("checked", "");
-                    loadjscssfile("https://web.nordcast.app/dark.css", "css");
-                }
-                if (localStorage.getItem("darkmode") === "true") {
-                    $(".custom-logo").attr("src", "https://web.nordcast.app/logo_dark.png?v="+new Date().getMilliseconds());
-                    $("#cdark__mode").attr("checked", "");
-                }
-                if (localStorage.getItem("darkmode") === "false") {
-                    $(".custom-logo").attr("src", "https://web.nordcast.app/logo.png?v="+new Date().getMilliseconds());
-                    $("#cdark__mode").removeAttr("checked");
-                }
-            });
         });
 
         var userLang = navigator.language || navigator.userLanguage;
@@ -327,5 +335,8 @@
     }
     .button-switch .switch.switch:checked:before {
         background: #3498db;
+    }
+    * {
+        outline: 0 !important;
     }
 </style>
