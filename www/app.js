@@ -72,23 +72,6 @@ function removejscssfile(filename, filetype){
 
 function drr2() {
     $(document).ready(function() {
-        window.setTimeout(function() {
-            if (device.platform === "Android") {
-                // Disable media controls for weak testing device
-                if (device.model === "Nokia 2") {
-                    disableMediaControls = true;
-                    MusicControls.destroy(function() {
-                        if (debug) {
-                            console.log("Media controls destroyed")
-                        }
-                    }, function() {
-                        if (debug) {
-                            console.log("Error destroying media controls")
-                        }
-                    });
-                }
-            }
-        }, 3000);
         window.setInterval(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 $(".dlbutton").hide();

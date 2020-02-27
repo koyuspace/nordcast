@@ -72,11 +72,6 @@ window.setInterval(function() {
         $(".rangeslider").hide();
         $("#podtitle").hide();
         $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
-        if (!didmax) {
-            $(".plchangesize").attr("style", "margin-left: -70px;margin-top: 3px;");
-        } else {
-            $(".plchangesize").attr("style", "margin-top: 3px;");
-        }
         $("#plcontrols").attr("css", "margin-left: 60px;");
         $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:9px;margin-left:60px;");
         $("#restart").hide();
@@ -217,6 +212,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     }
     if (plmax) {
         didmax = true;
+    }
+    var podtitle = Base64.decode(feedtitle) + " - " + Base64.decode(title);
+    $("#podtitle").html(twemoji.parse(podtitle));
+    if (podtitle.length > 30) {
+        $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");
     }
     localStorage.setItem("played", "true");
     $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
@@ -449,11 +449,6 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             }
             if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "true") {
                 player.currentTime = Number(localStorage.getItem("time-"+secret));
-            }
-            var podtitle = Base64.decode(feedtitle) + " - " + Base64.decode(title);
-            $("#podtitle").html(twemoji.parse(podtitle));
-            if (podtitle.length > 50) {
-                $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");
             }
             $("#img__cast2").attr("src", podcover);
             $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret+"/"+localStorage.getItem("instance"), function(data) {
@@ -886,8 +881,8 @@ function plin() {
     });
     anime({
         targets: "#img__cast2",
-        width: 330,
-        height: 330,
+        width: 280,
+        height: 280,
         duration: 500,
         autoplay: true
     });
