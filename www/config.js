@@ -44,6 +44,12 @@ function onDeviceReady() {
             }
         });
     }
+    if (location.href.includes("app.html")) {
+        window.setTimeout(function() {
+            var startup = document.getElementById("startup");
+            startup.play();
+        }, 100);
+    }
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
