@@ -37,6 +37,7 @@ var showallwasclicked = false;
 var showall_warning = "Warning: Loading every episode on this podcast may freeze your device. Continue?";
 var disableMediaControls = false;
 var fload = true;
+var enableLoader = true;
 
 window.setTimeout(function() {
     fload = false;
@@ -150,6 +151,7 @@ function drr2() {
                 $("#text__newforyou").hide();
                 $("#section__newforyou").hide();
                 $("#view__notifications").hide();
+                $("#view__fullscreen").hide();
             }
             window.setTimeout(function() {
                 if (localStorage.getItem("played") !== "true") {
@@ -214,12 +216,14 @@ function drr2() {
         $("#view__main").hide();
         var counter = 0;
         window.setInterval(function() {
-            if (!$("#view__"+findGetParameter("view")).is(":visible")) {
-                $("#logo__intro").show();
-                loading = true;
-            } else {
-                $("#logo__intro").hide();
-                loading = false;
+            if (enableLoader) {
+                if (!$("#view__"+findGetParameter("view")).is(":visible")) {
+                    $("#logo__intro").show();
+                    loading = true;
+                } else {
+                    $("#logo__intro").hide();
+                    loading = false;
+                }
             }
         }, 200)
         window.setInterval(function() {
@@ -261,7 +265,6 @@ function drr2() {
         var searchtoggle = false;
         $("#wrapper__search").hide();
         $("#profile__picture").hide();
-        $("#player").hide();
         loadview();
         function loadview() {
             $("#view__search").hide();
@@ -270,6 +273,7 @@ function drr2() {
             $("#view__main").hide();
             $("#view__addfeed").hide();
             $("#view__notifications").hide();
+            $("#view__fullscreen").hide();
             $("#view__report").hide();
             $("#snclose").hide();
             if (findGetParameter("view") === "settings") {
@@ -860,7 +864,7 @@ function drr2() {
                                     } catch (e) {}
                                     $("#playbtn-copy").attr("onclick", "playcast('"+podurl+"', '"+secret+"', '"+Base64.encode(itemtitle)+"', '"+Base64.encode(author)+"', '"+image+"', '"+feed+"', '"+Base64.encode(feedtitle)+"')");
                                     $("#playbtn-copy").html("<span style=\"display:none;\">"+secret+"</span>");
-                                }); 
+                                });
                             } else {
                                 var feedurl = backend+"/api/v1/getpodcast?q="+feed;
                                 if (localStorage.getItem("offline") === "true") {

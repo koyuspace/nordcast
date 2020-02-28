@@ -39,8 +39,6 @@
                 <input type="text" id="qq" placeholder="Search term" />
             </div>
         </div><br />
-        <audio id="player" src="" loop width="1" height="1" preload></audio>
-        <audio id="player2" src="" loop muted width="1" height="1" preload></audio>
         <p><i id="snclose" class="ion-md-close"></i></p>
         <div id="view__main"></div>
         <div id="view__cast"></div>
@@ -49,9 +47,11 @@
         <div id="view__notifications"></div>
         <div id="bottom__section">
             <div id="player__controls">
-                <i class="ion-ios-arrow-up plchangesize" onclick="plchangesize()"></i><div id="podtitle"></div>
+                <i class="ion-ios-arrow-up plchangesize" onclick="plchangesize()"></i>
+                <div id="podtitle"></div>
                 <input id="range-control" type="range" min="0" max="100" step="1" value="0">
-                <a id="link__cast"><img id="img__cast2" class="card__small"></a>
+                <i class="icon ion-md-expand" id="btn__fullscreen" onclick="fullscreen()" style="margin-top: 210px;position: absolute;color: #fff;margin-left: 320px;width:40px;height:40px;"></i>
+                <a id="link__cast"><video id="player" class="img__cast2" src="" loop width="24" height="24"></video></a>
                 <div id="plcontrols">
                     <div class="player-controls"><i onclick="restart()" style="margin-left: -31px;" id="restart" class="ion-md-skip-backward"></i> <i onclick="rev()" id="rev" class="ion-md-undo"></i> <i onclick="bplay()" id="bplay" class="playbutton ion-md-play"></i> <i onclick="ffw()" id="ffw" class="ion-md-redo"></i><i onclick="plclose()" id="plclose" class="ion-md-close"></i></div>
                     <div class="timers"><span id="timer">00:00:00</span> <span id="timeleft">-00:00:00</span></div>

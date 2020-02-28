@@ -366,12 +366,17 @@ h1 .emoji {
     margin-left: -20px;
 }
 
-#img__cast2 {
+.img__cast2 {
     margin-bottom: 10px;
     margin-left: 25px;
     margin-top: 10px;
     margin-right: 10px;
     float: left;
+    z-index: -1;
+}
+
+#btn__fullscreen {
+    z-index: 1;
 }
 
 #snclose {
@@ -481,11 +486,6 @@ h1 .emoji {
     margin-bottom: inherit !important;
 }
 
-#img__cast2 {
-    width: 48px;
-    height: 48px;
-}
-
 .problemreporting, .share, #playbtn-copy {
     font-size: 24px;
     display: inline;
@@ -514,13 +514,15 @@ h1 .emoji {
 }
 
 #banner__openapp {
-    padding-top: 60px;
+    padding-top: 20px;
     padding-bottom: 20px;
     text-align: center;
     background: rgb(39, 176, 226);
     width: 100vw;
     margin-left: -20px;
     color: #fff;
+    margin-top: 30px;
+    margin-bottom: -30px;
 }
 
 .koyushare {
@@ -569,7 +571,6 @@ h1 .emoji {
 .plchangesize {
     font-size: 20pt;
     margin-left: 20px;
-    margin-top: 4px;
     position: absolute;
 }
 

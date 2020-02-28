@@ -6,6 +6,11 @@ var elapsed = 0;
 var player = document.getElementById("player");
 var didmax = false;
 var checkheight = true;
+var stylePlayer = true;
+var isFullscreen = false;
+var disableFullscreen = true;
+
+$("#fullscreen").hide();
 
 window.setTimeout(function() {
     if (localStorage.getItem("played") !== "true" && localStorage.getItem("offline") === "false") {
@@ -19,6 +24,7 @@ window.setTimeout(function() {
         $("#view__cast").show();
     }
     $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
+    $(".player-controls").attr("style", "width:130px;");
 }, 1500);
 
 window.setInterval(function() {
@@ -55,6 +61,16 @@ window.setInterval(function() {
     if (!plmax && $("#player__controls").is(":visible") && checkheight) {
         $("#player__controls").attr("style", "bottom: "+Number($("#player__controls").height() + 3.5)+"px;");
     }
+    if (!disableFullscreen) {
+        $("#btn__fullscreen").show();
+    } else {
+        $("#btn__fullscreen").hide();
+    }
+    if (!detectmob()) {
+        disableFullscreen = true;
+        $("#player").attr("width", "800");
+        $("#player").attr("width", "600");
+    }
 });
 
 window.setInterval(function() {
@@ -73,10 +89,11 @@ window.setInterval(function() {
         $("#podtitle").hide();
         $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
         $("#plcontrols").attr("css", "margin-left: 60px;");
-        $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:9px;margin-left:60px;");
+        if (stylePlayer) {
+            $("#player").attr("style", "width:24px;height:24px;margin-left:60px; border-radius: 4px;");
+        }
         $("#restart").hide();
         $("#rev").hide();
-        $(".player-controls").attr("style", "margin-right: 35vw;");
     } else {
         $(".player-controls").removeAttr("style");
         $(".timers").show();
@@ -161,7 +178,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
             
                     // External controls (iOS only)
                     case 'music-controls-toggle-play-pause' :
-                        bplay();
+                        playcast(file, secret, title, author, podcover, feed, feedtitle);
                         break;
                     case 'music-controls-seek-to' :
                         const seekToInSeconds = JSON.parse(action).position;
@@ -206,6 +223,11 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
 }
 
 function playcast(file, secret, title, author, podcover, feed, feedtitle) {
+    if (file.includes(".mp4") || file.includes(".wmv") || file.includes(".mov") || file.includes(".avi") || file.includes(".mkv")) {
+        disableFullscreen = false;
+    } else {
+        disableFullscreen = true;
+    }
     if (!playing && !$("#player__controls").is(":visible") && !plmax) {
         $("#player__controls").css("height", "0%");
         $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
@@ -283,7 +305,6 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
         localStorage.setItem("feedtitle", feedtitle);
         localStorage.setItem("file", file);
         $("#bplay").attr("onclick", "playcast('"+file+"', '"+secret+"', '"+title+"', '"+author+"', '"+podcover+"', '"+feed+"', '"+feedtitle+"')");
-        $("#link__cast").attr("data-cast", Base64.encode(feed));
         $("#player__controls").show();
         if (!playing) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
@@ -450,7 +471,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             if (localStorage.getItem("uuid") !== "dummy" && localStorage.getItem("offline") === "true") {
                 player.currentTime = Number(localStorage.getItem("time-"+secret));
             }
-            $("#img__cast2").attr("src", podcover);
+            $(".img__cast2").attr("poster", podcover);
             $.get(backend+"/api/v1/getpos/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+secret+"/"+localStorage.getItem("instance"), function(data) {
                 if (data["login"] === "error") {
                     if (findGetParameter("time") !== null) {
@@ -649,9 +670,11 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
             $(".playbutton").attr("class", "playbutton ion-md-play");
         }
     }
-    checkheight = true;
+    checkheight = false;
     if (localStorage.getItem("played") !== "true" || findGetParameter("view") === "cast") {
-        plout();
+        if (!plmax) {
+            plout();
+        }
     }
 }
 
@@ -763,7 +786,7 @@ function onDeviceReady() {
         if (podtitle.length > 50) {
             $("#podtitle").html("<marquee>"+$("#podtitle").html()+"<marquee>");
         }
-        $("#img__cast2").attr("src", localStorage.getItem("podcover"));
+        $(".img__cast2").attr("poster", localStorage.getItem("podcover"));
         $("#bplay").attr("onclick", "playcast('"+localStorage.getItem("file")+"', '"+localStorage.getItem("secret")+"', '"+localStorage.getItem("title")+"', '"+localStorage.getItem("author")+"', '"+localStorage.getItem("podcover")+"', '"+localStorage.getItem("feed")+"', '"+localStorage.getItem("feedtitle")+"')");
         window.setTimeout(function() {
             $("#range-control").rangeslider({
@@ -793,7 +816,6 @@ function onDeviceReady() {
         if (downloaded) {
             player.src = localStorage.getItem("download-"+localStorage.getItem("secret"));
         }
-        $("#link__cast").attr("data-cast", Base64.encode(localStorage.getItem("feed")));
     }, 1500);
 }
 
@@ -859,16 +881,16 @@ function plout() {
         autoplay: true
     });
     anime({
-        targets: "#img__cast2",
+        targets: "#player",
         width: 24,
         height: 24,
         duration: 500,
         autoplay: true
     });
     $(".plchangesize").attr("class", "ion-ios-arrow-up plchangesize");
-    $(".plchangesize").attr("style", "margin-left:20px;margin-top:4px;");
     $("#plcontrols").attr("css", "margin-left: 60px;");
-    $("#img__cast2").attr("style", "width:24px;height:24px;margin-top:12px;margin-left:60px;");
+    $("#player").attr("style", "width:24px;height:24px;margin-top:12px;margin-left:60px; border-radius: 4px;");
+    $(".player-controls").attr("style", "width:130px;");
 }
 
 function plin() {
@@ -880,15 +902,15 @@ function plin() {
         autoplay: true
     });
     anime({
-        targets: "#img__cast2",
+        targets: "#player",
         width: 280,
         height: 280,
         duration: 500,
         autoplay: true
     });
-    $("#img__cast2").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px;");
+    $("#player").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px; border-radius: 10px;");
     $(".plchangesize").attr("class", "ion-ios-arrow-down plchangesize");
-    $(".plchangesize").attr("style", "margin-left: 10px;margin-top: 4px;");
+    $(".plchangesize").attr("style", "margin-left: 15px;");
 }
 
 function plchangesize() {
@@ -898,6 +920,16 @@ function plchangesize() {
         didmax = true;
         plout();
     }
+}
+
+function fullscreen() {
+    isFullscreen = !isFullscreen;
+    var player = document.getElementById("player");
+    player.requestFullscreen();
+}
+
+function bplay() {
+    playcast(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
