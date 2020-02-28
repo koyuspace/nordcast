@@ -61,11 +61,6 @@ window.setInterval(function() {
     if (!plmax && $("#player__controls").is(":visible") && checkheight) {
         $("#player__controls").attr("style", "bottom: "+Number($("#player__controls").height() + 3.5)+"px;");
     }
-    if (!disableFullscreen) {
-        $("#btn__fullscreen").show();
-    } else {
-        $("#btn__fullscreen").hide();
-    }
     if (!detectmob()) {
         disableFullscreen = true;
         $("#player").attr("width", "800");
@@ -228,6 +223,7 @@ function playcast(file, secret, title, author, podcover, feed, feedtitle) {
     } else {
         disableFullscreen = true;
     }
+    plout();
     if (!playing && !$("#player__controls").is(":visible") && !plmax) {
         $("#player__controls").css("height", "0%");
         $(".plchangesize").attr("style", "margin-left:-80px;margin-top:4px;");
@@ -924,8 +920,10 @@ function plchangesize() {
 
 function fullscreen() {
     isFullscreen = !isFullscreen;
-    var player = document.getElementById("player");
-    player.requestFullscreen();
+    if (!disableFullscreen) {
+        var player = document.getElementById("player");
+        player.requestFullscreen();
+    }
 }
 
 function bplay() {
