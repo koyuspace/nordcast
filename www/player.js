@@ -161,11 +161,35 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
                         var player = document.getElementById("player");
                         player.pause();
                         playing = false;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
+                        }
                         break;
                     case 'music-controls-play':
                         var player = document.getElementById("player");
                         player.play();
                         playing = true;
+                        if (device.platform !== "browser") {
+                            MusicControls.destroy(function() {
+                                if (debug) {
+                                    console.log("Media controls destroyed")
+                                }
+                            }, function() {
+                                if (debug) {
+                                    console.log("Error destroying media controls")
+                                }
+                            });
+                            addControls(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
+                        }
                         break;
                     case 'music-controls-destroy':
                         plclose();
@@ -684,18 +708,6 @@ window.setInterval(function() {
             }
             $("#bplay").attr("class", "playbutton ion-md-pause");
             playing = true;
-            if (device.platform !== "browser" && playing) {
-                MusicControls.destroy(function() {
-                    if (debug) {
-                        console.log("Media controls destroyed")
-                    }
-                }, function() {
-                    if (debug) {
-                        console.log("Error destroying media controls")
-                    }
-                });
-                addControls(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
-            }
         } else {
             $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
             if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
@@ -703,18 +715,6 @@ window.setInterval(function() {
             }
             $("#bplay").attr("class", "playbutton ion-md-play");
             playing = false;
-            if (device.platform !== "browser" && !playing) {
-                MusicControls.destroy(function() {
-                    if (debug) {
-                        console.log("Media controls destroyed")
-                    }
-                }, function() {
-                    if (debug) {
-                        console.log("Error destroying media controls")
-                    }
-                });
-                addControls(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
-            }
         }
     } catch (e) {}
 });
