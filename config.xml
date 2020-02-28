@@ -134,6 +134,7 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="~5.6.3">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     </plugin>
+    <preference name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     <plugin name="cordova-plugin-customurlscheme" spec="~5.0.0">
         <variable name="URL_SCHEME" value="nordcast" />
         <variable name="ANDROID_SCHEME" value=" " />
