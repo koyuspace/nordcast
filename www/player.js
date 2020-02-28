@@ -173,7 +173,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
             
                     // External controls (iOS only)
                     case 'music-controls-toggle-play-pause' :
-                        playcast(file, secret, title, author, podcover, feed, feedtitle);
+                        bplay();
                         break;
                     case 'music-controls-seek-to' :
                         const seekToInSeconds = JSON.parse(action).position;
@@ -195,11 +195,11 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
                     // Headset events (Android only)
                     // All media button events are listed below
                     case 'music-controls-media-button' :
-                        playcast(file, secret, title, author, podcover, feed, feedtitle);
+                        bplay();
                         break;
                     case 'music-controls-headset-unplugged' :
                         if (playing) {
-                            playcast(file, secret, title, author, podcover, feed, feedtitle);
+                            bplay();
                         }
                         break;
                     default:
@@ -684,6 +684,18 @@ window.setInterval(function() {
             }
             $("#bplay").attr("class", "playbutton ion-md-pause");
             playing = true;
+            if (device.platform !== "browser" && playing) {
+                MusicControls.destroy(function() {
+                    if (debug) {
+                        console.log("Media controls destroyed")
+                    }
+                }, function() {
+                    if (debug) {
+                        console.log("Error destroying media controls")
+                    }
+                });
+                addControls(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
+            }
         } else {
             $("#cast-"+localStorage.getItem("secret")).attr("class", "playbutton ion-md-play");
             if ($("#playbtn-copy").html().includes(localStorage.getItem("secret"))) {
@@ -691,6 +703,18 @@ window.setInterval(function() {
             }
             $("#bplay").attr("class", "playbutton ion-md-play");
             playing = false;
+            if (device.platform !== "browser" && !playing) {
+                MusicControls.destroy(function() {
+                    if (debug) {
+                        console.log("Media controls destroyed")
+                    }
+                }, function() {
+                    if (debug) {
+                        console.log("Error destroying media controls")
+                    }
+                });
+                addControls(localStorage.getItem("file"), localStorage.getItem("secret"), localStorage.getItem("title"), localStorage.getItem("author"), localStorage.getItem("podcover"), localStorage.getItem("feed"), localStorage.getItem("feedtitle"));
+            }
         }
     } catch (e) {}
 });
