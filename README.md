@@ -32,3 +32,5 @@ Please have a look at the `LICENSE.md` file. Nordcast is licensed under GPLv3.
 ## Help and Support
 
 If you found a bug open an issue ticket. If you need help or found a critical security vulnerability, do not use public channels like the issue ticket function and instead contact koyu.space support at support@koyu.space.
+
+<a href="https://play.google.com/store/apps/details?id=com.Sommerlichter.nordcast" target="_blank" rel="noopener noreferrer"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="60"></a><a href="https://apps.apple.com/app/id1492905437" target="_blank" rel="noopener noreferrer"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/1280px-Download_on_the_App_Store_Badge.svg.png" width="155"></a>
