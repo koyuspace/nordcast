@@ -185,7 +185,7 @@ function drr2() {
         var reloaded = false;
         window.setInterval(function() {
             if (device.platform !== "browser") {
-                $.get(backend+"?"+Date.now(), function(data) {
+                $.get(backend+"/getstatus?"+Date.now(), function(data) {
                     localStorage.setItem("offline", "false");
                     if (findGetParameter("view") !== "settings") {
                         if (localStorage.getItem("offline") === "false") {
@@ -269,7 +269,7 @@ function drr2() {
                     localStorage.setItem("notifications", data);
                 }
             });
-        }, 3000);
+        }, 10000);
         $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
             if (localStorage.getItem("uuid") !== "dummy") {
                 if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
@@ -472,6 +472,7 @@ function drr2() {
                                         if (Number(color.split(",")[0]) > 248 && localStorage.getItem("darkmode") === "true") {
                                             $("#podcard").attr("style", "background-image: none;");
                                         }
+                                        localStorage.setItem("color-"+Base64.encode(feed).slice(0, -3), color);
                                     });
                                 } else {
                                     var color = localStorage.getItem("color-"+Base64.encode(feed).slice(0, -3));
@@ -1231,17 +1232,17 @@ function drr2() {
                                         if (localStorage.getItem("lastloaded") !== null) {
                                             if (goaltime < Number(localStorage.getItem("lastloaded"))) {
                                                 localStorage.setItem("lastloaded", Date.now());
-                                                timeout = podlist.split(",").length * 622;
+                                                timeout = (podlist.split(",").length * 622) / 2;
                                             } else {
                                                 timeout = 3000;
                                             }
                                         } else {
                                             localStorage.setItem("lastloaded", Date.now());
-                                            timeout = podlist.split(",").length * 622;
+                                            timeout = (podlist.split(",").length * 622) / 2;
                                         }
                                         if (firstload) {
                                             localStorage.setItem("lastloaded", Date.now());
-                                            timeout = podlist.split(",").length * 622;
+                                            timeout = (podlist.split(",").length * 622) / 2;
                                         }
                                         window.setTimeout(function() {
                                             window.setTimeout(function() {
