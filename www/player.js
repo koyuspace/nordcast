@@ -17,10 +17,6 @@ window.setTimeout(function() {
         $("#player__controls").hide();
     } else {
         $("#player__controls").show();
-        bplay();
-        window.setTimeout(function() {
-            bplay();
-        }, 200);
     }
     if (findGetParameter("view") === "settings") {
         $("#view__cast").hide();
@@ -70,7 +66,7 @@ window.setInterval(function() {
         $("#player").attr("width", "800");
         $("#player").attr("width", "600");
     }
-});
+}, 1000);
 
 window.setInterval(function() {
     try {
@@ -222,7 +218,7 @@ function addControls(file, secret, title, author, podcover, feed, feedtitle) {
             
                     // Headset events (Android only)
                     // All media button events are listed below
-                    case 'music-controls-media-button' :
+                    case 'music-controls-media-button-play-pause' :
                         bplay();
                         break;
                     case 'music-controls-headset-unplugged' :
@@ -852,14 +848,7 @@ window.setInterval(function() {
 }, 1500);
 
 window.setInterval(function() {
-    var color = localStorage.getItem("color-"+Base64.encode(localStorage.getItem("feed")).slice(0, -3));
-    var style = "background:rgba(" + color.split("\n")[0] + ",.9) !important;";
-    $("#player__controls").css("background", style.replace("background:", "").replace(" !important;", ""));
-    if (Number(color.split(",")[0]) > 140) {
-        $("#player__controls").css("color", "#333");
-    } else {
-        $("#player__controls").css("color", "#fff");
-    }
+
 }, 1500);
 
 function ffw() {

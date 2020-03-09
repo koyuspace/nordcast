@@ -1,5 +1,4 @@
 document.addEventListener("deviceready", onDeviceReady, false);
-var warning_nologin = "Warning: If you don't login you'll be only able to listen to podcasts. This might be suitable for you, but you won't be able to follow podcasts, download them or tell your fediverse friends about them. Are you sure you want to continue?";
 var es = false;
 var error = false;
 
@@ -122,13 +121,11 @@ $(document).ready(function() {
         }
     });
     $("#nologin").click(function (e) {
-        if (window.confirm(warning_nologin)) {
-            localStorage.setItem("uuid", "dummy");
-            localStorage.setItem("username", "dummy");
-            window.setTimeout(function() {
-                location.href = "app.html#view=main";
-            }, 50);
-        }
+        localStorage.setItem("uuid", "dummy");
+        localStorage.setItem("username", "dummy");
+        window.setTimeout(function() {
+            location.href = "app.html#view=main";
+        }, 50);
         e.preventDefault();
     });
 });
@@ -170,7 +167,6 @@ function onDeviceReady() {
             $("#instance").attr("placeholder", "Server");
             $("#kslogin").html("Anmelden");
             $("#nologin").html("Weiter ohne Account");
-            warning_nologin = "Warnung: Ohne einen Account wirst du nur in der Lage sein Podcasts zu hören. Das mag zwar passend für dich sein, aber du kannst dann weder Podcasts folgen noch herunterladen oder im Fediverse mit deinen Freunden teilen. Möchtest du wirklich fortfahren?";
         }
     });
 }

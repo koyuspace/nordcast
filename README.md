@@ -9,7 +9,7 @@ Nordcast is a podcast streaming app by koyu.space
 - Visual Studio Code
 - Visual Studio Code extension for Cordova
 - NodeJS with NPM (Installation through `nvm` recommended)
-- Cordova
+- Phonegap and Cordova
 - Optional: Android or iOS SDK
 - Optional: Python 3 with PIP for the backend
 
