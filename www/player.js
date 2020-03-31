@@ -847,10 +847,6 @@ window.setInterval(function() {
     } catch (e) {}
 }, 1500);
 
-window.setInterval(function() {
-
-}, 1500);
-
 function ffw() {
     var player = document.getElementById("player");
     player.currentTime = player.currentTime + 10;
