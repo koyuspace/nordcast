@@ -764,7 +764,7 @@ function drr2() {
                         }
                     }, 700);
                     window.setTimeout(function() {
-                        $.get(backend+"/api/v1/getreversed", function(data) {
+                        $.get(backend+"/api/v1/getreversed?"+Date.now(), function(data) {
                             var reverse = false;
                             data.split("\n").forEach(function(vl) {
                                 if (vl.includes(feed)) {
@@ -1291,7 +1291,7 @@ function drr2() {
                                                         summary = summary.slice(0,71) + "...";
                                                     }
                                                     var reverse = false;
-                                                    $.get(backend+"/api/v1/getreversed", function(data) {
+                                                    $.get(backend+"/api/v1/getreversed?"+Date.now(), function(data) {
                                                         data.split("\n").forEach(function(vl) {
                                                             if (vl.includes(feed)) {
                                                                 reverse = true;
@@ -1323,7 +1323,7 @@ function drr2() {
                                                     }
                                                     if (findGetParameter("view") === "yourlist" && callback.entries.length > 0) {
                                                         var reverse = false;
-                                                        $.get(backend+"/api/v1/getreversed", function(data) {
+                                                        $.get(backend+"/api/v1/getreversed?"+Date.now(), function(data) {
                                                             data.split("\n").forEach(function(vl) {
                                                                 if (vl.includes(feed)) {
                                                                     reverse = true;
@@ -1550,10 +1550,12 @@ function drr2() {
                                                     title = title.split("?")[0]+"?";
                                                 }
                                                 $("#title__bigscreen").html(title);
-                                                var summary = callback.feed.summary.split(".")[0];
-                                                if (summary.length < 72) {
-                                                    summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
-                                                }
+                                                try {
+                                                    var summary = callback.feed.summary.split(".")[0];
+                                                    if (summary.length < 72) {
+                                                        summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
+                                                    }
+                                                } catch (e) {}
                                                 $("#text__bigscreen").html("<small>"+summary+".</small>")
                                             });
                                         }
@@ -1609,11 +1611,13 @@ function drr2() {
                                             title = title.split("?")[0]+"?";
                                         }
                                         $("#title__bigscreen").html(title);
-                                        var summary = callback.feed.summary.split(".")[0];
-                                        if (summary.length < 72) {
-                                            summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
-                                        }
-                                        $("#text__bigscreen").html("<small>"+summary+".</small>")
+                                        try {
+                                            var summary = callback.feed.summary.split(".")[0];
+                                            if (summary.length < 72) {
+                                                summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
+                                            }
+                                            $("#text__bigscreen").html("<small>"+summary+".</small>");
+                                        } catch (e) {}
                                     });
                                 }
                                 counter++;
@@ -1692,11 +1696,13 @@ function drr2() {
                                                 title = title.split("?")[0]+"?";
                                             }
                                             $("#title__bigscreen").html(title);
-                                            var summary = callback.feed.summary.split(".")[0];
-                                            if (summary.length < 72) {
-                                                summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
-                                            }
-                                            $("#text__bigscreen").html("<small>"+summary+".</small>")
+                                            try {
+                                                var summary = callback.feed.summary.split(".")[0];
+                                                if (summary.length < 72) {
+                                                    summary = callback.feed.summary.split(".")[0] + ". " + callback.feed.summary.split(".")[1];
+                                                }
+                                                $("#text__bigscreen").html("<small>"+summary+".</small>");
+                                            } catch (e) {}
                                         });
                                     }
                                     counter++;
