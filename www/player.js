@@ -819,7 +819,7 @@ function onDeviceReady() {
             var player = document.getElementById("player");
             var percent = player.currentTime / player.duration * 100;
             $("#range-control").val(percent).change();
-        }, 1500);
+        }, 3000);
         var downloaded = false;
         try {
             if (localStorage.getItem("downloaded").includes(localStorage.getItem("secret"))) {

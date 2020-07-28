@@ -28,6 +28,11 @@ function detectmob() {
         return false;
     }
 }
+function stripHtml(html) {
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+}
 
 var kicker = false;
 var loading = false;
@@ -979,7 +984,7 @@ function drr2() {
                 },1000);
                 $.get("views/searchview.html", function(data) {
                     $("#view__search").html(data);
-                    $("#text__query").html(findGetParameter("q"));
+                    $("#text__query").html(stripHtml(findGetParameter("q")));
                     $.getJSON(backend+"/api/v1/search/"+localStorage.getItem("lang")+"/"+findGetParameter("q"), function(data) {
                         data["results"].forEach(function(item) {
                             $("#searchtable tbody").append("<tr><td><a class=\"cardlink\" data-cast=\""+Base64.encode(item.feedUrl)+"\"><img src=\""+item.artworkUrl100+"\" class=\"card__small\"></a></td><td><a class=\"cardlink\" data-cast=\""+Base64.encode(item.feedUrl)+"\" style=\"color:#333;\">"+twemoji.parse(item.collectionName)+"</a></td></tr>");
@@ -989,6 +994,11 @@ function drr2() {
                             $("#view__"+findGetParameter("view")).show();
                         }
                     });
+                }).fail(function() {
+                    window.setTimeout(function() {
+                        $("#searchtable").html("<p id=\"object__noresults\"><b id=\"error__noresults\">No results found.</b></p>");
+                        $("#view__"+findGetParameter("view")).show();
+                    }, 2000);
                 });
             }
             if (findGetParameter("view") === "report") {
