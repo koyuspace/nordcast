@@ -241,7 +241,7 @@
         $("#submit_banner").click(function() {
             $("#submit_banner").attr("disabled", "");
             $("#submit_banner").html("<img src=\"https://web.nordcast.app/loading.svg\" style=\"height: 16px !important;\">");
-            $("#error").attr("style", "display:none;color:red;");
+            $("#fail").attr("style", "display:none;color:red;");
             try {
                 var fd = new FormData();
                 var file = $("#banner")[0].files[0];
@@ -261,20 +261,20 @@
                             $("#submit_banner").removeAttr("disabled");
                             $("#submit_banner").html("Submit");
                             $("#banner").val("");
-                            $("#error").attr("style", "color:red;");
+                            $("#fail").attr("style", "color:red;");
                         }
                     },
-                }).error(function() {
+                }).fail(function() {
                     $("#submit_banner").removeAttr("disabled");
                     $("#submit_banner").html("Submit");
                     $("#banner").val("");
-                    $("#error").attr("style", "color:red;");
+                    $("#fail").attr("style", "color:red;");
                 });
             } catch (e) {
                 $("#submit_banner").removeAttr("disabled");
                 $("#submit_banner").html("Submit");
                 $("#banner").val("");
-                $("#error").attr("style", "color:red;");
+                $("#fail").attr("style", "color:red;");
             }
         });
 
