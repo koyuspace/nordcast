@@ -4,7 +4,6 @@
   "displayName": "Nordcast",
   "cordova": {
     "platforms": [
-      "android",
       "ios"
     ],
     "plugins": {
@@ -26,15 +25,19 @@
       "cordova-music-controls": {},
       "cordova-plugin-x-socialsharing": {},
       "cordova-plugin-android-tv": {},
-      "cordova-plugin-music-controls2": {}
+      "cordova-plugin-music-controls2": {},
+      "cordova-plugin-androidx": {},
+      "cordova-plugin-androidx-adapter": {}
     }
   },
   "dependencies": {
-    "cordova-android": "^7.1.4",
+    "cordova-android": "^8.1.0",
     "cordova-file-cache": "^1.2.2",
     "cordova-ios": "^5.1.1",
     "cordova-music-controls": "git+https://github.com/ghenry22/cordova-music-controls-plugin.git",
     "cordova-plugin-android-tv": "^1.0.3",
+    "cordova-plugin-androidx": "2.0.0",
+    "cordova-plugin-androidx-adapter": "1.1.1",
     "cordova-plugin-customurlscheme": "5.0.0",
     "cordova-plugin-darkmode": "1.0.0",
     "cordova-plugin-device": "^1.1.7",
