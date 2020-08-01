@@ -560,13 +560,18 @@ function drr2() {
                                     secret = Base64.encode(item.link).replace("==", "");
                                 }
                                 var podurl = "";
+                                var hide = false;
                                 item.links.forEach(function(el) {
-                                    if (el.type.includes("audio")) {
-                                        podurl = el.href;
+                                    try {
+                                        if (el.type.includes("audio")) {
+                                            podurl = el.href;
+                                        }
+                                        if (el.type.includes("video")) {
+                                            podurl = el.href;
+                                        }
+                                    } catch (e) {
+                                        hide = true;
                                     }
-                                    if (el.type.includes("video")) {
-                                        podurl = el.href;
-                                    } 
                                 });
                                 var shownotes = "";
                                 try {
@@ -583,7 +588,6 @@ function drr2() {
                                     shownotes = item.summary;
                                 }
                                 var itemtitle = item.title;
-                                var hide = false;
                                 if (itemtitle.includes("New status by ")) {
                                     itemtitle = item.summary.replaceAll("<p>", "").replaceAll("</p>", "");
                                     shownotes = item.summary_detail;
