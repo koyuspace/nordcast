@@ -106,7 +106,6 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <preference name="android-installLocation" value="preferExternal">
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
