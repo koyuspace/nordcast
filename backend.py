@@ -32,7 +32,7 @@ else:
 @get("/")
 def index():
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return redirect("https://nordcast.app", code=302)
+    return redirect("https://nordcast.koyu.space", code=302)
 
 @get("/getstatus")
 def status():
