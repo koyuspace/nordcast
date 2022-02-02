@@ -1,0 +1,9 @@
+{
+  "theme_color": "#fff"
+  "background_color": "#fff"
+  "display": "standalone"
+  "scope": "/"
+  "start_url": "https://nordcast.koyu.space"
+  "name": "Nordcast"
+  "short_name": "Nordcast"
+}

@@ -623,6 +623,10 @@ h1 .emoji {
     }
 }
 
+.cardlink {
+    text-decoration: none !important;
+}
+
 #serverlist {
     display: block;
     margin: 0 auto;

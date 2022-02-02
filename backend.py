@@ -7,6 +7,7 @@ from colorthief import ColorThief
 import feedparser
 import json
 import os.path
+import os
 import redis
 import uuid
 import requests
@@ -83,7 +84,7 @@ def login():
         to_file = 'authtokens/'+username+'.'+instance+'.secret',
     )
     if not os.path.exists("usercred.secret"):
-        suid = str(uuid.uuid1())
+        suid = str(uuid.uuid1()).replace("b", "")
         if r.get("nordcast/uuids/" + username + "$$" + instance) == None:
             r.set("nordcast/uuids/" + username + "$$" + instance, suid)
         else:
@@ -92,121 +93,113 @@ def login():
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/login2/<username>/<uuid>/<instance>")
-def login2(username, uuid, instance):
+@get("/api/v1/login2/<username>/<guuid>/<instance>")
+def login2(username, guuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    try:
-        mastodon = Mastodon(
-            access_token = 'authtokens/'+username+'.'+instance+'.secret',
-            api_base_url = 'https://'+instance
-        )
-        mastodon.account_verify_credentials().source.note
-    except:
-        pass
-    if uuid in suid:
-        return json.dumps({"login": "ok", "uuid": uuid})
+    if guuid in suid:
+        return json.dumps({"login": "ok", "uuid": guuid})
     else:
         return "{\"login\": \"error\"}"
 
-@post("/api/v1/setlist/<username>/<uuid>/<instance>")
-def setlist(username, uuid, instance):
+@post("/api/v1/setlist/<username>/<guuid>/<instance>")
+def setlist(username, guuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     podlist = request.forms.get("podlist") # pylint: disable=no-member
-    if uuid in suid:
+    if guuid in suid:
         r.set("nordcast/podlist/" + username + "$$" + instance, podlist)
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success"})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getlist/<username>/<uuid>/<instance>")
-def getlist(username, uuid, instance):
+@get("/api/v1/getlist/<username>/<guuid>/<instance>")
+def getlist(username, guuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     podlist = str(r.get("nordcast/podlist/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if uuid in suid:
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "podlist": podlist})
+    if guuid in suid:
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "podlist": podlist})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/setpos/<username>/<uuid>/<secret>/<pos>/<instance>")
-def setpos(username, uuid, secret, pos, instance):
+@get("/api/v1/setpos/<username>/<guuid>/<secret>/<pos>/<instance>")
+def setpos(username, guuid, secret, pos, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if uuid in suid:
+    if guuid in suid:
         r.set("nordcast/pos/" + username + "$$" + instance + "/" + secret, pos)
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success"})
 
-@get("/api/v1/getpos/<username>/<uuid>/<secret>/<instance>")
-def getpos(username, uuid, secret, instance):
+@get("/api/v1/getpos/<username>/<guuid>/<secret>/<instance>")
+def getpos(username, guuid, secret, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if uuid in suid:
+    if guuid in suid:
         pos = str(r.get("nordcast/pos/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "pos": pos, "secret": secret})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "pos": pos, "secret": secret})
 
-@get("/api/v1/getname/<username>/<uuid>/<instance>")
-def getname(username, uuid, instance):
+@get("/api/v1/getname/<username>/<guuid>/<instance>")
+def getname(username, guuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if not uuid == "dummy":
+    if not guuid == "dummy":
         mastodon = Mastodon(
             access_token = 'authtokens/'+username+'.'+instance+'.secret',
             api_base_url = 'https://'+instance
         )
         userdict = mastodon.account_verify_credentials()
     try:
-        if uuid in suid:
+        if guuid in suid:
             ksname = userdict.display_name
             ksemojis = userdict.emojis
-            return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
+            return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "ksname": ksname, "ksemojis": ksemojis})
         else:
             return "{\"login\": \"error\"}"
     except:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getpic/<username>/<uuid>/<instance>")
-def getpic(username, uuid, instance):
+@get("/api/v1/getpic/<username>/<guuid>/<instance>")
+def getpic(username, guuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if not uuid == "dummy":
+    if not guuid == "dummy":
         mastodon = Mastodon(
             access_token = 'authtokens/'+username+'.'+instance+'.secret',
             api_base_url = 'https://'+instance
         )
         userdict = mastodon.account_verify_credentials()
     try:
-        if uuid in suid:
+        if guuid in suid:
             kspic = userdict.avatar
-            return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "kspic": kspic})
+            return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "kspic": kspic})
         else:
             return "{\"login\": \"error\"}"
     except:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/getemoji/<username>/<uuid>/<instance>")
-def getemoji(username, uuid, instance):
+@get("/api/v1/getemoji/<username>/<guuid>/<instance>")
+def getemoji(username, guuid, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if not uuid == "dummy":
+    if not guuid == "dummy":
         mastodon = Mastodon(
             access_token = 'authtokens/'+username+'.'+instance+'.secret',
             api_base_url = 'https://'+instance
         )
         userdict = mastodon.account_verify_credentials() # pylint: disable=unused-variable
     try:
-        if uuid in suid:
+        if guuid in suid:
             ksemoji = mastodon.custom_emojis()
-            return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "ksemoji": ksemoji})
+            return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "ksemoji": ksemoji})
         else:
             return "{\"login\": \"error\"}"
     except:
@@ -269,7 +262,7 @@ def getprimarycolor():
             return filecache
         else:
             if not "/api/v1/getbanner" in url:
-                subprocess.Popen(["wget", "-O", filename, url], shell=False).wait()
+                os.system("wget -O "+filename+" "+url)
             color_thief = ColorThief(filename)
             dominant_color = color_thief.get_color()
             x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
@@ -278,7 +271,7 @@ def getprimarycolor():
             return x
     else:
         if not "/api/v1/getbanner" in url:
-            subprocess.Popen(["wget", "-O", filename, url], shell=False).wait()
+            os.system("wget -O "+filename+" "+url)
         color_thief = ColorThief(filename)
         dominant_color = color_thief.get_color()
         x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
@@ -326,8 +319,8 @@ def getreversed():
     f.close()
     return x
 
-@post("/api/v1/toot/<username>/<uuid>/<instance>/<visibility>")
-def toot(username, uuid, instance, visibility):
+@post("/api/v1/toot/<username>/<guuid>/<instance>/<visibility>")
+def toot(username, guuid, instance, visibility):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
@@ -340,16 +333,16 @@ def toot(username, uuid, instance, visibility):
         mastodon.account_verify_credentials().source.note
     except:
         pass
-    if uuid in suid:
+    if guuid in suid:
         if "%20" in content:
             content = urllib.parse.unquote(content)
         mastodon.status_post(content, visibility=visibility)
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success"})
     else:
         return "{\"login\": \"error\"}"
 
-@get("/api/v1/isfav/<username>/<uuid>/<secret>/<instance>")
-def isfav(username, uuid, instance, secret):
+@get("/api/v1/isfav/<username>/<guuid>/<secret>/<instance>")
+def isfav(username, guuid, instance, secret):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
@@ -361,16 +354,16 @@ def isfav(username, uuid, instance, secret):
         mastodon.account_verify_credentials().source.note
     except:
         pass
-    if uuid in suid:
+    if guuid in suid:
         isfav = str(r.get("nordcast/isfav/" + username + "$$" + instance + "/" + secret)).replace("b'", "").replace("'", "")
         if isfav == "true":
             isfav = True
         else:
             isfav = False
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "isfav": isfav, "secret": secret})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "isfav": isfav, "secret": secret})
 
-@get("/api/v1/getfavs/<username>/<uuid>/<secret>/<instance>")
-def getfavs(username, uuid, instance, secret):
+@get("/api/v1/getfavs/<username>/<guuid>/<secret>/<instance>")
+def getfavs(username, guuid, instance, secret):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
@@ -382,18 +375,18 @@ def getfavs(username, uuid, instance, secret):
         mastodon.account_verify_credentials().source.note
     except:
         pass
-    if uuid in suid:
+    if guuid in suid:
         favs = str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "")
         if favs == "None":
             favs = "0"
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success", "favs": favs, "secret": secret})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success", "favs": favs, "secret": secret})
 
-@get("/api/v1/addfav/<username>/<uuid>/<secret>/<instance>")
-def addfav(username, uuid, secret, instance):
+@get("/api/v1/addfav/<username>/<guuid>/<secret>/<instance>")
+def addfav(username, guuid, secret, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if uuid in suid:
+    if guuid in suid:
         if str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "") == "None":
             favs = 1
         else:
@@ -408,16 +401,16 @@ def addfav(username, uuid, secret, instance):
         if isfav == False:
             r.set("nordcast/favs/" + secret, favs)
             r.set("nordcast/isfav/" + username + "$$" + instance + "/" + secret, "true")
-            return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+            return json.dumps({"login": "ok", "uuid": guuid, "action": "success"})
         else:
             return "{\"action\": \"error\"}"
 
-@get("/api/v1/delfav/<username>/<uuid>/<secret>/<instance>")
-def delfav(username, uuid, secret, instance):
+@get("/api/v1/delfav/<username>/<guuid>/<secret>/<instance>")
+def delfav(username, guuid, secret, instance):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if uuid in suid:
+    if guuid in suid:
         if str(r.get("nordcast/favs/" + secret)).replace("b'", "").replace("'", "") == "None":
             favs = 0
         else:
@@ -432,10 +425,11 @@ def delfav(username, uuid, secret, instance):
         if isfav == True:
             r.set("nordcast/favs/" + secret, favs)
             r.set("nordcast/isfav/" + username + "$$" + instance + "/" + secret, "false")
-            return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+            return json.dumps({"login": "ok", "uuid": guuid, "action": "success"})
         else:
             return "{\"action\": \"error\"}"
 
+"""
 @post("/api/v1/admin/featured/<adminkey>/<lang>")
 def setfeatured(adminkey, lang):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -544,24 +538,25 @@ def uploadbanner(adminkey):
                 return "{\"action\": \"error\"}"
         else:
             return "{\"action\": \"error\"}"
+"""
 
-@get("/api/v1/lastplayed/<username>/<uuid>/<instance>/<feed>/<time>")
-def lastplayed(username, uuid, instance, feed, time):
+@get("/api/v1/lastplayed/<username>/<guuid>/<instance>/<feed>/<time>")
+def lastplayed(username, guuid, instance, feed, time):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
-    if uuid in suid:
+    if guuid in suid:
         r.set("nordcast/lastplayed/" + username + "$$" + instance + "/" + feed, time)
-        return json.dumps({"login": "ok", "uuid": uuid, "action": "success"})
+        return json.dumps({"login": "ok", "uuid": guuid, "action": "success"})
 
-@get("/api/v1/getlastplayed/<username>/<uuid>/<instance>/<feed>")
-def getlastplayed(username, uuid, instance, feed):
+@get("/api/v1/getlastplayed/<username>/<guuid>/<instance>/<feed>")
+def getlastplayed(username, guuid, instance, feed):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.content_type = "application/json"
     suid = str(r.get("nordcast/uuids/" + username + "$$" + instance)).replace("b'", "").replace("'", "")
     lastplayed = str(r.get("nordcast/lastplayed/" + username + "$$" + instance + "/" + feed)).replace("b'", "").replace("'", "")
-    if uuid in suid:
-        return json.dumps({"login": "ok", "uuid": uuid, "lastplayed": lastplayed})
+    if guuid in suid:
+        return json.dumps({"login": "ok", "uuid": guuid, "lastplayed": lastplayed})
 
 @post("/api/v1/admin/custom/<adminkey>/<lang>")
 def setcustom(adminkey, lang):

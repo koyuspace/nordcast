@@ -1,4 +1,3 @@
-document.addEventListener("deviceready", onDeviceReady, false);
 var es = false;
 var error = false;
 
@@ -24,12 +23,14 @@ $(document).ready(function() {
         $.get(backend+"/getstatus?"+Date.now(), function(data) {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "app.html#view=main";
+            } else {
+                if (localStorage.getItem("offline") === "true") {
+                    location.href = "app.html#view=main";
+                }
             }
         }).fail(function() {
             if (localStorage.getItem("uuid") === "dummy") {
                 location.href = "index.html#mode=offline";
-            } else {
-                location.href = "app.html#view=main";
             }
         })
     }, 1500);
@@ -54,7 +55,7 @@ $(document).ready(function() {
                     }
                 });
                 try {
-                    if (localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") === "offline") {
+                    if (findGetParameter("mode") === "offline") {
                         $("#text__offline").show();
                         $("#logo__intro").attr("style", "margin-top:-32px;");
                         $("#logo__intro").show();
@@ -88,7 +89,7 @@ $(document).ready(function() {
                         localStorage.setItem("instance", $("#instance").val());
                         window.setTimeout(function() {
                             location.href = "app.html#view=main";
-                        }, 200)
+                        }, 1000)
                     } else {
                         $("#kslogin").removeAttr("disabled");
                         $("#kslogin").html(oldHTML);
@@ -128,45 +129,29 @@ $(document).ready(function() {
         }, 50);
         e.preventDefault();
     });
-});
-
-//Cordova-specific code
-function onDeviceReady() {
-    if (cordova.platformId == 'android') {
-        StatusBar.backgroundColorByHexString("#fff");
-        StatusBar.styleDefault();
-        if (localStorage.getItem("darkmode") === "true") {
-            StatusBar.backgroundColorByHexString("#191919");
-            StatusBar.styleLightContent();
-        }
-    }
-    if (localStorage.getItem("darkmode") === "true") {
-        $("head").append("<link rel=\"stylesheet\" href=\"dark.css\">");
-        $("#logo__intro").attr("src", "logo_dark.png");
-        if (device.platform === "Android" || device.platform === "iOS") {
-            StatusBar.backgroundColorByHexString("#191919");
-            StatusBar.styleLightContent();
-        }
-    }
+try {
     if (localStorage.getItem("uuid") === null || localStorage.getItem("uuid") === "dummy" && findGetParameter("mode") !== "offline") {
-        $("#view__welcome").attr("style", "");
-        $("#logo__intro").hide();
-    } else {
-        $("#logo__intro").show();
-    }
-    navigator.globalization.getPreferredLanguage(function (language) {
-        //German
-        if (language.value.includes("de")) {
-            localStorage.setItem("lang", "de")
-            $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
-            $("#text__safe").html("Deine Daten sind sicher.");
-            $("#header__welcome").html("Willkommen bei Nordcast");
-            $("#text__welcome").html("Bitte melde dich mit deinem Account im Fediversum an. Solltest du noch keinen Account haben, kannst du dir <a href=\"signup.html\">hier</a> einen machen.");
-            $("#username").attr("placeholder", "E-Mailadresse");
-            $("#password").attr("placeholder", "Passwort");
-            $("#instance").attr("placeholder", "Server");
-            $("#kslogin").html("Anmelden");
-            $("#nologin").html("Weiter ohne Account");
-        }
-    });
+         $("#view__welcome").attr("style", "");
+         $("#logo__intro").hide();
+     } else {
+         $("#logo__intro").show();
+     }
+} catch (e) {
+    $("#view__welcome").attr("style", "");
+    $("#logo__intro").hide();
 }
+
+var userLang = navigator.language || navigator.userLanguage;
+if (userLang.includes("de")) {
+    localStorage.setItem("lang", "de")
+    $("#welcome__error").html("<p><b style=\"color:red;\">Der Benutzername und/oder das Passwort ist falsch.</b></p>");
+    $("#text__safe").html("Deine Daten sind sicher.");
+    $("#header__welcome").html("Willkommen bei Nordcast");
+    $("#text__welcome").html("Bitte melde dich mit deinem Account im Fediversum an. Solltest du noch keinen Account haben, kannst du dir <a href=\"signup.html\">hier</a> einen machen.");
+    $("#username").attr("placeholder", "E-Mailadresse");
+    $("#password").attr("placeholder", "Passwort");
+    $("#instance").attr("placeholder", "Server (z.B. koyu.space)");
+    $("#kslogin").html("Anmelden");
+    $("#nologin").html("Weiter ohne Account");
+}
+});

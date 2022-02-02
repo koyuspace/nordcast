@@ -25,3 +25,6 @@ files/*.png
 files/*.jpg
 files/*.gif
 filecache
+
+# Redis
+dump.rdb

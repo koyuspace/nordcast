@@ -76,11 +76,17 @@ function removejscssfile(filename, filetype){
     }
 }
 
+window.setInterval(function() {
+    if (localStorage.getItem("offline") === "true") {
+        location.href = "index.html#mode=offline";
+    }
+}, 3000);
+
 function drr2() {
     $(document).ready(function() {
         window.setInterval(function() {
+            $(".dlbutton").hide();
             if (localStorage.getItem("uuid") === "dummy") {
-                $(".dlbutton").hide();
                 $("#text__newforyou").hide();
                 $("#section__newforyou").hide();
                 $("#menubuttons > div:nth-child(2)").hide();
@@ -172,7 +178,6 @@ function drr2() {
         }
         var reloaded = false;
         window.setInterval(function() {
-            if (device.platform !== "browser") {
                 $.get(backend+"/getstatus?"+Date.now(), function(data) {
                     localStorage.setItem("offline", "false");
                     if (findGetParameter("view") !== "settings") {
@@ -211,7 +216,6 @@ function drr2() {
                             reloaded = true;
                         }
                 });
-            }
         }, 1500);
         var timeout = 1200;
         $("#logo__intro").attr("src", "loading2.svg");
@@ -258,9 +262,9 @@ function drr2() {
                 }
             });
         }, 10000);
-        $.get(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
+        $.getJSON(backend+"/api/v1/login2/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
             if (localStorage.getItem("uuid") !== "dummy") {
-                if (data["login"] !== "ok" && data["uuid"] !== localStorage.getItem("uuid")) {
+                if (data["login"] !== "ok") {
                     localStorage.clear();
                     localStorage.setItem("uuid", "dummy");
                     location.reload();
@@ -304,8 +308,6 @@ function drr2() {
                             localStorage.setItem("darkmode", "false");
                             $("#cdark__mode").removeAttr("checked");
                             $("#starwars").attr("src", "darth.png");
-                            StatusBar.backgroundColorByHexString("#fff");
-                            StatusBar.styleDefault();
                             try {
                                 removejscssfile("dark.css", "css");
                             } catch (e) {}
@@ -313,21 +315,15 @@ function drr2() {
                             localStorage.setItem("darkmode", "true");
                             $("#cdark__mode").attr("checked", "");
                             $("#starwars").attr("src", "clonetrooper.png");
-                            StatusBar.backgroundColorByHexString("#191919");
-                            StatusBar.styleLightContent();
                             loadjscssfile("dark.css", "css");
                         }
                         if (localStorage.getItem("darkmode") === "true") {
                             $("#logo__nav").attr("src", "logo_dark.png?v="+new Date().getMilliseconds());
                             $("#cdark__mode").attr("checked", "");
-                            StatusBar.backgroundColorByHexString("#191919");
-                            StatusBar.styleLightContent();
                         }
                         if (localStorage.getItem("darkmode") === "false") {
                             $("#logo__nav").attr("src", "logo.png?v="+new Date().getMilliseconds());
                             $("#cdark__mode").removeAttr("checked");
-                            StatusBar.backgroundColorByHexString("#fff");
-                            StatusBar.styleDefault();
                         }
                     });
                     if (localStorage.getItem("darkmode") === "true") {
@@ -394,47 +390,6 @@ function drr2() {
                         $.getJSON(feedurl, function(callback) {
                             if (debug) {
                                 console.log(callback);
-                            }
-                            if (localStorage.getItem("offline") === "false") {
-                                var fileTransfer = new FileTransfer();
-                                window.setTimeout(function() {
-                                    fileTransfer.download(
-                                        backend+"/api/v1/getpodcast?q="+feed,
-                                        'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0, -3)+'.json',
-                                        function(entry) {
-                                            if (debug) {
-                                                console.log("Download: "+entry.toURL());
-                                                localStorage.setItem("feed-"+Base64.encode(feed).slice(0, -3), entry.toURL());
-                                            }
-                                        },
-                                        function(error) {
-                                            if (debug) {
-                                                console.log("download error source " + error.source);
-                                                console.log("download error target " + error.target);
-                                                console.log("download error code " + error.code);
-                                            }
-                                        },
-                                        false
-                                    );
-                                    fileTransfer.download(
-                                        callback.feed.image.href,
-                                        'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0, -3)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
-                                        function(entry) {
-                                            if (debug) {
-                                                console.log("Download: "+entry.toURL());
-                                                localStorage.setItem("image-"+Base64.encode(feed).slice(0, -3), entry.toURL());
-                                            }
-                                        },
-                                        function(error) {
-                                            if (debug) {
-                                                console.log("download error source " + error.source);
-                                                console.log("download error target " + error.target);
-                                                console.log("download error code " + error.code);
-                                            }
-                                        },
-                                        false
-                                    );
-                                });
                             }
                             try {
                                 if (localStorage.getItem("offline") === "false") {
@@ -1072,7 +1027,7 @@ function drr2() {
                         $("#section__issue__missing").show();
                     }
                     $(".btn-submit").click(function() {
-                        var report = "@nordcast@koyu.space"; //Recipient for the report
+                        var report = "@koyuchan@koyu.space"; //Recipient for the report
                         var report_type = $("#data__issue").val();
                         if (onlymissing) {
                             report_type = "missing";
@@ -1147,9 +1102,6 @@ function drr2() {
                     if (findGetParameter("view") === "main") {
                         $("#section__list").hide();
                         $("#text__list").hide();
-                        if (localStorage.getItem("offline") === "true") {
-                            location.href = "app.html#view=yourlist";
-                        }
                     } else {
                         $("#section__featured").hide();
                         $("#section__originals").hide();
@@ -1170,7 +1122,7 @@ function drr2() {
                 }, 1500);
                 $.get(backend+"/api/v1/getpic/"+localStorage.getItem("username")+"/"+localStorage.getItem("uuid")+"/"+localStorage.getItem("instance"), function(data) {
                     if (data["login"] === "ok") {
-                        $("#profile__picture").attr("src", data["kspic"]);
+                        $("#profile__picture").attr("src", data.kspic);
                         $("#profile__picture").show();
                     } else {
                         $("#profile__picture").hide();
@@ -1241,6 +1193,7 @@ function drr2() {
                                             localStorage.setItem("lastloaded", Date.now());
                                             timeout = (podlist.split(",").length * 622) / 2;
                                         }
+                                        timeout = 1500;
                                         window.setTimeout(function() {
                                             window.setTimeout(function() {
                                                 $("#section__list").html($("#section__list").html()+"</p>");
@@ -1250,47 +1203,6 @@ function drr2() {
                                         }, 20);
                                         podlist.split(",").forEach(function(feed) {
                                             $.get(backend+"/api/v1/getpodcast?q="+feed, function(callback) {
-                                                if (device.platform !== "browser") {
-                                                    var fileTransfer = new FileTransfer();
-                                                    window.setTimeout(function() {
-                                                        fileTransfer.download(
-                                                            backend+"/api/v1/getpodcast?q="+feed,
-                                                            'cdvfile://localhost/persistent/Nordcast/feeds/'+Base64.encode(feed).slice(0, -3)+'.json',
-                                                            function(entry) {
-                                                                if (debug) {
-                                                                    console.log("Download: "+entry.toURL());
-                                                                    localStorage.setItem("feed-"+Base64.encode(feed).slice(0, -3), entry.toURL());
-                                                                }
-                                                            },
-                                                            function(error) {
-                                                                if (debug) {
-                                                                    console.log("download error source " + error.source);
-                                                                    console.log("download error target " + error.target);
-                                                                    console.log("download error code " + error.code);
-                                                                }
-                                                            },
-                                                            false
-                                                        );
-                                                        fileTransfer.download(
-                                                            callback.feed.image.href,
-                                                            'cdvfile://localhost/persistent/Nordcast/images/'+Base64.encode(feed).slice(0, -3)+'.'+callback.feed.image.href.split(".")[callback.feed.image.href.split(".").length - 1],
-                                                            function(entry) {
-                                                                if (debug) {
-                                                                    console.log("Download: "+entry.toURL());
-                                                                    localStorage.setItem("image-"+Base64.encode(feed).slice(0, -3), entry.toURL());
-                                                                }
-                                                            },
-                                                            function(error) {
-                                                                if (debug) {
-                                                                    console.log("download error source " + error.source);
-                                                                    console.log("download error target " + error.target);
-                                                                    console.log("download error code " + error.code);
-                                                                }
-                                                            },
-                                                            false
-                                                        );
-                                                    });
-                                                }
                                                 try {
                                                     var secret = Base64.encode(feed).slice(0, -3)
                                                     var summary = "";
@@ -1732,7 +1644,7 @@ function drr2() {
                         }, 1500);
                         window.setTimeout(function() {
                             $("#view__main").show();
-                        }, 8000);
+                        }, 1500);
                     }
                 });
             }
@@ -1939,13 +1851,6 @@ $(document).on('click', 'a[href^="http"]', function (e) {
     e.preventDefault();
 });
 
-function onDeviceReady() {
-    if (localStorage.getItem("darkmode") === "true") {
-        StatusBar.backgroundColorByHexString("#191919");
-        StatusBar.styleLightContent();
-    }
-}
-
 function fav(cast) {
     if (!isfaving) {
         isfaving = true;
@@ -1972,5 +1877,4 @@ function fav(cast) {
     }
 }
 
-document.addEventListener("deviceready", onDeviceReady, false);
-document.addEventListener("deviceready", drr2, false);
+drr2();
