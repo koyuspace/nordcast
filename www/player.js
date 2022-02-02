@@ -598,6 +598,9 @@ function plin() {
         autoplay: true
     });
     $("#player").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px; border-radius: 10px;");
+    if (disableFullscreen) {
+        $("#player").attr("style", "margin-left: auto; margin-right: auto; display: block; float: none; margin-top: 20px; border-radius: 10px;width:280px;height:280px;");
+    }
     $(".plchangesize").attr("class", "ion-ios-arrow-down plchangesize");
     $(".plchangesize").attr("style", "margin-left: 15px;");
 }
