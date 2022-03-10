@@ -8,6 +8,7 @@ import feedparser
 import json
 import os.path
 import os
+import urllib.request
 import redis
 import uuid
 import requests
@@ -262,7 +263,7 @@ def getprimarycolor():
             return filecache
         else:
             if not "/api/v1/getbanner" in url:
-                os.system("wget -O "+filename+" "+url)
+                urllib.request.urlretrieve(url, filename)
             color_thief = ColorThief(filename)
             dominant_color = color_thief.get_color()
             x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
@@ -271,7 +272,7 @@ def getprimarycolor():
             return x
     else:
         if not "/api/v1/getbanner" in url:
-            os.system("wget -O "+filename+" "+url)
+            urllib.request.urlretrieve(url, filename)
         color_thief = ColorThief(filename)
         dominant_color = color_thief.get_color()
         x = str(dominant_color).replace("(", "").replace(" ", "").replace(")", "")
